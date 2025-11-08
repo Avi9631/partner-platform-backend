@@ -2,16 +2,16 @@ const jwt = require("jsonwebtoken");
 const lodash = require("lodash");
 const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
-const logger = require("../config/winston.config");
-const AcademyService = require("../service/AcademyService.service.js");
- const { ApiResponse } = require("../utils/responseFormatter");
+const logger = require("../config/winston.config.js");
+const AuthService = require("../service/AuthService.service.js");
+ const { ApiResponse } = require("../utils/responseFormatter.js");
  
 
 async function getUser(req, res, next) {
   const apiResponse = new ApiResponse(req, res);
 
   try {
-    const user = await AcademyService.getUser(req.user.userId);
+    const user = await AuthService.getUser(req.user.userId);
 
     apiResponse
       .status(200)
@@ -36,5 +36,4 @@ async function getUser(req, res, next) {
  
 module.exports = {
    getUser,
- 
 };

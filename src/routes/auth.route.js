@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
-const authService = require("../service/Auth.service");
+const authService = require("../service/AuthService.service");
 const logger = require("../config/winston.config.js");
 
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;

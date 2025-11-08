@@ -1,5 +1,4 @@
 const db = require("../entity/index.js");
-const lodash = require("lodash");
 const logger = require("../config/winston.config.js");
 
 const getInitials = (name) => {
@@ -46,7 +45,35 @@ async function findUser(email) {
   return data;
 }
 
+const getUser = async (userId) => {
+  try {
+    // Input validation
+    if (!userId) throw new Error("User ID is required");
+
+    const userData = await db.User.findByPk(userId);
+
+    if (!userData) {
+      logger.warn(`User not found with ID: ${userId}`);
+      throw new Error("User not found");
+    }
+
+    // Convert to plain object and remove any sensitive information
+    const userJson = userData.toJSON();
+
+    getStudyStreak(userId);
+    calculateLearningHours(userId);
+
+    return userJson;
+  } catch (error) {
+    logger.error("Error in getUser:", error);
+    throw new Error(`Failed to fetch user: ${error.message}`);
+  }
+};
+ 
+
+
 module.exports = {
   findUser,
   createUser,
+  getUser
 };
