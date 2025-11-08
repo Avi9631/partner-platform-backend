@@ -7,7 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon server.js",
     "start": "pm2 start server.js",
-    "test:queue": "node test-email-queue.js"
+    "test:queue": "node test-email-queue.js",
+    "worker": "node src/temporal/worker.js",
+    "worker:dev": "nodemon src/temporal/worker.js"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +18,10 @@
     "@google/generative-ai": "^0.24.1",
     "@libsql/client": "^0.15.10",
     "@supabase/supabase-js": "^2.76.0",
+    "@temporalio/activity": "^1.13.1",
+    "@temporalio/client": "^1.13.1",
+    "@temporalio/worker": "^1.13.1",
+    "@temporalio/workflow": "^1.13.1",
     "aws-sdk": "^2.1692.0",
     "axios": "^1.7.7",
     "body-parser": "^1.20.2",

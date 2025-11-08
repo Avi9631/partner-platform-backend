@@ -9,6 +9,7 @@ const cors = require("cors");
 const express = require("express");
 const commonRoute = require("./src/routes/common.route.js");
 const authRoute = require("./src/routes/auth.route.js");
+const temporalRoute = require("./src/routes/temporal.route.js");
 const logger = require("./src/config/winston.config.js");
  const app = express();
 const port = process.env.PORT || 3000;
@@ -82,6 +83,7 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 app.use(commonRoute);
 app.use(authRoute);
+app.use(temporalRoute);
 
  
 const server = app.listen(port, '0.0.0.0', () => {
