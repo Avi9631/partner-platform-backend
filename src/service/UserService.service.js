@@ -52,9 +52,10 @@ async function getUser(userId, email) {
  * Update user information
  * @param {number} userId - User ID
  * @param {Object} updateData - Data to update
+ * @param {boolean} isProfileCompletion - Whether this is a profile completion update
  * @returns {Promise<Object>} Updated user data
  */
-async function updateUser(userId, updateData) {
+async function updateUser(userId, updateData, isProfileCompletion = false) {
   try {
     const user = await db.PlatformUser.findByPk(userId);
 
@@ -69,15 +70,22 @@ async function updateUser(userId, updateData) {
       updateData.nameInitial = getInitials(`${firstName} ${lastName}`);
     }
 
+    // If completing profile, mark as completed and activate user
+    if (isProfileCompletion) {
+      updateData.profileCompleted = true;
+      updateData.userStatus = 'ACTIVE';
+    }
+
     // Prevent updating sensitive fields
     delete updateData.userId;
     delete updateData.emailVerifiedAt;
     delete updateData.phoneVerifiedAt;
+    delete updateData.completeProfile; // Remove the flag from actual update
 
     // Update user
     await user.update(updateData);
 
-    logger.info(`User ${userId} updated successfully`);
+    logger.info(`User ${userId} updated successfully${isProfileCompletion ? ' (profile completed)' : ''}`);
     return user.toJSON();
   } catch (error) {
     logger.error(`Error updating user ${userId}:`, error);

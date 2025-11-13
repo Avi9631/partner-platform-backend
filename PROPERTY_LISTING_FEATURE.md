@@ -75,8 +75,8 @@ This feature allows users to create new properties when the property they're loo
 **Location:** `partner-platform-backend/src/service/ListingDraftService.service.js`
 
 **Methods:**
-- `createDraft(userId, draftDetails)` - Create new listing draft
-- `updateDraft(draftId, userId, draftDetails)` - Update existing draft
+- `createDraft(userId, draftData)` - Create new listing draft
+- `updateDraft(draftId, userId, draftData)` - Update existing draft
 - `getDraftById(draftId, userId)` - Get single draft
 - `getUserDrafts(userId)` - Get all user drafts
 - `deleteDraft(draftId, userId)` - Delete a draft

@@ -6,7 +6,7 @@ const authMiddleware = require("../middleware/authMiddleware");
 // Get current authenticated user
 router.post("/partnerUser/get", authMiddleware, UserController.getUser);
 
-// Update current authenticated user
+// Update current authenticated user (also handles profile completion)
 router.patch("/partnerUser/update", authMiddleware, UserController.updateUser);
 
 // Verify phone number for current user

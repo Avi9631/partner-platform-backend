@@ -19,7 +19,7 @@ module.exports = (sequelize, Sequelize) => {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      draftDetails: {
+      draftData: {
         type: Sequelize.JSONB,
         field: "draft_details",
         allowNull: true,

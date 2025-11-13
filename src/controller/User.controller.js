@@ -37,7 +37,7 @@ async function getUser(req, res, next) {
 /**
  * Update user information
  * @route PATCH /partnerUser/update
- * @body {firstName?, lastName?, phone?, accountType?}
+ * @body {firstName?, lastName?, phone?, accountType?, completeProfile?: boolean}
  */
 async function updateUser(req, res, next) {
   const apiResponse = new ApiResponse(req, res);
@@ -45,6 +45,7 @@ async function updateUser(req, res, next) {
   try {
     const userId = req.user.userId;
     const updateData = req.body;
+    const isProfileCompletion = updateData.completeProfile === true;
 
     // Validate update data
     if (!updateData || Object.keys(updateData).length === 0) {
@@ -53,6 +54,17 @@ async function updateUser(req, res, next) {
         .withMessage("No update data provided")
         .withError("No fields to update", "VALIDATION_ERROR", "updateUser")
         .error();
+    }
+
+    // If completing profile, validate required fields
+    if (isProfileCompletion) {
+      if (!updateData.firstName || !updateData.lastName || !updateData.phone) {
+        return apiResponse
+          .status(400)
+          .withMessage("First name, last name, and phone are required to complete profile")
+          .withError("Missing required fields", "VALIDATION_ERROR", "updateUser")
+          .error();
+      }
     }
 
     // Allowed fields to update
@@ -73,15 +85,37 @@ async function updateUser(req, res, next) {
         .error();
     }
 
-    const updatedUser = await UserService.updateUser(userId, updateFields);
+    // Validate phone format if provided
+    if (updateFields.phone) {
+      const phoneRegex = /^[+]?[\d\s\-()]+$/;
+      if (!phoneRegex.test(updateFields.phone)) {
+        return apiResponse
+          .status(400)
+          .withMessage("Invalid phone number format")
+          .withError("Phone number must contain only digits, spaces, +, -, ()", "VALIDATION_ERROR", "updateUser")
+          .error();
+      }
+    }
+
+    // Validate account type if provided
+    if (updateFields.accountType && !['INDIVIDUAL', 'AGENT', 'ORGANIZATION'].includes(updateFields.accountType)) {
+      return apiResponse
+        .status(400)
+        .withMessage("Invalid account type")
+        .withError("Account type must be INDIVIDUAL, AGENT, or ORGANIZATION", "VALIDATION_ERROR", "updateUser")
+        .error();
+    }
+
+    const updatedUser = await UserService.updateUser(userId, updateFields, isProfileCompletion);
 
     apiResponse
       .status(200)
-      .withMessage("User updated successfully")
+      .withMessage(isProfileCompletion ? "Profile completed successfully" : "User updated successfully")
       .withData({ user: updatedUser })
       .withMeta({
         userId: userId,
         updatedFields: Object.keys(updateFields),
+        profileCompleted: isProfileCompletion,
       })
       .success();
   } catch (err) {

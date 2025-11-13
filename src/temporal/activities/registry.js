@@ -10,15 +10,7 @@
 // User activities
 const userActivities = require('./user/user.activities');
 
-// Payment activities
-const paymentActivities = require('./payment/payment.activities');
-
-// Listing activities
-const listingActivities = require('./listing/listing.activities');
-
-// Analytics activities
-const analyticsActivities = require('./analytics/analytics.activities');
-
+ 
 /**
  * Export all activities
  * 
@@ -29,13 +21,5 @@ const analyticsActivities = require('./analytics/analytics.activities');
 module.exports = {
     // User activities
     ...userActivities,
-    
-    // Payment activities
-    ...paymentActivities,
-    
-    // Listing activities
-    ...listingActivities,
-    
-    // Analytics activities
-    ...analyticsActivities,
+ 
 };

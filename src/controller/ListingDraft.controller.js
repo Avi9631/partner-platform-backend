@@ -29,13 +29,13 @@ const createListingDraft = async (req, res) => {
 const updateListingDraft = async (req, res) => {
   try {
     const userId = req.user.userId; // From auth middleware
-    const { draftId, draftDetails } = req.body;
+    const { draftId, draftData } = req.body;
 
     if (!draftId) {
       return sendErrorResponse(res, 'Draft ID is required', 400);
     }
 
-    const result = await ListingDraftService.updateDraft(draftId, userId, draftDetails);
+    const result = await ListingDraftService.updateDraft(draftId, userId, draftData);
 
     if (result.success) {
       return sendSuccessResponse(res, result.data, result.message);

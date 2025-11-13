@@ -51,6 +51,11 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.DATE,
         field: "user_phone_verified_at",
       },
+      profileCompleted: {
+        type: Sequelize.BOOLEAN,
+        field: "profile_completed",
+        defaultValue: false,
+      },
       
       derivedUserName: {
         type: Sequelize.VIRTUAL,

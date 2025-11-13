@@ -11,25 +11,45 @@ const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
 const frontendUrl = process.env.FRONTEND_URL;
 
-router.get("/auth/status", (req, res) => {
+
+router.get("/auth/status", async (req, res) => {
   const accessToken = req.cookies?.accessToken;
   
   if (!accessToken) {
     return res.status(401).json({ authenticated: false });
   }
 
-  jwt.verify(accessToken, accessTokenSecret, (err, decoded) => {
+  jwt.verify(accessToken, accessTokenSecret, async (err, decoded) => {
     if (err) {
       return res.status(401).json({ authenticated: false });
     }
 
-    res.json({
-      authenticated: true,
-      user: {
-        userId: decoded.userId,
-        userEmail: decoded.userEmail,
-      },
-    });
+    try {
+      const user = await authService.findUser(null, decoded.userId);
+      
+      res.json({
+        authenticated: true,
+        user: {
+          userId: decoded.userId,
+          userEmail: decoded.userEmail,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          phone: user.phone,
+          accountType: user.accountType,
+          profileCompleted: user.profileCompleted,
+        },
+      });
+    } catch (error) {
+      logger.error("Error fetching user in auth status:", error);
+      res.json({
+        authenticated: true,
+        user: {
+          userId: decoded.userId,
+          userEmail: decoded.userEmail,
+          profileCompleted: false,
+        },
+      });
+    }
   });
 });
 

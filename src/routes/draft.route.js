@@ -8,7 +8,6 @@ router.get("/ping", function (req, res) {
     res.status(200).send({message: "Ping Successful"});
 });
 
-
 router.post("/createListingDraft", authMiddleware, ListingDraftController.createListingDraft);
 
 router.patch("/updateListingDraft", authMiddleware, ListingDraftController.updateListingDraft);

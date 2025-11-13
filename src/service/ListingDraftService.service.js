@@ -7,7 +7,7 @@ const PlatformUser = db.PlatformUser;
 /**
  * Create a new listing draft
  * @param {number} userId - The ID of the user creating the draft
- * @param {object} draftDetails - The draft details (form data)
+ * @param {object} draftData - The draft details (form data)
  * @returns {Promise<object>} The created draft
  */
 const createDraft = async (userId) => {
@@ -32,10 +32,10 @@ const createDraft = async (userId) => {
  * Update an existing listing draft
  * @param {number} draftId - The ID of the draft to update
  * @param {number} userId - The ID of the user (for authorization)
- * @param {object} draftDetails - The updated draft details
+ * @param {object} draftData - The updated draft details
  * @returns {Promise<object>} The updated draft
  */
-const updateDraft = async (draftId, userId, draftDetails) => {
+const updateDraft = async (draftId, userId, draftData) => {
   try {
     const draft = await ListingDraft.findOne({
       where: {
@@ -52,7 +52,7 @@ const updateDraft = async (draftId, userId, draftDetails) => {
     }
 
     await draft.update({
-      draftDetails: draftDetails
+      draftData: draftData
     });
 
     return {
@@ -182,32 +182,32 @@ const submitDraft = async (draftId, userId) => {
       };
     }
 
-    const draftDetails = draft.draftDetails;
+    const draftData = draft.draftData;
     let projectId = null;
 
     // Check if a new property needs to be created
-    if (draftDetails.isNewProperty && draftDetails.customPropertyName) {
+    if (draftData.isNewProperty && draftData.customPropertyName) {
       // Create a new project with the custom property name
       const newProject = await Project.create({
-        projectName: draftDetails.customPropertyName,
+        projectName: draftData.customPropertyName,
         createdBy: userId,
         projectDetails: {
-          ownershipType: draftDetails.ownershipType,
-          reraIds: draftDetails.reraIds || [],
-          ageOfProperty: draftDetails.ageOfProperty,
-          possessionStatus: draftDetails.possessionStatus,
-          possessionDate: draftDetails.possessionDate,
+          ownershipType: draftData.ownershipType,
+          reraIds: draftData.reraIds || [],
+          ageOfProperty: draftData.ageOfProperty,
+          possessionStatus: draftData.possessionStatus,
+          possessionDate: draftData.possessionDate,
           createdFromListing: true
         },
         status: 'ACTIVE'
       }, { transaction });
 
       projectId = newProject.projectId;
-    } else if (draftDetails.projectName && draftDetails.projectName !== 'Not Listed') {
+    } else if (draftData.projectName && draftData.projectName !== 'Not Listed') {
       // Find existing project by name
       const existingProject = await Project.findOne({
         where: {
-          projectName: draftDetails.projectName
+          projectName: draftData.projectName
         }
       });
 
@@ -218,10 +218,10 @@ const submitDraft = async (draftId, userId) => {
 
     // Create the property (listing)
     const property = await Property.create({
-      propertyName: draftDetails.customPropertyName || draftDetails.projectName,
+      propertyName: draftData.customPropertyName || draftData.projectName,
       projectId: projectId,
       createdBy: userId,
-      propertyDetails: draftDetails,
+      propertyDetails: draftData,
       status: 'ACTIVE'
     }, { transaction });
 
@@ -236,7 +236,7 @@ const submitDraft = async (draftId, userId) => {
       success: true,
       data: {
         property: property,
-        projectCreated: draftDetails.isNewProperty && projectId !== null
+        projectCreated: draftData.isNewProperty && projectId !== null
       },
       message: 'Listing submitted successfully'
     };
