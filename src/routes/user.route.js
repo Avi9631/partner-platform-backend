@@ -1,13 +1,21 @@
 const express = require("express");
 const router = express.Router();
- const authMiddleware = require("../middleware/authMiddleware");
+const UserController = require("../controller/User.controller.js");
+const authMiddleware = require("../middleware/authMiddleware");
 
+// Get current authenticated user
+router.post("/partnerUser/get", authMiddleware, UserController.getUser);
 
-router.post("/partnerUser/get", authMiddleware, AuthController.getUser);
+// Update current authenticated user
+router.patch("/partnerUser/update", authMiddleware, UserController.updateUser);
 
-router.patch("/partnerUser/update", authMiddleware, AuthController.getUser);
+// Verify phone number for current user
+router.post("/partnerUser/verifyPhone", authMiddleware, UserController.verifyPhone);
 
-router.post("/partnerUser/verifyPhone", authMiddleware, AuthController.getUser);
+// Get all users (admin function - consider adding admin middleware)
+router.get("/partnerUser/all", authMiddleware, UserController.getAllUsers);
 
+// Update user status (admin function - consider adding admin middleware)
+router.patch("/partnerUser/updateStatus", authMiddleware, UserController.updateUserStatus);
 
 module.exports = router;

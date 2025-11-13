@@ -61,8 +61,14 @@ async function findUser(email, userId) {
     throw new Error(`Failed to fetch user: ${error.message}`);
   }
 }
+
+// Alias for backward compatibility
+async function getUser(userId, email) {
+  return findUser(email, userId);
+}
  
 module.exports = {
   findUser,
+  getUser,
   createUser,
  };

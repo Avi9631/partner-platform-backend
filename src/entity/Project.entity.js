@@ -13,17 +13,17 @@ module.exports = (sequelize, Sequelize) => {
         field: "project_name",
         allowNull: false,
       },
-      developerId: {
-        type: Sequelize.INTEGER,
-        field: "developer_id",
-        allowNull: true,
-        references: {
-          model: 'developer',
-          key: 'developer_id'
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL'
-      },
+      // developerId: {
+      //   type: Sequelize.INTEGER,
+      //   field: "developer_id",
+      //   allowNull: true,
+      //   references: {
+      //     model: 'developer',
+      //     key: 'developer_id'
+      //   },
+      //   onUpdate: 'CASCADE',
+      //   onDelete: 'SET NULL'
+      // },
       createdBy: {
         type: Sequelize.INTEGER,
         field: "created_by",
@@ -82,9 +82,9 @@ module.exports = (sequelize, Sequelize) => {
         {
           fields: ['project_name']
         },
-        {
-          fields: ['developer_id']
-        },
+        // {
+        //   fields: ['developer_id']
+        // },
         {
           fields: ['created_by']
         },

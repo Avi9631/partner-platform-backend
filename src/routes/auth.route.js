@@ -4,11 +4,34 @@ const router = express.Router();
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
 const authService = require("../service/AuthService.service");
+const UserService = require("../service/UserService.service");
 const logger = require("../config/winston.config.js");
 
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
 const frontendUrl = process.env.FRONTEND_URL;
+
+router.get("/auth/status", (req, res) => {
+  const accessToken = req.cookies?.accessToken;
+  
+  if (!accessToken) {
+    return res.status(401).json({ authenticated: false });
+  }
+
+  jwt.verify(accessToken, accessTokenSecret, (err, decoded) => {
+    if (err) {
+      return res.status(401).json({ authenticated: false });
+    }
+
+    res.json({
+      authenticated: true,
+      user: {
+        userId: decoded.userId,
+        userEmail: decoded.userEmail,
+      },
+    });
+  });
+});
 
 router.get("/auth/google", (req, res, next) => {
   // passport.authenticate("google", {
@@ -43,7 +66,12 @@ router.get(
       const user = req.user;
       console.log(user);
       const email = user.emails?.[0]?.value;
-      const userDataFromDB = await authService.findUser(email);
+      let userDataFromDB ;
+      try{
+        userDataFromDB = await authService.findUser(email);
+      }catch(err){
+        logger.error(`Error fetching user during Google auth redirect:`, err.message);
+      }
 
       let userId;
       if (!userDataFromDB) {
@@ -63,17 +91,20 @@ router.get(
         userEmail: email,
       };
 
+      // Update last login timestamp
+      await UserService.updateLastLogin(userId);
+
       console.log("Redirect URL :: " + req.cookies?.postAuthRedirect);
 
       const redirectUrl = req.cookies?.postAuthRedirect || `${frontendUrl}/`;
 
       let accessToken = jwt.sign(claims, accessTokenSecret, {
-        expiresIn: "30m",
+        expiresIn: "1m",
       });
       claims = { ...claims };
 
       const refreshToken = jwt.sign(claims, refreshTokenSecret, {
-        expiresIn: "60m",
+        expiresIn: "15m",
       });
 
       res.cookie("accessToken", accessToken, {
@@ -88,6 +119,13 @@ router.get(
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
       res.cookie("userId", userId);
+
+      // Clear the postAuthRedirect cookie
+      res.clearCookie("postAuthRedirect", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "None",
+      });
 
       res.redirect(redirectUrl);
     } catch (err) {
@@ -156,6 +194,9 @@ router.get(
         userEmail: email,
       };
 
+      // Update last login timestamp
+      await UserService.updateLastLogin(userId);
+
       console.log("Redirect URL :: " + req.cookies?.postAuthRedirect);
 
       const redirectUrl = req.cookies?.postAuthRedirect || `${frontendUrl}/`;
@@ -181,6 +222,13 @@ router.get(
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
       res.cookie("userId", userId);
+
+      // Clear the postAuthRedirect cookie
+      res.clearCookie("postAuthRedirect", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "None",
+      });
 
       res.redirect(redirectUrl);
     } catch (err) {
