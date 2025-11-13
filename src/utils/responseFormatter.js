@@ -221,5 +221,32 @@ function requestIdMiddleware(req, res, next) {
 
 module.exports = {
   ApiResponse,
-  requestIdMiddleware
+  requestIdMiddleware,
+  
+  // Helper functions for backward compatibility
+  sendSuccessResponse: (res, data = null, message = 'Success', statusCode = 200) => {
+    return res.status(statusCode).json({
+      status: statusCode,
+      success: true,
+      message: message,
+      data: data,
+      warnings: [],
+      error: null
+    });
+  },
+
+  sendErrorResponse: (res, message = 'An error occurred', statusCode = 500, errorCode = null, details = null) => {
+    return res.status(statusCode).json({
+      status: statusCode,
+      success: false,
+      message: message,
+      data: null,
+      warnings: [],
+      error: {
+        code: errorCode || `ERROR_${statusCode}`,
+        message: message,
+        ...(details && { details })
+      }
+    });
+  }
 };

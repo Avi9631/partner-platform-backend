@@ -27,6 +27,8 @@ db.sequelize = sequelize;
 // Entities
 db.PlatformUser = require("./PlatformUser.entity.js")(sequelize, Sequelize);
 db.ListingDraft = require("./ListingDraft.entity.js")(sequelize, Sequelize);
+db.Project = require("./Project.entity.js")(sequelize, Sequelize);
+db.Property = require("./Property.entity.js")(sequelize, Sequelize);
 
 // Relationships
 // User has many ListingDrafts
@@ -39,6 +41,42 @@ db.PlatformUser.hasMany(db.ListingDraft, {
 db.ListingDraft.belongsTo(db.PlatformUser, {
     foreignKey: 'user_id',
     as: 'user'
+});
+
+// User has many Projects
+db.PlatformUser.hasMany(db.Project, {
+    foreignKey: 'created_by',
+    as: 'projects'
+});
+
+// Project belongs to User
+db.Project.belongsTo(db.PlatformUser, {
+    foreignKey: 'created_by',
+    as: 'creator'
+});
+
+// Project has many Properties
+db.Project.hasMany(db.Property, {
+    foreignKey: 'project_id',
+    as: 'properties'
+});
+
+// Property belongs to Project
+db.Property.belongsTo(db.Project, {
+    foreignKey: 'project_id',
+    as: 'project'
+});
+
+// User has many Properties
+db.PlatformUser.hasMany(db.Property, {
+    foreignKey: 'created_by',
+    as: 'properties'
+});
+
+// Property belongs to User
+db.Property.belongsTo(db.PlatformUser, {
+    foreignKey: 'created_by',
+    as: 'creator'
 });
  
  

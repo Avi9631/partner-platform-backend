@@ -19,10 +19,14 @@ async function createUser(firstName, lastName, email, number) {
     firstName: firstName,
     lastName: lastName,
     email: email,
-    number: number,
+    phone: number,
+    userStatus: "PENDING",
+    accountType: "INDIVIDUAL",
+    emailVerifiedAt: new Date(),
+    phoneVerifiedAt: null,
     nameInitial: getInitials(firstName + " " + lastName),
   };
-  const [data, created] = await db.User.findOrCreate({
+  const [data, created] = await db.PlatformUser.findOrCreate({
     where: {
       email: email,
     },
@@ -34,46 +38,31 @@ async function createUser(firstName, lastName, email, number) {
   return data;
 }
 
+async function findUser(email, userId) {
+  if (!userId && !email) throw new Error("User ID or email is required");
 
-async function findUser(email) {
-  const data = await db.User.findOne({
-    where: {
-      email: email,
-    },
-  });
-  console.log(data);
-  return data;
-}
-
-const getUser = async (userId) => {
   try {
-    // Input validation
-    if (!userId) throw new Error("User ID is required");
-
-    const userData = await db.User.findByPk(userId);
-
+    const userData = await db.PlatformUser.findOne({
+      where: {
+        ...(email && { email: email }),
+        ...(userId && { userId: userId }),
+      },
+    });
     if (!userData) {
       logger.warn(`User not found with ID: ${userId}`);
       throw new Error("User not found");
     }
 
-    // Convert to plain object and remove any sensitive information
     const userJson = userData.toJSON();
-
-    getStudyStreak(userId);
-    calculateLearningHours(userId);
 
     return userJson;
   } catch (error) {
     logger.error("Error in getUser:", error);
     throw new Error(`Failed to fetch user: ${error.message}`);
   }
-};
+}
  
-
-
 module.exports = {
   findUser,
   createUser,
-  getUser
-};
+ };
