@@ -9,6 +9,7 @@
 
 // User activities
 const userActivities = require('./user/user.activities');
+const partnerOnboardingActivities = require('./user/partnerOnboarding.activities');
 
  
 /**
@@ -21,5 +22,8 @@ const userActivities = require('./user/user.activities');
 module.exports = {
     // User activities
     ...userActivities,
+    
+    // Partner onboarding activities
+    ...partnerOnboardingActivities,
  
 };

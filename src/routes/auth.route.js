@@ -27,6 +27,7 @@ router.get("/auth/status", async (req, res) => {
     try {
       const user = await authService.findUser(null, decoded.userId);
       
+
       res.json({
         authenticated: true,
         user: {
@@ -34,9 +35,21 @@ router.get("/auth/status", async (req, res) => {
           userEmail: decoded.userEmail,
           firstName: user.firstName,
           lastName: user.lastName,
+          nameInitial: user.nameInitial,
           phone: user.phone,
           accountType: user.accountType,
-          profileCompleted: user.profileCompleted,
+          profileImage: user.profileImage,
+          profileVideo: user.profileVideo,
+          verificationStatus: user.verificationStatus,
+          verificationNotes: user.verificationNotes,
+          verifiedAt: user.verifiedAt,
+          verifiedBy: user.verifiedBy,
+          latitude: user.latitude,
+          longitude: user.longitude,
+          address: user.address,
+          lastLoginAt: user.lastLoginAt,
+          phoneVerifiedAt: user.phoneVerifiedAt,
+          profileCompleted: user.verificationStatus != "INITIAL" ? true : false,
         },
       });
     } catch (error) {

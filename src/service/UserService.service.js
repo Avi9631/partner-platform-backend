@@ -215,6 +215,67 @@ async function updateUserStatus(userId, newStatus) {
 }
 
 /**
+ * Approve user verification
+ * Sets verificationStatus to APPROVED and profileCompleted to true
+ * @param {number} userId - User ID
+ * @param {string} verificationNotes - Optional verification notes
+ * @param {number} verifiedBy - Admin user ID who approved
+ * @returns {Promise<Object>} Updated user data
+ */
+async function approveVerification(userId, verificationNotes = null, verifiedBy = null) {
+  try {
+    const user = await db.PlatformUser.findByPk(userId);
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    await user.update({ 
+      verificationStatus: 'APPROVED',
+      profileCompleted: true, // Only set to true upon approval
+      verificationNotes: verificationNotes,
+      verifiedAt: new Date(),
+      verifiedBy: verifiedBy
+    });
+
+    logger.info(`User ${userId} verification approved by ${verifiedBy || 'system'}`);
+    return user.toJSON();
+  } catch (error) {
+    logger.error(`Error approving verification for user ${userId}:`, error);
+    throw error;
+  }
+}
+
+/**
+ * Reject user verification
+ * Sets verificationStatus to REJECTED
+ * @param {number} userId - User ID
+ * @param {string} verificationNotes - Rejection reason (required)
+ * @returns {Promise<Object>} Updated user data
+ */
+async function rejectVerification(userId, verificationNotes) {
+  try {
+    const user = await db.PlatformUser.findByPk(userId);
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    await user.update({ 
+      verificationStatus: 'REJECTED',
+      verificationNotes: verificationNotes,
+      profileCompleted: false // Ensure it stays false on rejection
+    });
+
+    logger.info(`User ${userId} verification rejected`);
+    return user.toJSON();
+  } catch (error) {
+    logger.error(`Error rejecting verification for user ${userId}:`, error);
+    throw error;
+  }
+}
+
+/**
  * Update last login timestamp
  * @param {number} userId - User ID
  * @returns {Promise<void>}
@@ -238,5 +299,7 @@ module.exports = {
   verifyPhone,
   getAllUsers,
   updateUserStatus,
+  approveVerification,
+  rejectVerification,
   updateLastLogin,
 };

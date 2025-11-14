@@ -146,7 +146,7 @@ const CLEANUP_CONFIG = {
 // ==================== Queue Names ====================
 
 const TASK_QUEUES = {
-    DEFAULT: process.env.TEMPORAL_TASK_QUEUE || 'partner-platform-queue',
+    DEFAULT: 'partner-platform-queue',
     HIGH_PRIORITY: 'partner-platform-priority-queue',
     BACKGROUND: 'partner-platform-background-queue',
     SCHEDULED: 'partner-platform-scheduled-queue',

@@ -1,14 +1,29 @@
-const { Client } = require('@temporalio/client');
+const { Client, Connection } = require('@temporalio/client');
 const logger = require('../config/winston.config');
 const temporalConfig = require('../config/temporal.config');
 
 let temporalClient = null;
 
 /**
+ * Check if Temporal is enabled
+ * @returns {boolean}
+ */
+function isTemporalEnabled() {
+    return process.env.TEMPORAL_ENABLED === 'true';
+}
+
+/**
  * Initialize Temporal Client
  * Creates and returns a singleton Temporal client instance
  */
 async function getTemporalClient() {
+    // Check if Temporal is enabled
+    if (!isTemporalEnabled()) {
+        const error = new Error('Temporal is disabled. Set TEMPORAL_ENABLED=true in environment variables to use Temporal workflows.');
+        error.code = 'TEMPORAL_DISABLED';
+        throw error;
+    }
+    
     if (temporalClient) {
         return temporalClient;
     }
@@ -16,10 +31,14 @@ async function getTemporalClient() {
     try {
         logger.info('Initializing Temporal Client...');
         
+        // Create connection with timeout to fail fast if server is not available
+        const connection = await Connection.connect({
+            address: temporalConfig.address,
+            connectTimeout: 5000, // 5 second timeout
+        });
+        
         temporalClient = new Client({
-            connection: {
-                address: temporalConfig.address,
-            },
+            connection,
             namespace: temporalConfig.namespace,
         });
         
@@ -28,7 +47,14 @@ async function getTemporalClient() {
         
     } catch (error) {
         logger.error('Failed to initialize Temporal Client:', error);
-        throw error;
+        // Add more context to the error
+        const enhancedError = new Error(
+            `Cannot connect to Temporal server at ${temporalConfig.address}. ` +
+            `Ensure Temporal server is running or set TEMPORAL_ENABLED=false to use fallback mode.`
+        );
+        enhancedError.code = 'TEMPORAL_CONNECTION_FAILED';
+        enhancedError.originalError = error;
+        throw enhancedError;
     }
 }
 
@@ -160,6 +186,7 @@ async function signalWorkflow(workflowId, signalName, ...args) {
 }
 
 module.exports = {
+    isTemporalEnabled,
     getTemporalClient,
     startWorkflow,
     executeWorkflow,

@@ -30,33 +30,55 @@ module.exports = (sequelize, Sequelize) => {
         field: "user_phone"
       }, 
       accountType: {
-        type: Sequelize.ENUM( 'INDIVIDUAL', 'AGENT', 'ORGANIZATION'),
+        type: Sequelize.ENUM( 'INDIVIDUAL', 'AGENCY'),
         field: "user_account_type",
         defaultValue: 'INDIVIDUAL'
-      },
-      userStatus: {
-        type: Sequelize.ENUM('PENDING', 'APPROVED', 'REJECTED', 'ACTIVE', 'INACTIVE', 'SUSPENDED'),
-        field: "user_status",
-        defaultValue: 'ACTIVE'
-      },
+      }, 
       lastLoginAt: {
         type: Sequelize.DATE,
         field: "user_last_login_at",
-      },
-      emailVerifiedAt: {
-        type: Sequelize.DATE,
-        field: "user_email_verified_at",
-      },
+      }, 
       phoneVerifiedAt: {
         type: Sequelize.DATE,
         field: "user_phone_verified_at",
+      }, 
+      latitude: {
+        type: Sequelize.DECIMAL(10, 8),
+        field: "user_latitude",
       },
-      profileCompleted: {
-        type: Sequelize.BOOLEAN,
-        field: "profile_completed",
-        defaultValue: false,
+      longitude: {
+        type: Sequelize.DECIMAL(11, 8),
+        field: "user_longitude",
       },
-      
+      address: {
+        type: Sequelize.TEXT,
+        field: "user_address",
+      },
+      profileImage: {
+        type: Sequelize.STRING(500),
+        field: "user_profile_image",
+      },
+      profileVideo: {
+        type: Sequelize.STRING(500),
+        field: "user_profile_video",
+      },
+      verificationStatus: {
+        type: Sequelize.ENUM('INITIAL', 'PENDING', 'APPROVED', 'REJECTED'),
+        field: "verification_status",
+        defaultValue: 'INITIAL',
+      },
+      verificationNotes: {
+        type: Sequelize.TEXT,
+        field: "verification_notes",
+      },
+      verifiedAt: {
+        type: Sequelize.DATE,
+        field: "verified_at",
+      },
+      verifiedBy: {
+        type: Sequelize.INTEGER,
+        field: "verified_by",
+      },
       derivedUserName: {
         type: Sequelize.VIRTUAL,
         get() {
@@ -109,7 +131,7 @@ module.exports = (sequelize, Sequelize) => {
           fields: ['user_email']
         }, 
         {
-          fields: ['user_status']
+          fields: ['verification_status']
         }
       ],
     });

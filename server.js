@@ -6,6 +6,7 @@ dns.setDefaultResultOrder("ipv4first");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const express = require("express");
+const path = require("path");
 const authRoute = require("./src/routes/auth.route.js");
 const draftRoute = require("./src/routes/draft.route.js");
 const userRoute = require("./src/routes/user.route.js");
@@ -68,6 +69,9 @@ app.use(cookieParser());
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
+// Serve static files for uploaded images
+app.use('/uploads', express.static(path.join(__dirname, 'src/uploads')));
+
 // For production: Sync database with alter (safe for existing data)
 (async () => {
   try {
@@ -78,8 +82,9 @@ app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
     // Use alter: true for production - this won't drop existing data
     // Now that tables are created, use safer sync method
-    await db.sequelize.sync({ force: true });
+    await db.sequelize.sync({ alter: true });
 
+    
     console.log("Database synchronized successfully - all tables verified");
     logger.info("Database synchronized successfully - all tables verified");
 

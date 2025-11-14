@@ -62,13 +62,9 @@ async function findUser(email, userId) {
   }
 }
 
-// Alias for backward compatibility
-async function getUser(userId, email) {
-  return findUser(email, userId);
-}
+ 
  
 module.exports = {
   findUser,
-  getUser,
-  createUser,
+   createUser,
  };

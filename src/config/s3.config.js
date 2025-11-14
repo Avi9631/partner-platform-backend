@@ -29,7 +29,7 @@ if (process.env.S3_ENDPOINT) {
 const s3 = new AWS.S3(s3Config);
 
 // Default bucket name
-const defaultBucket = process.env.S3_DEFAULT_BUCKET || 'uploads';
+const defaultBucket = process.env.S3_PARTNER_PROFILE_BUCKET || 'uploads';
 
 // Export configuration and instance
 module.exports = {
