@@ -136,7 +136,7 @@ async function partnerUserOnboarding(workflowInput) {
             userId,
             profileData,
             videoUrl: uploadResult.videoUrl,
-            verificationStatus: 'VERIFIED',
+            verificationStatus: 'APPROVED',
         });
         
         if (!updateResult.success) {

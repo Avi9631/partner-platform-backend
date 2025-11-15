@@ -233,7 +233,7 @@ async function uploadVideoToSupabase(uploadData) {
  * @returns {Promise<{success: boolean, user: Object}>}
  */
 async function updatePartnerUser(updateData) {
-    const { userId, profileData, videoUrl } = updateData;
+    const { userId, profileData, videoUrl, verificationStatus } = updateData;
     
     try {
         logger.info(`[Update Partner User] Updating user ${userId}`);
@@ -255,7 +255,7 @@ async function updatePartnerUser(updateData) {
             address: profileData.address,
             profileVideo: videoUrl,
             userStatus: 'ACTIVE',
-            verificationStatus: 'PENDING',
+            verificationStatus: verificationStatus || 'PENDING',
         };
         
         // Update name initial

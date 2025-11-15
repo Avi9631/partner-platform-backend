@@ -49,7 +49,7 @@ router.get("/auth/status", async (req, res) => {
           address: user.address,
           lastLoginAt: user.lastLoginAt,
           phoneVerifiedAt: user.phoneVerifiedAt,
-          profileCompleted: user.verificationStatus != "INITIAL" ? true : false,
+          profileCompleted: (user.verificationStatus != "INITIAL" && user.verificationStatus != "PENDING") ? true : false,
         },
       });
     } catch (error) {
