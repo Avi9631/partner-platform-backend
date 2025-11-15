@@ -16,12 +16,18 @@ router.get("/auth/status", async (req, res) => {
   const accessToken = req.cookies?.accessToken;
   
   if (!accessToken) {
-    return res.status(401).json({ authenticated: false });
+    return res.status(401).json({ authenticated: false, message: "No access token" });
   }
 
   jwt.verify(accessToken, accessTokenSecret, async (err, decoded) => {
     if (err) {
-      return res.status(401).json({ authenticated: false });
+      // Return 401 for expired tokens to trigger refresh on frontend
+      const statusCode = err.name === "TokenExpiredError" ? 401 : 401;
+      return res.status(statusCode).json({ 
+        authenticated: false, 
+        expired: err.name === "TokenExpiredError",
+        message: err.message 
+      });
     }
 
     try {
@@ -132,24 +138,25 @@ router.get(
       const redirectUrl = req.cookies?.postAuthRedirect || `${frontendUrl}/`;
 
       let accessToken = jwt.sign(claims, accessTokenSecret, {
-        expiresIn: "1m",
+        expiresIn: "15m", // 15 minutes - short lived for security
       });
       claims = { ...claims };
 
       const refreshToken = jwt.sign(claims, refreshTokenSecret, {
-        expiresIn: "15m",
+        expiresIn: "7d", // 7 days - matches cookie maxAge
       });
 
       res.cookie("accessToken", accessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "None",
+        maxAge: 15 * 60 * 1000, // 15 minutes
       });
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "None",
-        maxAge: 7 * 24 * 60 * 60 * 1000,
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       });
       res.cookie("userId", userId);
 
@@ -235,24 +242,25 @@ router.get(
       const redirectUrl = req.cookies?.postAuthRedirect || `${frontendUrl}/`;
 
       let accessToken = jwt.sign(claims, accessTokenSecret, {
-        expiresIn: "1m",
+        expiresIn: "15m", // 15 minutes - short lived for security
       });
       claims = { ...claims };
 
       const refreshToken = jwt.sign(claims, refreshTokenSecret, {
-        expiresIn: "15m",
+        expiresIn: "7d", // 7 days - matches cookie maxAge
       });
 
       res.cookie("accessToken", accessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "None",
+        maxAge: 15 * 60 * 1000, // 15 minutes
       });
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "None",
-        maxAge: 7 * 24 * 60 * 60 * 1000,
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       });
       res.cookie("userId", userId);
 
@@ -291,13 +299,14 @@ router.post("/auth/refresh-token", (req, res) => {
         userEmail: decoded.userEmail,
       },
       accessTokenSecret,
-      { expiresIn: "30m" }
+      { expiresIn: "15m" } // 15 minutes - consistent with login
     );
 
     res.cookie("accessToken", newAccessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "None",
+      maxAge: 15 * 60 * 1000, // 15 minutes
     });
 
     res.json({ accessToken: newAccessToken });
