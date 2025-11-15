@@ -99,3 +99,4 @@ module.exports = (sequelize, Sequelize) => {
 
     return Property;
 };
+

@@ -1,29 +1,10 @@
 const multer = require("multer");
 const path = require("path");
-const fs = require("fs");
 
-// Ensure upload directory exists for temporary files
-const uploadDir = path.join(__dirname, "../uploads/profile-videos");
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-// Configure storage - Use diskStorage for temporary file storage
-// The temporal workflow will upload to Supabase and clean up temp files
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadDir);
-  },
-  filename: function (req, file, cb) {
-    // Generate unique filename: userId-timestamp-originalname
-    const userId = req.user?.userId || "unknown";
-    const timestamp = Date.now();
-    const ext = path.extname(file.originalname);
-    const nameWithoutExt = path.basename(file.originalname, ext);
-    const sanitizedName = nameWithoutExt.replace(/[^a-zA-Z0-9]/g, "_");
-    cb(null, `${userId}-${timestamp}-${sanitizedName}${ext}`);
-  },
-});
+// Configure storage - Use memoryStorage to keep file in memory
+// The file buffer will be passed directly to the temporal workflow
+// No temporary files on disk needed
+const storage = multer.memoryStorage();
 
 // File filter to accept only videos
 const fileFilter = (req, file, cb) => {

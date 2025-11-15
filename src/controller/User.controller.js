@@ -86,9 +86,11 @@ async function updateUser(req, res, next) {
       }
     }
 
-    // Add profile video if uploaded
+    // Note: Profile video is handled separately through workflow
+    // If video is uploaded, it will be processed by temporal workflow
     if (profileVideo) {
-      updateFields.profileVideo = `/uploads/profile-videos/${profileVideo.filename}`;
+      // Video will be uploaded to S3 via workflow, not saved locally
+      logger.info(`Profile video received for user ${userId}, size: ${profileVideo.size} bytes`);
     }
 
     if (Object.keys(updateFields).length === 0) {
@@ -334,9 +336,9 @@ async function onboardUser(req, res, next) {
       latitude: lat,
       longitude: lon,
       address: onboardingData.address || null,
-      profileVideo: `/uploads/profile-videos/${profileVideo.filename}`,
       verificationStatus: 'PENDING',
       userStatus: 'ACTIVE'
+      // Note: profileVideo will be set by the workflow after S3 upload
     };
 
     // Prepare business fields for AGENCY accounts
@@ -374,8 +376,10 @@ async function onboardUser(req, res, next) {
               accountType: updateFields.accountType,
             },
             businessData: businessFields,
-            videoPath: profileVideo.path,
+            videoBuffer: profileVideo.buffer,
             originalFilename: profileVideo.originalname,
+            videoMimetype: profileVideo.mimetype,
+            videoSize: profileVideo.size,
           },
           workflowId
         );

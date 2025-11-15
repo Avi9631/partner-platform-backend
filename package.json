@@ -35,7 +35,7 @@
     "lodash": "^4.17.21",
     "multer": "^2.0.2",
     "mysql2": "^3.6.5",
-    "nodemailer": "^6.10.1",
+    "nodemailer": "^7.0.10",
     "nodemon": "^3.0.2",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",

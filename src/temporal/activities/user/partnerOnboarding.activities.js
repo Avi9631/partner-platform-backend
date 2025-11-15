@@ -136,8 +136,8 @@ async function validateProfileData(profileData) {
             }
         }
         
-        // Check for video file
-        if (!profileData.videoPath && !profileData.videoBuffer) {
+        // Check for video buffer
+        if (!profileData.videoBuffer) {
             errors.push('Profile verification video is required');
         }
         
@@ -164,34 +164,35 @@ async function validateProfileData(profileData) {
  * @returns {Promise<{success: boolean, videoUrl: string}>}
  */
 async function uploadVideoToSupabase(uploadData) {
-    const { userId, videoPath, videoBuffer, originalFilename } = uploadData;
+    const { userId, videoBuffer, originalFilename, videoMimetype } = uploadData;
     
     try {
         logger.info(`[Upload Video] Starting upload for user ${userId}`);
         
+        // Validate video buffer
+        if (!videoBuffer) {
+            throw new Error('No video buffer provided');
+        }
+        
         // Determine file extension
-        const ext = path.extname(originalFilename || videoPath || '.mp4');
+        const ext = path.extname(originalFilename || '.mp4');
         const timestamp = Date.now();
         const s3Key = `partner-profiles/${userId}/verification-video-${timestamp}${ext}`;
         
-        let fileBuffer;
+        // Ensure buffer is a Buffer instance
+        const fileBuffer = Buffer.isBuffer(videoBuffer) 
+            ? videoBuffer 
+            : Buffer.from(videoBuffer);
         
-        // Get file buffer
-        if (videoBuffer) {
-            fileBuffer = videoBuffer;
-        } else if (videoPath) {
-            fileBuffer = await fs.readFile(videoPath);
-        } else {
-            throw new Error('No video data provided');
-        }
+        logger.info(`[Upload Video] Buffer size: ${fileBuffer.length} bytes`);
         
         // Upload to S3/Supabase
         const uploadParams = {
             Bucket: process.env.S3_PARTNER_PROFILE_BUCKET || defaultBucket,
             Key: s3Key,
             Body: fileBuffer,
-            ContentType: 'video/mp4',
-            ACL: 'private', // Changed to private for security
+            ContentType: videoMimetype || 'video/mp4',
+            ACL: 'private', // Private for security
         };
         
         logger.info(`[Upload Video] Uploading to S3: ${s3Key}`);
@@ -201,16 +202,6 @@ async function uploadVideoToSupabase(uploadData) {
         const videoUrl = uploadResult.Location || `${process.env.S3_ENDPOINT}/${uploadParams.Bucket}/${s3Key}`;
         
         logger.info(`[Upload Video] Upload successful for user ${userId}: ${videoUrl}`);
-        
-        // Clean up temporary file if it exists
-        if (videoPath) {
-            try {
-                await fs.unlink(videoPath);
-                logger.info(`[Upload Video] Cleaned up temporary file: ${videoPath}`);
-            } catch (cleanupError) {
-                logger.warn(`[Upload Video] Failed to clean up temp file:`, cleanupError);
-            }
-        }
         
         return {
             success: true,

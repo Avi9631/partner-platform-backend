@@ -34,6 +34,13 @@ async function getUser(userId, email) {
       attributes: {
         exclude: ["user_deleted_at"], // Exclude sensitive/unnecessary fields
       },
+      include: [
+        {
+          model: db.PartnerBusiness,
+          as: "business",
+          required: false, // LEFT JOIN - user may not have a business yet
+        },
+      ],
     });
 
     if (!userData) {

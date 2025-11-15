@@ -46,9 +46,10 @@ const {
  * @param {string} workflowInput.email - User email
  * @param {Object} workflowInput.profileData - Profile data (firstName, lastName, phone, location, etc.)
  * @param {Object} workflowInput.businessData - Business/agency data (for AGENCY account type)
- * @param {string} workflowInput.videoPath - Temporary path to uploaded video file
- * @param {Buffer} workflowInput.videoBuffer - Video file buffer (alternative to videoPath)
+ * @param {Buffer} workflowInput.videoBuffer - Video file buffer
  * @param {string} workflowInput.originalFilename - Original video filename
+ * @param {string} workflowInput.videoMimetype - Video MIME type
+ * @param {number} workflowInput.videoSize - Video file size in bytes
  * @returns {Promise<WorkflowResult>} - Workflow result
  * 
  * @example
@@ -64,8 +65,10 @@ const {
  *     address: '123 Main St, New York, NY',
  *     accountType: 'AGENT'
  *   },
- *   videoPath: '/tmp/uploads/video123.mp4',
- *   originalFilename: 'verification-video.mp4'
+ *   videoBuffer: Buffer.from(...),
+ *   originalFilename: 'verification-video.mp4',
+ *   videoMimetype: 'video/mp4',
+ *   videoSize: 1024000
  * });
  */
 async function partnerUserOnboarding(workflowInput) {
@@ -74,9 +77,10 @@ async function partnerUserOnboarding(workflowInput) {
         email, 
         profileData, 
         businessData,
-        videoPath, 
         videoBuffer, 
-        originalFilename 
+        originalFilename,
+        videoMimetype,
+        videoSize
     } = workflowInput;
     
     console.log(`[Partner Onboarding Workflow] Starting for user ${userId}`);
@@ -88,7 +92,6 @@ async function partnerUserOnboarding(workflowInput) {
         const validationResult = await validateProfileData({
             userId,
             ...profileData,
-            videoPath,
             videoBuffer,
         });
         
@@ -118,9 +121,9 @@ async function partnerUserOnboarding(workflowInput) {
         
         const uploadResult = await uploadVideoToSupabase({
             userId,
-            videoPath,
             videoBuffer,
             originalFilename,
+            videoMimetype,
         });
         
         if (!uploadResult.success) {
