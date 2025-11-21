@@ -182,7 +182,7 @@ const business = await PartnerBusinessService.getBusinessByUserId(123);
 // Update verification status
 const business = await PartnerBusinessService.updateVerificationStatus(
   businessId, 
-  'VERIFIED', 
+  'APPROVED', 
   'All documents verified',
   adminUserId
 );

@@ -63,9 +63,9 @@ module.exports = (sequelize, Sequelize) => {
         field: "user_profile_video",
       },
       verificationStatus: {
-        type: Sequelize.ENUM('INITIAL', 'PENDING', 'APPROVED', 'REJECTED'),
+        type: Sequelize.ENUM('PENDING', 'AUTOMATED_REVIEW','MANUAL_REVIEW' ,  'APPROVED', 'REJECTED'),
         field: "verification_status",
-        defaultValue: 'INITIAL',
+        defaultValue: 'PENDING',
       },
       verificationNotes: {
         type: Sequelize.TEXT,

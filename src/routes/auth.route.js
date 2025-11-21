@@ -56,6 +56,7 @@ router.get("/auth/status", async (req, res) => {
           lastLoginAt: user.lastLoginAt,
           phoneVerifiedAt: user.phoneVerifiedAt,
           profileCompleted: (user.verificationStatus != "INITIAL" && user.verificationStatus != "PENDING") ? true : false,
+          business: user.business || null,
         },
       });
     } catch (error) {

@@ -42,12 +42,23 @@ async function findUser(email, userId) {
   if (!userId && !email) throw new Error("User ID or email is required");
 
   try {
-    const userData = await db.PlatformUser.findOne({
+   const userData = await db.PlatformUser.findOne({
       where: {
         ...(email && { email: email }),
         ...(userId && { userId: userId }),
       },
+      attributes: {
+        exclude: ["user_deleted_at"], // Exclude sensitive/unnecessary fields
+      },
+      include: [
+        {
+          model: db.PartnerBusiness,
+          as: "business",
+          required: false, // LEFT JOIN - user may not have a business yet
+        },
+      ],
     });
+    
     if (!userData) {
       logger.warn(`User not found with ID: ${userId}`);
       throw new Error("User not found");

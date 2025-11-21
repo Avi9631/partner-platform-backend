@@ -8,6 +8,7 @@
  */
 
 const { partnerUserOnboarding } = require('./user/partnerOnboarding.workflow');
+const { partnerBusinessOnboarding } = require('./user/partnerBusinessOnboarding.workflow');
 
 
 /**
@@ -19,5 +20,6 @@ const { partnerUserOnboarding } = require('./user/partnerOnboarding.workflow');
 module.exports = {
 
     partnerUserOnboarding,
+    partnerBusinessOnboarding,
 
 };

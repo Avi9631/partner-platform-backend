@@ -10,6 +10,7 @@
 // User activities
 const userActivities = require('./user/user.activities');
 const partnerOnboardingActivities = require('./user/partnerOnboarding.activities');
+const partnerBusinessOnboardingActivities = require('./user/partnerBusinessOnboarding.activities');
 
  
 /**
@@ -25,5 +26,8 @@ module.exports = {
     
     // Partner onboarding activities
     ...partnerOnboardingActivities,
+    
+    // Partner business onboarding activities
+    ...partnerBusinessOnboardingActivities,
  
 };

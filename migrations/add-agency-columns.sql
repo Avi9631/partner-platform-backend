@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS partner_business (
     business_phone VARCHAR(20) NOT NULL,
     business_type ENUM('BUSINESS', 'DEVELOPER', 'BUILDER', 'CONSULTANT') DEFAULT 'BUSINESS',
     business_status ENUM('ACTIVE', 'INACTIVE', 'SUSPENDED', 'PENDING_VERIFICATION') DEFAULT 'PENDING_VERIFICATION',
-    verification_status ENUM('PENDING', 'VERIFIED', 'REJECTED') DEFAULT 'PENDING',
+    verification_status ENUM('PENDING', 'APPROVED', 'REJECTED') DEFAULT 'PENDING',
     verification_notes TEXT,
     verified_at DATETIME,
     verified_by INT,

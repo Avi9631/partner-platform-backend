@@ -70,15 +70,6 @@ async function updateUser(req, res, next) {
       'address'
     ];
     const updateFields = {};
-    
-    // Extract agency/business fields separately
-    const businessFields = {
-      agencyName: updateData.agencyName,
-      agencyRegistrationNumber: updateData.agencyRegistrationNumber,
-      agencyAddress: updateData.agencyAddress,
-      agencyEmail: updateData.agencyEmail,
-      agencyPhone: updateData.agencyPhone
-    };
 
     for (const field of allowedFields) {
       if (updateData[field] !== undefined && updateData[field] !== '') {
@@ -93,7 +84,7 @@ async function updateUser(req, res, next) {
       logger.info(`Profile video received for user ${userId}, size: ${profileVideo.size} bytes`);
     }
 
-    if (Object.keys(updateFields).length === 0) {
+    if (Object.keys(updateFields).length === 0 && !profileVideo) {
       return apiResponse
         .status(400)
         .withMessage("No valid fields to update")
@@ -122,30 +113,6 @@ async function updateUser(req, res, next) {
         .error();
     }
 
-    // Validate business email format if provided
-    if (businessFields.agencyEmail) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(businessFields.agencyEmail)) {
-        return apiResponse
-          .status(400)
-          .withMessage("Invalid business email format")
-          .withError("Business email must be a valid email address", "VALIDATION_ERROR", "updateUser")
-          .error();
-      }
-    }
-
-    // Validate business phone format if provided
-    if (businessFields.agencyPhone) {
-      const phoneRegex = /^[+]?[\d\s\-()]+$/;
-      if (!phoneRegex.test(businessFields.agencyPhone)) {
-        return apiResponse
-          .status(400)
-          .withMessage("Invalid business phone number format")
-          .withError("Business phone must contain only digits, spaces, +, -, ()", "VALIDATION_ERROR", "updateUser")
-          .error();
-      }
-    }
-
     // Validate coordinates if provided
     if (updateFields.latitude) {
       const lat = parseFloat(updateFields.latitude);
@@ -169,17 +136,6 @@ async function updateUser(req, res, next) {
           .error();
       }
       updateFields.longitude = lon;
-    }
-
-    // Update business profile if BUSINESS account type and business fields provided
-    if (updateData.accountType === 'BUSINESS' && businessFields.agencyName) {
-      try {
-        await PartnerBusinessService.createOrUpdateBusiness(userId, businessFields);
-        logger.info(`Business profile updated for user ${userId}`);
-      } catch (businessError) {
-        logger.error(`Failed to update business profile for user ${userId}:`, businessError);
-        // Continue with user update even if business update fails
-      }
     }
 
     // Update user
@@ -619,6 +575,313 @@ async function updateUserStatus(req, res, next) {
 }
 
 /**
+ * Onboard business partner - complete business profile setup for verification
+ * @route POST /partnerUser/businessOnboarding
+ * @body {businessName, registrationNumber, businessAddress, businessEmail, businessPhones: [{phone: string}]}
+ * @file ownerVideo (multipart/form-data)
+ * 
+ * This endpoint handles business partner onboarding with all required business details.
+ * Business profile is submitted for verification.
+ */
+async function onboardBusinessPartner(req, res, next) {
+  const apiResponse = new ApiResponse(req, res);
+
+  try {
+    const userId = req.user.userId;
+    const businessData = req.body;
+    const ownerVideo = req.file;
+
+    // Validate all required fields for business onboarding
+    const missingFields = [];
+    if (!businessData.businessName) missingFields.push("businessName");
+    if (!businessData.registrationNumber) missingFields.push("registrationNumber");
+    if (!businessData.businessAddress) missingFields.push("businessAddress");
+    if (!businessData.businessEmail) missingFields.push("businessEmail");
+    if (!ownerVideo) missingFields.push("ownerVideo");
+
+    // Parse businessPhones if it's a JSON string
+    if (businessData.businessPhones) {
+      try {
+        if (typeof businessData.businessPhones === 'string') {
+          businessData.businessPhones = JSON.parse(businessData.businessPhones);
+        }
+      } catch (parseError) {
+        return apiResponse
+          .status(400)
+          .withMessage("Invalid businessPhones format. Must be a JSON array of objects with 'phone' property.")
+          .withError("JSON parse error", "VALIDATION_ERROR", "onboardBusinessPartner")
+          .error();
+      }
+    }
+
+    // Validate businessPhones array
+    if (!businessData.businessPhones || !Array.isArray(businessData.businessPhones) || businessData.businessPhones.length === 0) {
+      missingFields.push("businessPhones");
+    }
+
+    if (missingFields.length > 0) {
+      return apiResponse
+        .status(400)
+        .withMessage(`Missing required fields for business onboarding: ${missingFields.join(", ")}`)
+        .withError("Missing required fields", "VALIDATION_ERROR", "onboardBusinessPartner")
+        .withMeta({ missingFields })
+        .error();
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(businessData.businessEmail)) {
+      return apiResponse
+        .status(400)
+        .withMessage("Invalid business email format")
+        .withError("Business email must be a valid email address", "VALIDATION_ERROR", "onboardBusinessPartner")
+        .error();
+    }
+
+    // Validate phone format for each phone in the array
+    const phoneRegex = /^[+]?[\d\s\-()]+$/;
+    for (let i = 0; i < businessData.businessPhones.length; i++) {
+      const phoneObj = businessData.businessPhones[i];
+      if (!phoneObj.phone || !phoneRegex.test(phoneObj.phone)) {
+        return apiResponse
+          .status(400)
+          .withMessage(`Invalid phone number format at index ${i}`)
+          .withError("Phone number must contain only digits, spaces, +, -, ()", "VALIDATION_ERROR", "onboardBusinessPartner")
+          .error();
+      }
+    }
+
+    // Get user email for notification
+    const currentUser = await UserService.getUser(userId);
+    
+    // Check if Temporal is available
+    const temporalEnabled = process.env.TEMPORAL_ENABLED === 'true';
+    
+    if (temporalEnabled) {
+      // Start temporal workflow for business partner onboarding
+      const workflowId = `business-onboarding-${userId}-${Date.now()}`;
+      
+      try {
+        const { workflowId: wfId } = await startWorkflow(
+          'partnerBusinessOnboarding',
+          {
+            userId,
+            email: currentUser.email,
+            businessData: {
+              businessName: businessData.businessName,
+              registrationNumber: businessData.registrationNumber,
+              businessAddress: businessData.businessAddress,
+              businessEmail: businessData.businessEmail,
+              businessPhones: businessData.businessPhones,
+            },
+            videoBuffer: ownerVideo.buffer,
+            originalFilename: ownerVideo.originalname,
+            videoMimetype: ownerVideo.mimetype,
+            videoSize: ownerVideo.size,
+          },
+          workflowId
+        );
+
+        logger.info(`Business onboarding workflow started for user ${userId}: ${wfId}`);
+
+        // Return accepted status immediately - workflow processes async
+        return apiResponse
+          .status(202)
+          .withMessage("Business profile submitted for verification. Processing in progress.")
+          .withData({ 
+            workflowId: wfId,
+            status: 'processing',
+            message: 'Your business profile is being processed. You will receive an email once verification is complete.'
+          })
+          .withMeta({
+            userId: userId,
+            businessOnboardingSubmitted: true,
+            workflowStarted: true,
+          })
+          .success();
+
+      } catch (workflowError) {
+        logger.error(`Failed to start business onboarding workflow for user ${userId}. Falling back to direct update.`, workflowError);
+        // Fall through to direct update
+      }
+    }
+    
+    // Fallback: Direct database update (when Temporal is disabled or fails)
+    logger.info(`Processing business onboarding directly for user ${userId} (Temporal: ${temporalEnabled ? 'failed' : 'disabled'})`);
+    
+    // Create business profile using service
+    try {
+      const business = await PartnerBusinessService.createOrUpdateBusiness(userId, {
+        agencyName: businessData.businessName,
+        agencyRegistrationNumber: businessData.registrationNumber,
+        agencyAddress: businessData.businessAddress,
+        agencyEmail: businessData.businessEmail,
+        agencyPhone: businessData.businessPhones,
+      });
+      
+      logger.info(`Business profile created for user ${userId}, ID: ${business.businessId}`);
+
+      apiResponse
+        .status(200)
+        .withMessage("Business profile submitted for verification successfully")
+        .withData({ 
+          business,
+          verificationStatus: 'PENDING'
+        })
+        .withMeta({
+          userId: userId,
+          businessOnboardingSubmitted: true,
+          ownerVideoUploaded: true,
+        })
+        .success();
+    } catch (businessError) {
+      logger.error(`Failed to create business profile for user ${userId}:`, businessError);
+      return apiResponse
+        .status(500)
+        .withMessage("Failed to create business profile")
+        .withError(businessError.message, "BUSINESS_CREATION_ERROR", "onboardBusinessPartner")
+        .error();
+    }
+  } catch (err) {
+    logger.error(`Error occurred during business partner onboarding:`, err.message);
+    apiResponse
+      .status(err.message === "User not found" ? 404 : 500)
+      .withMessage(err.message || "Failed to complete business onboarding")
+      .withError(err.message, err.code || "ONBOARD_BUSINESS_ERROR", "onboardBusinessPartner")
+      .withMeta({
+        userId: req.user?.userId,
+      })
+      .error();
+  }
+}
+
+/**
+ * Update business profile information
+ * @route PATCH /partnerUser/updateBusiness
+ * @body {businessName?, registrationNumber?, businessAddress?, businessEmail?, businessPhones?: [{phone: string}]}
+ */
+async function updateBusinessProfile(req, res, next) {
+  const apiResponse = new ApiResponse(req, res);
+
+  try {
+    const userId = req.user.userId;
+    const updateData = req.body;
+
+    // Validate that user has BUSINESS account type
+    const user = await UserService.getUser(userId);
+    if (user.accountType !== 'BUSINESS') {
+      return apiResponse
+        .status(403)
+        .withMessage("Business profile update is only available for BUSINESS accounts")
+        .withError("User is not a business account", "AUTHORIZATION_ERROR", "updateBusinessProfile")
+        .error();
+    }
+
+    // Validate update data
+    if (!updateData || Object.keys(updateData).length === 0) {
+      return apiResponse
+        .status(400)
+        .withMessage("No update data provided")
+        .withError("No fields to update", "VALIDATION_ERROR", "updateBusinessProfile")
+        .error();
+    }
+
+    // Parse businessPhones if it's a JSON string
+    if (updateData.businessPhones) {
+      try {
+        if (typeof updateData.businessPhones === 'string') {
+          updateData.businessPhones = JSON.parse(updateData.businessPhones);
+        }
+      } catch (parseError) {
+        return apiResponse
+          .status(400)
+          .withMessage("Invalid businessPhones format. Must be a JSON array of objects with 'phone' property.")
+          .withError("JSON parse error", "VALIDATION_ERROR", "updateBusinessProfile")
+          .error();
+      }
+    }
+
+    // Prepare business fields
+    const businessFields = {};
+    if (updateData.businessName) businessFields.agencyName = updateData.businessName;
+    if (updateData.registrationNumber) businessFields.agencyRegistrationNumber = updateData.registrationNumber;
+    if (updateData.businessAddress) businessFields.agencyAddress = updateData.businessAddress;
+    if (updateData.businessEmail) businessFields.agencyEmail = updateData.businessEmail;
+    if (updateData.businessPhones) businessFields.agencyPhone = updateData.businessPhones;
+
+    if (Object.keys(businessFields).length === 0) {
+      return apiResponse
+        .status(400)
+        .withMessage("No valid business fields to update")
+        .withError("Invalid update fields", "VALIDATION_ERROR", "updateBusinessProfile")
+        .error();
+    }
+
+    // Validate email format if provided
+    if (businessFields.agencyEmail) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(businessFields.agencyEmail)) {
+        return apiResponse
+          .status(400)
+          .withMessage("Invalid business email format")
+          .withError("Business email must be a valid email address", "VALIDATION_ERROR", "updateBusinessProfile")
+          .error();
+      }
+    }
+
+    // Validate phone format for each phone in the array
+    if (businessFields.agencyPhone) {
+      if (!Array.isArray(businessFields.agencyPhone) || businessFields.agencyPhone.length === 0) {
+        return apiResponse
+          .status(400)
+          .withMessage("businessPhones must be a non-empty array")
+          .withError("Invalid phone format", "VALIDATION_ERROR", "updateBusinessProfile")
+          .error();
+      }
+
+      const phoneRegex = /^[+]?[\d\s\-()]+$/;
+      for (let i = 0; i < businessFields.agencyPhone.length; i++) {
+        const phoneObj = businessFields.agencyPhone[i];
+        if (!phoneObj.phone || !phoneRegex.test(phoneObj.phone)) {
+          return apiResponse
+            .status(400)
+            .withMessage(`Invalid phone number format at index ${i}`)
+            .withError("Phone number must contain only digits, spaces, +, -, ()", "VALIDATION_ERROR", "updateBusinessProfile")
+            .error();
+        }
+      }
+    }
+
+    // Update business profile
+    const updatedBusiness = await PartnerBusinessService.createOrUpdateBusiness(userId, businessFields);
+    
+    logger.info(`Business profile updated for user ${userId}`);
+
+    apiResponse
+      .status(200)
+      .withMessage("Business profile updated successfully")
+      .withData({ 
+        business: updatedBusiness
+      })
+      .withMeta({
+        userId: userId,
+        updatedFields: Object.keys(businessFields),
+      })
+      .success();
+  } catch (err) {
+    logger.error(`Error occurred while updating business profile:`, err.message);
+    apiResponse
+      .status(err.message === "User not found" ? 404 : 500)
+      .withMessage(err.message || "Failed to update business profile")
+      .withError(err.message, err.code || "UPDATE_BUSINESS_ERROR", "updateBusinessProfile")
+      .withMeta({
+        userId: req.user?.userId,
+      })
+      .error();
+  }
+}
+
+/**
  * Approve user verification (admin function - add auth check for admin role)
  * @route PATCH /partnerUser/approveVerification
  * @body {targetUserId: number, verificationNotes?: string}
@@ -729,7 +992,9 @@ async function rejectVerification(req, res, next) {
 module.exports = {
   getUser,
   updateUser,
+  updateBusinessProfile,
   onboardUser,
+  onboardBusinessPartner,
   verifyPhone,
   getAllUsers,
   updateUserStatus,

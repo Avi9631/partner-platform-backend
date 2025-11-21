@@ -29,6 +29,9 @@ const upload = multer({
 // Middleware for single profile video upload
 const uploadProfileVideo = upload.single("profileVideo");
 
+// Middleware for single owner video upload (for business onboarding)
+const uploadOwnerVideo = upload.single("ownerVideo");
+
 // Error handling middleware for multer
 const handleUploadError = (err, req, res, next) => {
   if (err instanceof multer.MulterError) {
@@ -56,5 +59,6 @@ const handleUploadError = (err, req, res, next) => {
 
 module.exports = {
   uploadProfileVideo,
+  uploadOwnerVideo,
   handleUploadError,
 };

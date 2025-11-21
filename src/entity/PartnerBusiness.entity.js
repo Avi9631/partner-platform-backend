@@ -39,9 +39,14 @@ module.exports = (sequelize, Sequelize) => {
       businessPhone: {
         type: Sequelize.JSONB,
         field: "business_phone",
-      },  
+      },
+      ownerVideo: {
+        type: Sequelize.TEXT,
+        field: "owner_video",
+        comment: "URL to the owner verification video stored in Supabase/S3"
+      },
       verificationStatus: {
-        type: Sequelize.ENUM('PENDING', 'VERIFIED', 'REJECTED'),
+        type: Sequelize.ENUM('PENDING', 'AUTOMATED_REVIEW','MANUAL_REVIEW' ,  'APPROVED', 'REJECTED'),
         field: "verification_status",
         defaultValue: 'PENDING'
       },

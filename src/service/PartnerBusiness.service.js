@@ -94,13 +94,13 @@ async function getBusinessById(businessId) {
 /**
  * Update business verification status
  * @param {number} businessId - Business ID
- * @param {string} status - Verification status (PENDING, VERIFIED, REJECTED)
+ * @param {string} status - Verification status (PENDING, APPROVED, REJECTED)
  * @param {string} notes - Verification notes
  * @param {number} verifiedBy - User ID of verifier
  * @returns {Promise<Object>} Updated business data
  */
 async function updateVerificationStatus(businessId, status, notes = null, verifiedBy = null) {
-  const validStatuses = ['PENDING', 'VERIFIED', 'REJECTED'];
+  const validStatuses = ['PENDING', 'APPROVED', 'REJECTED'];
   
   if (!validStatuses.includes(status)) {
     throw new Error(`Invalid verification status. Must be one of: ${validStatuses.join(', ')}`);
@@ -118,7 +118,7 @@ async function updateVerificationStatus(businessId, status, notes = null, verifi
       verificationNotes: notes
     };
 
-    if (status === 'VERIFIED') {
+    if (status === 'APPROVED') {
       updateFields.verifiedAt = new Date();
       updateFields.verifiedBy = verifiedBy;
       updateFields.businessStatus = 'ACTIVE';

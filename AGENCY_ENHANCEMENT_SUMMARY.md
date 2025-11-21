@@ -27,7 +27,7 @@ Created a new `partner_business` table with the following structure:
 - `business_phone` VARCHAR(20)
 - `business_type` ENUM (BUSINESS, DEVELOPER, BUILDER, CONSULTANT)
 - `business_status` ENUM (ACTIVE, INACTIVE, SUSPENDED, PENDING_VERIFICATION)
-- `verification_status` ENUM (PENDING, VERIFIED, REJECTED)
+- `verification_status` ENUM (PENDING, APPROVED, REJECTED)
 - `verification_notes` TEXT
 - `verified_at` DATETIME
 - `verified_by` INT
