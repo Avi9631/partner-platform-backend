@@ -114,11 +114,11 @@ async function updateUser(req, res, next) {
     }
 
     // Validate account type if provided
-    if (updateFields.accountType && !['INDIVIDUAL', 'AGENT', 'AGENCY'].includes(updateFields.accountType)) {
+    if (updateFields.accountType && !['INDIVIDUAL', 'AGENT', 'BUSINESS'].includes(updateFields.accountType)) {
       return apiResponse
         .status(400)
         .withMessage("Invalid account type")
-        .withError("Account type must be INDIVIDUAL, AGENT, or AGENCY", "VALIDATION_ERROR", "updateUser")
+        .withError("Account type must be INDIVIDUAL, AGENT, or BUSINESS", "VALIDATION_ERROR", "updateUser")
         .error();
     }
 
@@ -171,8 +171,8 @@ async function updateUser(req, res, next) {
       updateFields.longitude = lon;
     }
 
-    // Update business profile if AGENCY account type and business fields provided
-    if (updateData.accountType === 'AGENCY' && businessFields.agencyName) {
+    // Update business profile if BUSINESS account type and business fields provided
+    if (updateData.accountType === 'BUSINESS' && businessFields.agencyName) {
       try {
         await PartnerBusinessService.createOrUpdateBusiness(userId, businessFields);
         logger.info(`Business profile updated for user ${userId}`);
@@ -185,9 +185,9 @@ async function updateUser(req, res, next) {
     // Update user
     const updatedUser = await UserService.updateUser(userId, updateFields, false);
     
-    // Include business data in response if AGENCY account type
+    // Include business data in response if BUSINESS account type
     let businessData = null;
-    if (updatedUser.accountType === 'AGENCY') {
+    if (updatedUser.accountType === 'BUSINESS') {
       try {
         businessData = await PartnerBusinessService.getBusinessByUserId(userId);
       } catch (businessError) {
@@ -243,18 +243,18 @@ async function onboardUser(req, res, next) {
     if (!onboardingData.firstName) missingFields.push("firstName");
     if (!onboardingData.lastName) missingFields.push("lastName");
     if (!onboardingData.phone) missingFields.push("phone");
-    if (!onboardingData.accountType) missingFields.push("accountType");
+    // if (!onboardingData.accountType) missingFields.push("accountType");
     if (!onboardingData.latitude || !onboardingData.longitude) missingFields.push("location");
     if (!profileVideo) missingFields.push("profileVideo");
 
-    // Additional validation for AGENCY account type
-    if (onboardingData.accountType === 'AGENCY') {
-      if (!onboardingData.agencyName) missingFields.push("agencyName");
-      if (!onboardingData.agencyRegistrationNumber) missingFields.push("agencyRegistrationNumber");
-      if (!onboardingData.agencyAddress) missingFields.push("agencyAddress");
-      if (!onboardingData.agencyEmail) missingFields.push("agencyEmail");
-      if (!onboardingData.agencyPhone) missingFields.push("agencyPhone");
-    }
+    // Additional validation for BUSINESS account type
+    // if (onboardingData.accountType === 'BUSINESS') {
+    //   if (!onboardingData.agencyName) missingFields.push("agencyName");
+    //   if (!onboardingData.agencyRegistrationNumber) missingFields.push("agencyRegistrationNumber");
+    //   if (!onboardingData.agencyAddress) missingFields.push("agencyAddress");
+    //   if (!onboardingData.agencyEmail) missingFields.push("agencyEmail");
+    //   if (!onboardingData.agencyPhone) missingFields.push("agencyPhone");
+    // }
 
     if (missingFields.length > 0) {
       return apiResponse
@@ -266,13 +266,13 @@ async function onboardUser(req, res, next) {
     }
 
     // Validate account type
-    if (!['INDIVIDUAL', 'AGENT', 'AGENCY'].includes(onboardingData.accountType)) {
-      return apiResponse
-        .status(400)
-        .withMessage("Invalid account type")
-        .withError("Account type must be INDIVIDUAL, AGENT, or AGENCY", "VALIDATION_ERROR", "onboardUser")
-        .error();
-    }
+    // if (!['INDIVIDUAL', 'AGENT', 'BUSINESS'].includes(onboardingData.accountType)) {
+    //   return apiResponse
+    //     .status(400)
+    //     .withMessage("Invalid account type")
+    //     .withError("Account type must be INDIVIDUAL, AGENT, or BUSINESS", "VALIDATION_ERROR", "onboardUser")
+    //     .error();
+    // }
 
     // Validate phone format
     const phoneRegex = /^[+]?[\d\s\-()]+$/;
@@ -332,7 +332,7 @@ async function onboardUser(req, res, next) {
       firstName: onboardingData.firstName,
       lastName: onboardingData.lastName,
       phone: onboardingData.phone,
-      accountType: onboardingData.accountType,
+      // accountType: onboardingData.accountType,
       latitude: lat,
       longitude: lon,
       address: onboardingData.address || null,
@@ -341,14 +341,14 @@ async function onboardUser(req, res, next) {
       // Note: profileVideo will be set by the workflow after S3 upload
     };
 
-    // Prepare business fields for AGENCY accounts
-    const businessFields = onboardingData.accountType === 'AGENCY' ? {
-      agencyName: onboardingData.agencyName,
-      agencyRegistrationNumber: onboardingData.agencyRegistrationNumber,
-      agencyAddress: onboardingData.agencyAddress,
-      agencyEmail: onboardingData.agencyEmail,
-      agencyPhone: onboardingData.agencyPhone
-    } : null;
+    // Prepare business fields for BUSINESS accounts
+    // const businessFields = onboardingData.accountType === 'BUSINESS' ? {
+    //   agencyName: onboardingData.agencyName,
+    //   agencyRegistrationNumber: onboardingData.agencyRegistrationNumber,
+    //   agencyAddress: onboardingData.agencyAddress,
+    //   agencyEmail: onboardingData.agencyEmail,
+    //   agencyPhone: onboardingData.agencyPhone
+    // } : null;
 
     // Get user email for notification
     const currentUser = await UserService.getUser(userId);
@@ -373,9 +373,9 @@ async function onboardUser(req, res, next) {
               latitude: updateFields.latitude,
               longitude: updateFields.longitude,
               address: updateFields.address,
-              accountType: updateFields.accountType,
+              // accountType: updateFields.accountType,
             },
-            businessData: businessFields,
+            // businessData: businessFields,
             videoBuffer: profileVideo.buffer,
             originalFilename: profileVideo.originalname,
             videoMimetype: profileVideo.mimetype,
@@ -412,40 +412,40 @@ async function onboardUser(req, res, next) {
     // Fallback: Direct database update (when Temporal is disabled or fails)
     logger.info(`Processing onboarding directly for user ${userId} (Temporal: ${temporalEnabled ? 'failed' : 'disabled'})`);
     
-    // Create business profile if AGENCY account type
-    if (businessFields) {
-      try {
-        await PartnerBusinessService.createOrUpdateBusiness(userId, businessFields);
-        logger.info(`Business profile created during onboarding for user ${userId}`);
-      } catch (businessError) {
-        logger.error(`Failed to create business profile during onboarding for user ${userId}:`, businessError);
-        return apiResponse
-          .status(500)
-          .withMessage("Failed to create business profile")
-          .withError(businessError.message, "BUSINESS_PROFILE_ERROR", "onboardUser")
-          .error();
-      }
-    }
+    // Create business profile if BUSINESS account type
+    // if (businessFields) {
+    //   try {
+    //     await PartnerBusinessService.createOrUpdateBusiness(userId, businessFields);
+    //     logger.info(`Business profile created during onboarding for user ${userId}`);
+    //   } catch (businessError) {
+    //     logger.error(`Failed to create business profile during onboarding for user ${userId}:`, businessError);
+    //     return apiResponse
+    //       .status(500)
+    //       .withMessage("Failed to create business profile")
+    //       .withError(businessError.message, "BUSINESS_PROFILE_ERROR", "onboardUser")
+    //       .error();
+    //   }
+    // }
 
     // Update user with onboarding data
     const updatedUser = await UserService.updateUser(userId, updateFields, false);
     
-    // Include business data in response if AGENCY account type
-    let businessData = null;
-    if (updatedUser.accountType === 'AGENCY') {
-      try {
-        businessData = await PartnerBusinessService.getBusinessByUserId(userId);
-      } catch (businessError) {
-        logger.warn(`Could not fetch business data for user ${userId}:`, businessError);
-      }
-    }
+    // Include business data in response if BUSINESS account type
+    // let businessData = null;
+    // if (updatedUser.accountType === 'BUSINESS') {
+    //   try {
+    //     businessData = await PartnerBusinessService.getBusinessByUserId(userId);
+    //   } catch (businessError) {
+    //     logger.warn(`Could not fetch business data for user ${userId}:`, businessError);
+    //   }
+    // }
 
     apiResponse
       .status(200)
       .withMessage("Onboarding profile submitted for verification successfully")
       .withData({ 
         user: updatedUser,
-        business: businessData
+        // business: businessData
       })
       .withMeta({
         userId: userId,

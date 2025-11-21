@@ -54,21 +54,21 @@ A **separate entity** (`PartnerBusiness`) to store agency/business information i
 
 3. **`migrations/add-agency-columns.sql`**
    - Creates `partner_business` table
-   - Updates `platform_user.user_account_type` ENUM to include 'AGENCY'
+   - Updates `platform_user.user_account_type` ENUM to include 'BUSINESS'
 
 4. **`src/entity/index.js`**
    - Added PartnerBusiness entity
    - Defined hasOne/belongsTo relationships
 
 5. **`src/entity/PlatformUser.entity.js`**
-   - Updated accountType ENUM: 'INDIVIDUAL', 'AGENT', 'AGENCY'
+   - Updated accountType ENUM: 'INDIVIDUAL', 'AGENT', 'BUSINESS'
    - Removed agency fields (kept clean)
 
 6. **`src/controller/User.controller.js`**
    - Imports PartnerBusinessService
    - Extracts businessFields separately from updateData
    - Validates business email and phone formats
-   - Creates business profile when accountType=AGENCY
+   - Creates business profile when accountType=BUSINESS
    - Returns business data in response
 
 7. **`src/temporal/workflows/user/partnerOnboarding.workflow.js`**
@@ -97,7 +97,7 @@ A **separate entity** (`PartnerBusiness`) to store agency/business information i
 
 2. Controller validates
    ├─ Basic user fields ✓
-   ├─ Business fields (if AGENCY) ✓
+   ├─ Business fields (if BUSINESS) ✓
    ├─ Email format ✓
    └─ Phone format ✓
 
@@ -132,7 +132,7 @@ A **separate entity** (`PartnerBusiness`) to store agency/business information i
   firstName: "TECHFUSION"           → user_first_name
   lastName: "STUDIO"                → user_last_name
   phone: "+919631045873"            → user_phone
-  accountType: "AGENCY"             → user_account_type
+  accountType: "BUSINESS"             → user_account_type
   latitude: 22.7803136              → user_latitude
   longitude: 86.2650368             → user_longitude
   address: "Jamshedpur..."          → user_address
@@ -151,7 +151,7 @@ A **separate entity** (`PartnerBusiness`) to store agency/business information i
   userStatus: "ACTIVE"
   
   // In partner_business:
-  businessType: "AGENCY"
+  businessType: "BUSINESS"
   businessStatus: "PENDING_VERIFICATION"
   verificationStatus: "PENDING"
 }
@@ -191,7 +191,7 @@ const business = await PartnerBusinessService.updateVerificationStatus(
 const result = await PartnerBusinessService.getAllBusinesses(
   { 
     verificationStatus: 'PENDING',
-    businessType: 'AGENCY',
+    businessType: 'BUSINESS',
     search: 'SRKVD'
   },
   page = 1,
@@ -223,7 +223,7 @@ curl -X PATCH http://localhost:3000/api/partnerUser/update \
   -F "firstName=TECHFUSION" \
   -F "lastName=STUDIO" \
   -F "phone=+919631045873" \
-  -F "accountType=AGENCY" \
+  -F "accountType=BUSINESS" \
   -F "latitude=22.7803136" \
   -F "longitude=86.2650368" \
   -F "address=Jamshedpur..." \
@@ -246,7 +246,7 @@ curl -X PATCH http://localhost:3000/api/partnerUser/update \
       "userId": 123,
       "firstName": "TECHFUSION",
       "lastName": "STUDIO",
-      "accountType": "AGENCY",
+      "accountType": "BUSINESS",
       "profileCompleted": true,
       "verificationStatus": "PENDING"
     },
@@ -258,7 +258,7 @@ curl -X PATCH http://localhost:3000/api/partnerUser/update \
       "businessAddress": "FLAT - 601...",
       "businessEmail": "avi@gmail.com",
       "businessPhone": "+919631045873",
-      "businessType": "AGENCY",
+      "businessType": "BUSINESS",
       "businessStatus": "PENDING_VERIFICATION",
       "verificationStatus": "PENDING"
     }
@@ -326,7 +326,7 @@ WHERE u.user_id = 123;
 1. **One-to-One Relationship**: Currently, each user can have ONE business profile
 2. **Cascade Delete**: Deleting a user will delete their business profile
 3. **Soft Delete**: Business records are soft-deleted (paranoid mode)
-4. **Required for AGENCY**: Business fields are required only when `accountType=AGENCY`
+4. **Required for BUSINESS**: Business fields are required only when `accountType=BUSINESS`
 5. **Validation**: Both controller and Temporal activities validate business data
 6. **Service Layer**: Always use PartnerBusinessService for business operations
 
@@ -346,13 +346,13 @@ WHERE u.user_id = 123;
 **Solution**: Run the migration file
 
 ### Issue: "Cannot read property 'business' of null"
-**Solution**: Business is created only for AGENCY account type
+**Solution**: Business is created only for BUSINESS account type
 
 ### Issue: "Duplicate entry for key 'user_id'"
 **Solution**: Each user can have only one business profile. Use update instead of create.
 
 ### Issue: "Validation failed: businessName is required"
-**Solution**: When accountType=AGENCY, all business fields are required
+**Solution**: When accountType=BUSINESS, all business fields are required
 
 ---
 

@@ -16,7 +16,7 @@ const path = require('path');
 /**
  * Validate Business Data Activity
  * 
- * Validates business/agency information for AGENCY account type.
+ * Validates business/agency information for BUSINESS account type.
  * 
  * @param {Object} businessData - Business data to validate
  * @returns {Promise<{success: boolean, errors?: string[]}>}
@@ -28,7 +28,7 @@ async function validateBusinessData(businessData) {
         const errors = [];
         
         if (!businessData) {
-            errors.push('Business data is required for AGENCY account type');
+            errors.push('Business data is required for BUSINESS account type');
             return { success: false, errors };
         }
         
@@ -130,7 +130,7 @@ async function validateProfileData(profileData) {
         
         // Validate account type if provided
         if (profileData.accountType) {
-            const validTypes = ['INDIVIDUAL', 'AGENT', 'AGENCY'];
+            const validTypes = ['INDIVIDUAL', 'AGENT', 'BUSINESS'];
             if (!validTypes.includes(profileData.accountType)) {
                 errors.push(`Invalid account type. Must be one of: ${validTypes.join(', ')}`);
             }

@@ -16,10 +16,10 @@ const { ACTIVITY_OPTIONS } = require('../../config/constants');
 // Proxy partner onboarding activities with appropriate timeouts
 const {
     validateProfileData,
-    validateBusinessData,
+    // validateBusinessData,
     uploadVideoToSupabase,
     updatePartnerUser,
-    createPartnerBusiness,
+    // createPartnerBusiness,
     sendOnboardingNotification,
 } = proxyActivities({
     startToCloseTimeout: '5 minutes', // Longer timeout for video upload
@@ -45,7 +45,7 @@ const {
  * @param {number} workflowInput.userId - User ID
  * @param {string} workflowInput.email - User email
  * @param {Object} workflowInput.profileData - Profile data (firstName, lastName, phone, location, etc.)
- * @param {Object} workflowInput.businessData - Business/agency data (for AGENCY account type)
+ * @param {Object} workflowInput.businessData - Business/agency data (for BUSINESS account type)
  * @param {Buffer} workflowInput.videoBuffer - Video file buffer
  * @param {string} workflowInput.originalFilename - Original video filename
  * @param {string} workflowInput.videoMimetype - Video MIME type
@@ -102,19 +102,19 @@ async function partnerUserOnboarding(workflowInput) {
         
         console.log(`[Partner Onboarding] Profile validation successful`);
         
-        // Step 1.5: Validate business data if AGENCY account type
-        if (profileData.accountType === 'AGENCY' && businessData) {
-            console.log(`[Partner Onboarding] Step 1.5: Validating business data`);
+        // // Step 1.5: Validate business data if BUSINESS account type
+        // if (profileData.accountType === 'BUSINESS' && businessData) {
+        //     console.log(`[Partner Onboarding] Step 1.5: Validating business data`);
             
-            const businessValidationResult = await validateBusinessData(businessData);
+        //     const businessValidationResult = await validateBusinessData(businessData);
             
-            if (!businessValidationResult.success) {
-                console.error(`[Partner Onboarding] Business validation failed:`, businessValidationResult.errors);
-                throw new Error(`Business validation failed: ${businessValidationResult.errors.join(', ')}`);
-            }
+        //     if (!businessValidationResult.success) {
+        //         console.error(`[Partner Onboarding] Business validation failed:`, businessValidationResult.errors);
+        //         throw new Error(`Business validation failed: ${businessValidationResult.errors.join(', ')}`);
+        //     }
             
-            console.log(`[Partner Onboarding] Business validation successful`);
-        }
+        //     console.log(`[Partner Onboarding] Business validation successful`);
+        // }
         
         // Step 2: Upload video to Supabase using S3 protocol
         console.log(`[Partner Onboarding] Step 2: Uploading video to Supabase`);
@@ -148,23 +148,23 @@ async function partnerUserOnboarding(workflowInput) {
         
         console.log(`[Partner Onboarding] User record updated successfully`);
         
-        // Step 3.5: Create business profile if AGENCY account type
-        let businessResult = null;
-        if (profileData.accountType === 'AGENCY' && businessData) {
-            console.log(`[Partner Onboarding] Step 3.5: Creating business profile`);
+        // Step 3.5: Create business profile if BUSINESS account type
+        // let businessResult = null;
+        // if (profileData.accountType === 'BUSINESS' && businessData) {
+        //     console.log(`[Partner Onboarding] Step 3.5: Creating business profile`);
             
-            businessResult = await createPartnerBusiness({
-                userId,
-                businessData,
-            });
+        //     businessResult = await createPartnerBusiness({
+        //         userId,
+        //         businessData,
+        //     });
             
-            if (!businessResult.success) {
-                console.error(`[Partner Onboarding] Business creation failed`);
-                // Don't fail the entire workflow, just log the error
-            } else {
-                console.log(`[Partner Onboarding] Business profile created successfully`);
-            }
-        }
+        //     if (!businessResult.success) {
+        //         console.error(`[Partner Onboarding] Business creation failed`);
+        //         // Don't fail the entire workflow, just log the error
+        //     } else {
+        //         console.log(`[Partner Onboarding] Business profile created successfully`);
+        //     }
+        // }
         
         // Step 4: Send onboarding notification email
         console.log(`[Partner Onboarding] Step 4: Sending notification email`);

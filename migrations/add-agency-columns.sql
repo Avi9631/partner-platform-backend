@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS partner_business (
     business_address TEXT NOT NULL,
     business_email VARCHAR(100) NOT NULL,
     business_phone VARCHAR(20) NOT NULL,
-    business_type ENUM('AGENCY', 'DEVELOPER', 'BUILDER', 'CONSULTANT') DEFAULT 'AGENCY',
+    business_type ENUM('BUSINESS', 'DEVELOPER', 'BUILDER', 'CONSULTANT') DEFAULT 'BUSINESS',
     business_status ENUM('ACTIVE', 'INACTIVE', 'SUSPENDED', 'PENDING_VERIFICATION') DEFAULT 'PENDING_VERIFICATION',
     verification_status ENUM('PENDING', 'VERIFIED', 'REJECTED') DEFAULT 'PENDING',
     verification_notes TEXT,
@@ -35,6 +35,6 @@ CREATE TABLE IF NOT EXISTS partner_business (
 -- Add comments
 ALTER TABLE partner_business COMMENT = 'Stores business/agency information for partner users';
 
--- Update platform_user accountType enum to include AGENCY
+-- Update platform_user accountType enum to include BUSINESS
 ALTER TABLE platform_user 
-MODIFY COLUMN user_account_type ENUM('INDIVIDUAL', 'AGENT', 'AGENCY') DEFAULT 'INDIVIDUAL';
+MODIFY COLUMN user_account_type ENUM('INDIVIDUAL', 'AGENT', 'BUSINESS') DEFAULT 'INDIVIDUAL';

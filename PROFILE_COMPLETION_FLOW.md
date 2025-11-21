@@ -37,10 +37,10 @@
 ┌─────────────────────────────────────────────────────────────┐
 │ 3. TEMPORAL WORKFLOW PROCESSES                               │
 │    - Validates profile data                                  │
-│    - Validates business data (if AGENCY)                     │
+│    - Validates business data (if BUSINESS)                     │
 │    - Uploads video to Supabase                               │
 │    - Updates user record (verificationStatus: PENDING)       │
-│    - Creates business profile (if AGENCY)                    │
+│    - Creates business profile (if BUSINESS)                    │
 │    - Sends notification email                                │
 └────────────────────┬────────────────────────────────────────┘
                      │
@@ -49,7 +49,7 @@
 │ 4. ADMIN REVIEWS PROFILE                                     │
 │    - Reviews submitted information                           │
 │    - Verifies video                                          │
-│    - Checks business registration (if AGENCY)                │
+│    - Checks business registration (if BUSINESS)                │
 └────────────────────┬────────────────────────────────────────┘
                      │
            ┌─────────┴─────────┐
@@ -111,13 +111,13 @@ Content-Type: multipart/form-data
 firstName: TECHFUSION
 lastName: STUDIO
 phone: +919631045873
-accountType: AGENCY
+accountType: BUSINESS
 latitude: 22.7803136
 longitude: 86.2650368
 address: Jamshedpur...
 profileVideo: (binary file)
 
-# If AGENCY, also required:
+# If BUSINESS, also required:
 agencyName: SRKVD
 agencyRegistrationNumber: RERA948789599
 agencyAddress: FLAT - 601...
@@ -137,7 +137,7 @@ agencyPhone: +919631045873
       "profileCompleted": false,
       "userStatus": "ACTIVE"
     },
-    "business": { /* if AGENCY */ }
+    "business": { /* if BUSINESS */ }
   },
   "meta": {
     "profileSetupSubmitted": true,
@@ -296,7 +296,7 @@ curl -X PATCH http://localhost:3000/api/partnerUser/update \
   -F "firstName=TECHFUSION" \
   -F "lastName=STUDIO" \
   -F "phone=+919631045873" \
-  -F "accountType=AGENCY" \
+  -F "accountType=BUSINESS" \
   -F "latitude=22.7803136" \
   -F "longitude=86.2650368" \
   -F "address=Jamshedpur..." \

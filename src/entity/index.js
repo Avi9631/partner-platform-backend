@@ -30,7 +30,7 @@ db.PartnerBusiness = require("./PartnerBusiness.entity.js")(sequelize, Sequelize
 db.ListingDraft = require("./ListingDraft.entity.js")(sequelize, Sequelize);
  
 // Relationships
-// User has one PartnerBusiness (for AGENCY account type)
+// User has one PartnerBusiness (for BUSINESS account type)
 db.PlatformUser.hasOne(db.PartnerBusiness, {
     foreignKey: 'user_id',
     as: 'business'

@@ -30,7 +30,7 @@ module.exports = (sequelize, Sequelize) => {
         field: "user_phone"
       }, 
       accountType: {
-        type: Sequelize.ENUM( 'INDIVIDUAL', 'AGENCY'),
+        type: Sequelize.ENUM( 'INDIVIDUAL', 'BUSINESS'),
         field: "user_account_type",
         defaultValue: 'INDIVIDUAL'
       }, 

@@ -21,7 +21,7 @@ async function createOrUpdateBusiness(userId, businessData) {
       businessAddress: businessData.agencyAddress,
       businessEmail: businessData.agencyEmail,
       businessPhone: businessData.agencyPhone,
-      businessType: 'AGENCY',
+      businessType: 'BUSINESS',
       businessStatus: 'PENDING_VERIFICATION',
       verificationStatus: 'PENDING'
     };

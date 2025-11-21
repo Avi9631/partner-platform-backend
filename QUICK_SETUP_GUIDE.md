@@ -69,7 +69,7 @@ User Data (platform_user)  +  Business Data (partner_business)
 - ✅ latitude/longitude
 - ✅ profileVideo
 
-### Additional for AGENCY Users
+### Additional for BUSINESS Users
 - ✅ agencyName (required)
 - ✅ agencyRegistrationNumber (required)
 - ✅ agencyAddress (required)
@@ -88,7 +88,7 @@ POST /partnerUser/update
 firstName=TECHFUSION
 lastName=STUDIO
 phone=+919631045873
-accountType=AGENCY          // ✅ Now supported
+accountType=BUSINESS          // ✅ Now supported
 latitude=22.7803136
 longitude=86.2650368
 address=Jamshedpur, Golmuri-Cum-Jugsalai, East Singhbhum...
@@ -109,7 +109,7 @@ profileVideo=(binary)
   "data": {
     "user": {
       "userId": 123,
-      "accountType": "AGENCY",
+      "accountType": "BUSINESS",
       "profileCompleted": true,
       "verificationStatus": "PENDING"
     },
@@ -130,7 +130,7 @@ profileVideo=(binary)
 ## 🔍 Troubleshooting
 
 ### Error: "Missing required fields: agencyName, agencyEmail"
-**Cause**: You're using `accountType=AGENCY` but didn't provide all agency fields
+**Cause**: You're using `accountType=BUSINESS` but didn't provide all agency fields
 **Fix**: Provide all 5 required agency fields
 
 ### Error: "Invalid agency email format"
@@ -142,8 +142,8 @@ profileVideo=(binary)
 **Fix**: Run the database migration (Step 1 above)
 
 ### Error: "Invalid account type"
-**Cause**: Using old 'ORGANIZATION' instead of 'AGENCY'
-**Fix**: Use `accountType=AGENCY`
+**Cause**: Using old 'ORGANIZATION' instead of 'BUSINESS'
+**Fix**: Use `accountType=BUSINESS`
 
 ---
 
@@ -160,7 +160,7 @@ profileVideo=(binary)
 | `business_address` | TEXT | Registered office address |
 | `business_email` | VARCHAR(100) | Official business email |
 | `business_phone` | VARCHAR(20) | Official business phone |
-| `business_type` | ENUM | AGENCY, DEVELOPER, BUILDER, CONSULTANT |
+| `business_type` | ENUM | BUSINESS, DEVELOPER, BUILDER, CONSULTANT |
 | `business_status` | ENUM | Status of the business |
 | `verification_status` | ENUM | Verification status |
 
@@ -171,14 +171,14 @@ platform_user (1) ←→ (1) partner_business
 
 ### ENUM Change in `platform_user`
 - **Before**: `user_account_type` = ENUM('INDIVIDUAL', 'AGENT', 'ORGANIZATION')
-- **After**: `user_account_type` = ENUM('INDIVIDUAL', 'AGENT', 'AGENCY')
+- **After**: `user_account_type` = ENUM('INDIVIDUAL', 'AGENT', 'BUSINESS')
 
 ---
 
 ## 🎯 Complete Workflow
 
 ```
-1. User submits profile with accountType=AGENCY
+1. User submits profile with accountType=BUSINESS
                     ↓
 2. Controller validates all agency fields
                     ↓
@@ -212,7 +212,7 @@ platform_user (1) ←→ (1) partner_business
 ### Checklist
 - [ ] Database migration executed successfully
 - [ ] Server restarted
-- [ ] API tested with AGENCY payload
+- [ ] API tested with BUSINESS payload
 - [ ] Verified data saved in database
 - [ ] Frontend updated to collect agency fields (if applicable)
 
@@ -236,9 +236,9 @@ SELECT * FROM partner_business WHERE user_id = YOUR_USER_ID;
 ## 💡 Pro Tips
 
 1. **For Testing**: Use Postman or curl to test the enhanced route
-2. **For Production**: Update frontend forms to show agency fields when AGENCY is selected
-3. **For Existing Data**: If you have users with `accountType=ORGANIZATION`, update them to `AGENCY`
-4. **For Validation**: Agency fields are only required when `accountType=AGENCY` AND `completeProfile=true`
+2. **For Production**: Update frontend forms to show agency fields when BUSINESS is selected
+3. **For Existing Data**: If you have users with `accountType=ORGANIZATION`, update them to `BUSINESS`
+4. **For Validation**: Agency fields are only required when `accountType=BUSINESS` AND `completeProfile=true`
 
 ---
 

@@ -14,7 +14,7 @@ Your submitted payload:
 firstName: TECHFUSION
 lastName: STUDIO
 phone: +919631045873
-accountType: AGENCY
+accountType: BUSINESS
 latitude: 22.7803136
 longitude: 86.2650368
 address: Jamshedpur, Golmuri-Cum-Jugsalai...
@@ -33,16 +33,16 @@ profileVideo: (binary)
 - agencyName, agencyRegistrationNumber, agencyAddress, agencyEmail, agencyPhone were being ignored
 - No validation for agency-specific fields
 - No database columns to store agency data
-- Account type 'AGENCY' not in ENUM (was 'ORGANIZATION')
+- Account type 'BUSINESS' not in ENUM (was 'ORGANIZATION')
 
 ## Changes Implemented
 
 ### ✅ Database Layer
 - Added 5 new columns for agency data
-- Updated account_type ENUM to include 'AGENCY'
+- Updated account_type ENUM to include 'BUSINESS'
 
 ### ✅ Validation Layer (Controller)
-**Required fields when `accountType=AGENCY` & `completeProfile=true`:**
+**Required fields when `accountType=BUSINESS` & `completeProfile=true`:**
 - Basic: firstName, lastName, phone, latitude, longitude, profileVideo
 - Agency: agencyName, agencyRegistrationNumber, agencyAddress, agencyEmail, agencyPhone
 
@@ -68,7 +68,7 @@ profileVideo: (binary)
 │              CONTROLLER: User.controller.js                      │
 │                                                                   │
 │  1. Validate basic fields (firstName, lastName, phone, etc.)     │
-│  2. IF accountType=AGENCY → Validate agency fields               │
+│  2. IF accountType=BUSINESS → Validate agency fields               │
 │  3. Validate email & phone formats                               │
 │  4. Add agency fields to updateFields                            │
 └──────────────────────────┬──────────────────────────────────────┘
@@ -84,7 +84,7 @@ profileVideo: (binary)
 │                          │   │                          │
 │  1. validateProfileData  │   │  UserService.updateUser  │
 │     - Validate agency    │   │  - Save all fields       │
-│       fields if AGENCY   │   │    including agency      │
+│       fields if BUSINESS   │   │    including agency      │
 │  2. uploadVideoToSupabase│   │    data                  │
 │  3. updatePartnerUser    │   │                          │
 │     - Save agency data   │   │                          │
@@ -98,7 +98,7 @@ profileVideo: (binary)
 // 1. Request arrives at controller
 {
   firstName: "TECHFUSION",
-  accountType: "AGENCY",
+  accountType: "BUSINESS",
   agencyName: "SRKVD",
   agencyEmail: "avi@example.com",
   // ... other fields
@@ -107,7 +107,7 @@ profileVideo: (binary)
 // 2. Controller validates and transforms
 updateFields = {
   firstName: "TECHFUSION",
-  accountType: "AGENCY",
+  accountType: "BUSINESS",
   agencyName: "SRKVD",        // ✅ Now included
   agencyEmail: "avi@example.com",  // ✅ Now included
   // ... validated fields
@@ -118,7 +118,7 @@ updateFields = {
   userId: 123,
   profileData: {
     firstName: "TECHFUSION",
-    accountType: "AGENCY",
+    accountType: "BUSINESS",
     agencyName: "SRKVD",      // ✅ Passed to workflow
     agencyEmail: "avi@example.com",
     // ... all fields
@@ -129,7 +129,7 @@ updateFields = {
 {
   user_id: 123,
   user_first_name: "TECHFUSION",
-  user_account_type: "AGENCY",
+  user_account_type: "BUSINESS",
   agency_name: "SRKVD",       // ✅ Stored in DB
   agency_email: "avi@example.com",
   profile_completed: true,
@@ -141,15 +141,15 @@ updateFields = {
 
 | Field | Required | Format | Notes |
 |-------|----------|--------|-------|
-| accountType | Yes* | ENUM: INDIVIDUAL, AGENT, AGENCY | When completing profile |
-| agencyName | Yes** | String (max 200 chars) | Required if AGENCY |
-| agencyRegistrationNumber | Yes** | String (max 100 chars) | Required if AGENCY |
-| agencyAddress | Yes** | Text | Required if AGENCY |
-| agencyEmail | Yes** | Valid email format | Required if AGENCY |
-| agencyPhone | Yes** | Phone format | Required if AGENCY |
+| accountType | Yes* | ENUM: INDIVIDUAL, AGENT, BUSINESS | When completing profile |
+| agencyName | Yes** | String (max 200 chars) | Required if BUSINESS |
+| agencyRegistrationNumber | Yes** | String (max 100 chars) | Required if BUSINESS |
+| agencyAddress | Yes** | Text | Required if BUSINESS |
+| agencyEmail | Yes** | Valid email format | Required if BUSINESS |
+| agencyPhone | Yes** | Phone format | Required if BUSINESS |
 
 \* Required when `completeProfile=true`
-\*\* Required only when `accountType=AGENCY` and `completeProfile=true`
+\*\* Required only when `accountType=BUSINESS` and `completeProfile=true`
 
 ## Error Scenarios
 
@@ -198,7 +198,7 @@ curl -X PATCH http://localhost:3000/api/partnerUser/update \
   -F "firstName=TECHFUSION" \
   -F "lastName=STUDIO" \
   -F "phone=+919631045873" \
-  -F "accountType=AGENCY" \
+  -F "accountType=BUSINESS" \
   -F "latitude=22.7803136" \
   -F "longitude=86.2650368" \
   -F "address=Jamshedpur, Golmuri-Cum-Jugsalai..." \
@@ -233,7 +233,7 @@ curl -X PATCH http://localhost:3000/api/partnerUser/update \
 3. ✅ **Controller**: Agency fields now in allowedFields list
 4. ✅ **Workflow**: Agency data flows through Temporal workflow
 5. ✅ **Activities**: Agency fields validated and saved in workflow activities
-6. ✅ **Enum Update**: Changed ORGANIZATION → AGENCY
+6. ✅ **Enum Update**: Changed ORGANIZATION → BUSINESS
 
 ## Files Modified
 
@@ -249,7 +249,7 @@ curl -X PATCH http://localhost:3000/api/partnerUser/update \
 2. ⚠️ **Run database migration** (IMPORTANT!)
 3. ⚠️ **Restart Node.js server**
 4. ✅ Test with your payload
-5. ✅ Update frontend to show agency fields when AGENCY is selected
+5. ✅ Update frontend to show agency fields when BUSINESS is selected
 
 ## Migration Command
 ```bash
