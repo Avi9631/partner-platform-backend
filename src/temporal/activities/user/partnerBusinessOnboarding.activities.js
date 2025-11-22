@@ -277,7 +277,7 @@ async function updateUserAccountType(updateData) {
  * 
  * @param {Object} updateData - Update data
  * @param {number} updateData.userId - User ID
- * @param {string} updateData.verificationStatus - Verification status ('INITIAL', 'PENDING', 'APPROVED', 'REJECTED')
+ * @param {string} updateData.verificationStatus - Verification status (null, 'PENDING', 'APPROVED', 'REJECTED')
  * @returns {Promise<{success: boolean, business: Object}>}
  */
 async function updateBusinessVerificationStatus(updateData) {
@@ -287,7 +287,7 @@ async function updateBusinessVerificationStatus(updateData) {
         logger.info(`[Update Business Verification Status] Updating business for user ${userId} to status: ${verificationStatus}`);
         
         // Validate verification status
-        const validStatuses = ['INITIAL', 'PENDING', 'APPROVED', 'REJECTED'];
+        const validStatuses = [null, 'PENDING', 'APPROVED', 'REJECTED'];
         if (!validStatuses.includes(verificationStatus)) {
             throw new Error(`Invalid verification status: ${verificationStatus}. Must be one of: ${validStatuses.join(', ')}`);
         }

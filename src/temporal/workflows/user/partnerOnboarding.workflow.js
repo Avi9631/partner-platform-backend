@@ -187,7 +187,6 @@ async function partnerUserOnboarding(workflowInput) {
                 verificationStatus: 'PENDING',
                 videoUrl: uploadResult.videoUrl,
                 user: updateResult.user,
-                business: businessResult?.business || null,
             },
         };
         

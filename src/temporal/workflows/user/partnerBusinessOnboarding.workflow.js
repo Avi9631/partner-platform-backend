@@ -181,7 +181,7 @@ async function partnerBusinessOnboarding(workflowInput) {
             data: {
                 businessId: businessResult.business.businessId,
                 businessName: businessData.businessName,
-                verificationStatus: 'APPROVED',
+                verificationStatus: 'PENDING',
                 ownerVideoUrl: uploadResult.videoUrl,
                 business: businessResult.business,
             },

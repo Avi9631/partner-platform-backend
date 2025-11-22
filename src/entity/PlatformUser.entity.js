@@ -65,7 +65,7 @@ module.exports = (sequelize, Sequelize) => {
       verificationStatus: {
         type: Sequelize.ENUM('PENDING', 'AUTOMATED_REVIEW','MANUAL_REVIEW' ,  'APPROVED', 'REJECTED'),
         field: "verification_status",
-        defaultValue: 'PENDING',
+        defaultValue: null,
       },
       verificationNotes: {
         type: Sequelize.TEXT,
