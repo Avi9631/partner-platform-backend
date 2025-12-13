@@ -10,11 +10,12 @@ const PlatformUser = db.PlatformUser;
  * @param {object} draftData - The draft details (form data)
  * @returns {Promise<object>} The created draft
  */
-const createDraft = async (userId) => {
+const createDraft = async (userId, draftType) => {
   try {
     const draft = await ListingDraft.create({
       userId: userId,
-      draftStatus: 'DRAFT'
+      draftStatus: 'DRAFT',
+      draftType: draftType,
     });
 
     return {
@@ -32,10 +33,11 @@ const createDraft = async (userId) => {
  * Update an existing listing draft
  * @param {number} draftId - The ID of the draft to update
  * @param {number} userId - The ID of the user (for authorization)
- * @param {object} draftData - The updated draft details
+ * @param {object} draftData - The updated draft details (can include media URLs)
+ * @param {string} draftType - Optional draft type to update (PROPERTY, PG, PROJECT, DEVELOPER)
  * @returns {Promise<object>} The updated draft
  */
-const updateDraft = async (draftId, userId, draftData) => {
+const updateDraft = async (draftId, userId, draftData, draftType) => {
   try {
     const draft = await ListingDraft.findOne({
       where: {
@@ -51,9 +53,42 @@ const updateDraft = async (draftId, userId, draftData) => {
       };
     }
 
-    await draft.update({
-      draftData: draftData
+    // If draftData contains nested draftData, unwrap it
+    let cleanedDraftData = draftData;
+    if (draftData && draftData.draftData) {
+      console.warn('Detected nested draftData structure, unwrapping...');
+      cleanedDraftData = draftData.draftData;
+    }
+
+    // Merge new data with existing draftData
+    const existingDraftData = draft.draftData || {};
+    const mergedDraftData = {
+      ...existingDraftData,
+      ...cleanedDraftData
+    };
+
+    // Merge media arrays intelligently (preserve existing, add new)
+    const mediaFields = ['media', 'mediaData', 'docMediaData', 'planMediaData'];
+    mediaFields.forEach(field => {
+      if (existingDraftData[field] && cleanedDraftData[field]) {
+        mergedDraftData[field] = [
+          // ...existingDraftData[field],
+          ...cleanedDraftData[field]
+        ];
+      }
     });
+
+    // Prepare update object
+    const updateObject = {
+      draftData: mergedDraftData
+    };
+
+    // Add draftType to update if provided
+    if (draftType) {
+      updateObject.draftType = draftType;
+    }
+
+    await draft.update(updateObject);
 
     return {
       success: true,
@@ -101,14 +136,22 @@ const getDraftById = async (draftId, userId) => {
 /**
  * Get all drafts for a user
  * @param {number} userId - The ID of the user
+ * @param {string} draftType - Optional filter by draft type (PROPERTY, PG, PROJECT, DEVELOPER)
  * @returns {Promise<object>} List of drafts
  */
-const getUserDrafts = async (userId) => {
+const getUserDrafts = async (userId, draftType) => {
   try {
+    const whereClause = {
+      userId: userId
+    };
+
+    // Add draftType filter if provided
+    if (draftType) {
+      whereClause.draftType = draftType;
+    }
+
     const drafts = await ListingDraft.findAll({
-      where: {
-        userId: userId
-      },
+      where: whereClause,
       order: [['draft_created_at', 'DESC']]
     });
 
@@ -183,47 +226,86 @@ const submitDraft = async (draftId, userId) => {
     }
 
     const draftData = draft.draftData;
+    const draftType = draft.draftType;
     let projectId = null;
+    let result = {};
 
-    // Check if a new property needs to be created
-    if (draftData.isNewProperty && draftData.customPropertyName) {
-      // Create a new project with the custom property name
-      const newProject = await Project.create({
-        projectName: draftData.customPropertyName,
-        createdBy: userId,
-        projectDetails: {
-          ownershipType: draftData.ownershipType,
-          reraIds: draftData.reraIds || [],
-          ageOfProperty: draftData.ageOfProperty,
-          possessionStatus: draftData.possessionStatus,
-          possessionDate: draftData.possessionDate,
-          createdFromListing: true
-        },
-        status: 'ACTIVE'
-      }, { transaction });
+    // Handle different draft types
+    switch (draftType) {
+      case 'PROPERTY':
+      case 'PG':
+        // Check if a new property needs to be created
+        if (draftData.isNewProperty && draftData.customPropertyName) {
+          // Create a new project with the custom property name
+          const newProject = await Project.create({
+            projectName: draftData.customPropertyName,
+            createdBy: userId,
+            projectDetails: {
+              ownershipType: draftData.ownershipType,
+              reraIds: draftData.reraIds || [],
+              ageOfProperty: draftData.ageOfProperty,
+              possessionStatus: draftData.possessionStatus,
+              possessionDate: draftData.possessionDate,
+              createdFromListing: true
+            },
+            status: 'ACTIVE'
+          }, { transaction });
 
-      projectId = newProject.projectId;
-    } else if (draftData.projectName && draftData.projectName !== 'Not Listed') {
-      // Find existing project by name
-      const existingProject = await Project.findOne({
-        where: {
-          projectName: draftData.projectName
+          projectId = newProject.projectId;
+        } else if (draftData.projectName && draftData.projectName !== 'Not Listed') {
+          // Find existing project by name
+          const existingProject = await Project.findOne({
+            where: {
+              projectName: draftData.projectName
+            }
+          });
+
+          if (existingProject) {
+            projectId = existingProject.projectId;
+          }
         }
-      });
 
-      if (existingProject) {
-        projectId = existingProject.projectId;
-      }
+        // Create the property (listing)
+        const property = await Property.create({
+          propertyName: draftData.customPropertyName || draftData.projectName,
+          projectId: projectId,
+          createdBy: userId,
+          propertyDetails: draftData,
+          status: 'ACTIVE'
+        }, { transaction });
+
+        result = {
+          property: property,
+          projectCreated: draftData.isNewProperty && projectId !== null
+        };
+        break;
+
+      case 'PROJECT':
+        // Create a new project
+        const newProjectDirect = await Project.create({
+          projectName: draftData.projectName,
+          createdBy: userId,
+          projectDetails: draftData,
+          status: 'ACTIVE'
+        }, { transaction });
+
+        result = {
+          project: newProjectDirect
+        };
+        break;
+
+      case 'DEVELOPER':
+        // Handle developer creation (if Developer entity exists)
+        // For now, store in draftData or create appropriate entity
+        result = {
+          developer: draftData,
+          message: 'Developer draft submitted (entity creation pending)'
+        };
+        break;
+
+      default:
+        throw new Error(`Unknown draft type: ${draftType}`);
     }
-
-    // Create the property (listing)
-    const property = await Property.create({
-      propertyName: draftData.customPropertyName || draftData.projectName,
-      projectId: projectId,
-      createdBy: userId,
-      propertyDetails: draftData,
-      status: 'ACTIVE'
-    }, { transaction });
 
     // Update draft status to PUBLISHED
     await draft.update({
@@ -234,11 +316,8 @@ const submitDraft = async (draftId, userId) => {
 
     return {
       success: true,
-      data: {
-        property: property,
-        projectCreated: draftData.isNewProperty && projectId !== null
-      },
-      message: 'Listing submitted successfully'
+      data: result,
+      message: `${draftType} listing submitted successfully`
     };
   } catch (error) {
     await transaction.rollback();

@@ -1,7 +1,9 @@
-const {formatDate, formatTime} = require("../utils/dateFormatters");
+const { formatDate, formatTime } = require("../utils/dateFormatters");
 
 module.exports = (sequelize, Sequelize) => {
-    const ListingDraft = sequelize.define("listing_draft", {
+  const ListingDraft = sequelize.define(
+    "listing_draft",
+    {
       draftId: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -13,21 +15,27 @@ module.exports = (sequelize, Sequelize) => {
         field: "user_id",
         allowNull: false,
         references: {
-          model: 'user',
-          key: 'user_id'
+          model: "user",
+          key: "user_id",
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
+      draftType: {
+        type: Sequelize.ENUM("PROPERTY", "PG", "PROJECT", "DEVELOPER"),
+        field: "draft_type",
+        defaultValue: "PROPERTY",
+      },
+
       draftData: {
         type: Sequelize.JSONB,
         field: "draft_details",
         allowNull: true,
       },
       draftStatus: {
-        type: Sequelize.ENUM('DRAFT', 'PUBLISHED', 'ARCHIVED'),
+        type: Sequelize.ENUM("DRAFT", "PUBLISHED", "ARCHIVED"),
         field: "draft_status",
-        defaultValue: 'DRAFT'
+        defaultValue: "DRAFT",
       },
 
       // Virtual fields for formatted date/time
@@ -55,7 +63,8 @@ module.exports = (sequelize, Sequelize) => {
           return formatTime(this.draft_updated_at);
         },
       },
-    }, {
+    },
+    {
       timestamps: true,
       createdAt: "draft_created_at",
       updatedAt: "draft_updated_at",
@@ -63,16 +72,17 @@ module.exports = (sequelize, Sequelize) => {
       paranoid: true,
       indexes: [
         {
-          fields: ['user_id']
+          fields: ["user_id"],
         },
         {
-          fields: ['draft_status']
+          fields: ["draft_status"],
         },
         {
-          fields: ['draft_created_at']
-        }
+          fields: ["draft_created_at"],
+        },
       ],
-    });
+    }
+  );
 
-    return ListingDraft;
+  return ListingDraft;
 };

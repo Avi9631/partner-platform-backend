@@ -28,6 +28,7 @@ db.sequelize = sequelize;
 db.PlatformUser = require("./PlatformUser.entity.js")(sequelize, Sequelize);
 db.PartnerBusiness = require("./PartnerBusiness.entity.js")(sequelize, Sequelize);
 db.ListingDraft = require("./ListingDraft.entity.js")(sequelize, Sequelize);
+db.Listing = require("./Listing.entity.js")(sequelize, Sequelize);
  
 // Relationships
 // User has one PartnerBusiness (for BUSINESS account type)
@@ -52,6 +53,24 @@ db.PlatformUser.hasMany(db.ListingDraft, {
 db.ListingDraft.belongsTo(db.PlatformUser, {
     foreignKey: 'user_id',
     as: 'user'
+});
+
+// User has many Listings
+db.PlatformUser.hasMany(db.Listing, {
+    foreignKey: 'created_by',
+    as: 'listings'
+});
+
+// Listing belongs to User (creator)
+db.Listing.belongsTo(db.PlatformUser, {
+    foreignKey: 'created_by',
+    as: 'creator'
+});
+
+// Listing belongs to User (approver)
+db.Listing.belongsTo(db.PlatformUser, {
+    foreignKey: 'approved_by',
+    as: 'approver'
 });
  
  

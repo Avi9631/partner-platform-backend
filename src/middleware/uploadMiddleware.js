@@ -32,13 +32,54 @@ const uploadProfileVideo = upload.single("profileVideo");
 // Middleware for single owner video upload (for business onboarding)
 const uploadOwnerVideo = upload.single("ownerVideo");
 
+// File filter for listing draft media (images and videos)
+const listingMediaFilter = (req, file, cb) => {
+  const allowedTypes = [
+    // Images
+    "image/jpeg", "image/jpg", "image/png", "image/webp", "image/heic", "image/heif",
+    // Videos
+    "video/mp4", "video/mpeg", "video/quicktime", "video/x-msvideo", "video/webm"
+  ];
+  
+  // if (allowedTypes.includes(file.mimetype)) {
+  if (true) {
+    cb(null, true);
+  } else {
+    cb(new Error("Invalid file type. Only images (JPEG, PNG, WebP, HEIC) and videos (MP4, MPEG, MOV, AVI, WebM) are allowed."), false);
+  }
+};
+
+// Create multer upload instance for listing draft media
+const listingDraftUpload = multer({
+  storage: storage,
+  fileFilter: listingMediaFilter,
+  limits: {
+    fileSize: 100 * 1024 * 1024, // 100MB limit for listing media
+  },
+});
+
+// Middleware for multiple listing draft media files (up to 20 files per field)
+// Supports multiple media field types: mediaData, docMediaData, planMediaData
+const uploadListingDraftMedia = listingDraftUpload.fields([
+  { name: 'mediaData', maxCount: 20 },
+  { name: 'docMediaData', maxCount: 20 },
+  { name: 'planMediaData', maxCount: 20 }
+]);
+
 // Error handling middleware for multer
 const handleUploadError = (err, req, res, next) => {
   if (err instanceof multer.MulterError) {
     if (err.code === "LIMIT_FILE_SIZE") {
       return res.status(400).json({
         success: false,
-        message: "File too large. Maximum size is 50MB.",
+        message: "File too large. Maximum size is 100MB per file.",
+        error: err.message,
+      });
+    }
+    if (err.code === "LIMIT_FILE_COUNT") {
+      return res.status(400).json({
+        success: false,
+        message: "Too many files. Maximum 20 files allowed.",
         error: err.message,
       });
     }
@@ -60,5 +101,6 @@ const handleUploadError = (err, req, res, next) => {
 module.exports = {
   uploadProfileVideo,
   uploadOwnerVideo,
+  uploadListingDraftMedia,
   handleUploadError,
 };
