@@ -10,6 +10,7 @@ const path = require("path");
 const authRoute = require("./src/routes/auth.route.js");
 const draftRoute = require("./src/routes/draft.route.js");
 const userRoute = require("./src/routes/user.route.js");
+const developerRoute = require("./src/routes/developer.route.js");
 const logger = require("./src/config/winston.config.js");
 const app = express();
 const port = process.env.PORT || 3000;
@@ -105,6 +106,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'src/uploads')));
 app.use(authRoute);
 app.use(draftRoute);
 app.use(userRoute);
+app.use("/api/developer", developerRoute);
 
 const server = app.listen(port, "0.0.0.0", () => {
   console.log(`Example app listening on port ${port}`);

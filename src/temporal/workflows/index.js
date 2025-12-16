@@ -9,6 +9,7 @@
 
 const { partnerUserOnboarding } = require('./user/partnerOnboarding.workflow');
 const { partnerBusinessOnboarding } = require('./user/partnerBusinessOnboarding.workflow');
+const { developerPublishing } = require('./developer/developerPublishing.workflow');
 
 
 /**
@@ -21,5 +22,6 @@ module.exports = {
 
     partnerUserOnboarding,
     partnerBusinessOnboarding,
+    developerPublishing,
 
 };
