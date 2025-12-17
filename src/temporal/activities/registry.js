@@ -15,6 +15,9 @@ const partnerBusinessOnboardingActivities = require('./user/partnerBusinessOnboa
 // Developer activities
 const developerPublishingActivities = require('./developer/developerPublishing.activities');
 
+// PG/Colive/Hostel activities
+const pgHostelPublishingActivities = require('./pgHostel/pgHostelPublishing.activities');
+
  
 /**
  * Export all activities
@@ -35,5 +38,8 @@ module.exports = {
     
     // Developer publishing activities
     ...developerPublishingActivities,
+    
+    // PG/Colive/Hostel publishing activities
+    ...pgHostelPublishingActivities,
  
 };

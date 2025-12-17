@@ -125,7 +125,6 @@ module.exports = (sequelize, Sequelize) => {
       slug: {
         type: Sequelize.STRING(300),
         field: "slug",
-        unique: true,
         comment: "URL-friendly slug for developer profile"
       },
       metaTitle: {

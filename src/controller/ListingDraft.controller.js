@@ -26,78 +26,19 @@ const createListingDraft = async (req, res) => {
 /**
  * Update an existing listing draft
  * PATCH /api/draft/updateListingDraft
- * Supports file uploads for media (images/videos) with metadata embedded in draftData
- * Media keys: mediaData, docMediaData, planMediaData
+ * Accepts JSON data only
  */
 const updateListingDraft = async (req, res) => {
   try {
     const userId = req.user.userId; // From auth middleware
-    let { draftId, draftData, draftType } = req.body;
+    const { draftId, draftData, draftType } = req.body;
 
     if (!draftId) {
       return sendErrorResponse(res, 'Draft ID is required', 400);
     }
 
-    // Parse draftData if it's a string (happens with multipart/form-data)
-    if (typeof draftData === 'string') {
-      try {
-        draftData = JSON.parse(draftData);
-      } catch (parseError) {
-        return sendErrorResponse(res, 'Invalid draftData JSON format', 400);
-      }
-    }
-
-    // Define media field mappings (field name -> S3 folder)
-    const mediaFieldMappings = {
-      'mediaData': 'listing-drafts/media/'+draftId,
-      'docMediaData': 'listing-drafts/documents/'+draftId,
-      'planMediaData': 'listing-drafts/plans/'+draftId
-    };
-
-    // Process each media field type
-    for (const [fieldName, s3Folder] of Object.entries(mediaFieldMappings)) {
-      const files = req.files && req.files[fieldName] ? req.files[fieldName] : [];
-      const existingMetadata = draftData[fieldName] || [];
-      
-      if (files.length > 0) {
-        try {
-          const uploadedFiles = await uploadMultipleToS3({
-            files: files,
-            folder: s3Folder,
-            userId: userId,
-          });
-
-          // Separate metadata: already uploaded (with URLs) vs new files (without URLs)
-          const alreadyUploaded = existingMetadata.filter(item => item.url);
-          const newFileMetadata = existingMetadata.filter(item => !item.url);
-
-          // Combine uploaded files with their corresponding metadata
-          const newlyProcessedMedia = uploadedFiles.map((file, index) => {
-            const metadata = newFileMetadata[index] || {};
-            return {
-              ...metadata, // Preserve metadata (title, type, category, description)
-              url: file.url,
-              key: file.key,
-              originalName: file.originalName,
-              mimetype: file.mimetype,
-              uploadedAt: new Date().toISOString(),
-            };
-          });
-
-          // REPLACE the entire array (not append) with already uploaded + newly uploaded
-          draftData[fieldName] = [...alreadyUploaded, ...newlyProcessedMedia];
-
-          console.log(`Processed ${fieldName}: ${alreadyUploaded.length} existing + ${newlyProcessedMedia.length} new = ${draftData[fieldName].length} total`);
-        } catch (uploadError) {
-          console.error(`Error uploading ${fieldName}:`, uploadError);
-          return sendErrorResponse(res, `Failed to upload ${fieldName}`, 500);
-        }
-      } else if (existingMetadata.length > 0) {
-        // No new files, but we have metadata (could be preserving existing uploads)
-        // Keep only items with URLs (already uploaded items)
-        draftData[fieldName] = existingMetadata.filter(item => item.url);
-        console.log(`Preserved ${draftData[fieldName].length} existing ${fieldName} items`);
-      }
+    if (!draftData) {
+      return sendErrorResponse(res, 'Draft data is required', 400);
     }
 
     const result = await ListingDraftService.updateDraft(draftId, userId, draftData, draftType);

@@ -11,7 +11,9 @@ const authRoute = require("./src/routes/auth.route.js");
 const draftRoute = require("./src/routes/draft.route.js");
 const userRoute = require("./src/routes/user.route.js");
 const developerRoute = require("./src/routes/developer.route.js");
+const pgHostelRoute = require("./src/routes/pgHostel.route.js");
 const workflowRoute = require("./src/routes/workflow.route.js");
+const uploadRoute = require("./src/routes/upload.route.js");
 const logger = require("./src/config/winston.config.js");
 const app = express();
 const port = process.env.PORT || 3000;
@@ -85,7 +87,6 @@ app.use('/uploads', express.static(path.join(__dirname, 'src/uploads')));
     // Use alter: true for production - this won't drop existing data
     // Now that tables are created, use safer sync method
     await db.sequelize.sync({ alter: true });
-
     
     console.log("Database synchronized successfully - all tables verified");
     logger.info("Database synchronized successfully - all tables verified");
@@ -108,7 +109,9 @@ app.use(authRoute);
 app.use(draftRoute);
 app.use(userRoute);
 app.use("/api/developer", developerRoute);
+app.use("/api/pg-hostel", pgHostelRoute);
 app.use(workflowRoute);
+app.use("/api/upload", uploadRoute);
 
 const server = app.listen(port, "0.0.0.0", () => {
   console.log(`Example app listening on port ${port}`);

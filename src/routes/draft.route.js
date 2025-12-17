@@ -11,7 +11,7 @@ router.get("/ping", function (req, res) {
 
 router.post("/createListingDraft", authMiddleware, ListingDraftController.createListingDraft);
 
-router.patch("/updateListingDraft", authMiddleware, uploadListingDraftMedia, handleUploadError, ListingDraftController.updateListingDraft);
+router.patch("/updateListingDraft", authMiddleware, ListingDraftController.updateListingDraft);
 
 router.delete("/deleteListingDraft", authMiddleware, ListingDraftController.deleteListingDraft);
 
