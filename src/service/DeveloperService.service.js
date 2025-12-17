@@ -46,10 +46,11 @@ const ensureUniqueSlug = async (baseSlug, excludeDeveloperId = null) => {
 /**
  * Create a new developer record from draft data
  * @param {number} userId - User ID
- * @param {object} developerData - Developer data from frontend
+ * @param {number} draftId - Draft ID (required, ensures one draft = one publish)
+ * @param {object} developerData - Developer data
  * @returns {Promise<object>} - Result object
  */
-const createDeveloper = async (userId, developerData) => {
+const createDeveloper = async (userId, draftId, developerData) => {
   try {
     // Generate unique slug
     const baseSlug = createSlug(developerData.developerName);
@@ -58,6 +59,7 @@ const createDeveloper = async (userId, developerData) => {
     // Create developer record
     const developer = await Developer.create({
       userId,
+      draftId,
       developerName: developerData.developerName,
       developerType: developerData.developerType,
       description: developerData.description,

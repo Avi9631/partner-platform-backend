@@ -17,6 +17,17 @@ module.exports = (sequelize, Sequelize) => {
           key: 'user_id'
         }
       },
+      draftId: {
+        type: Sequelize.INTEGER,
+        field: "draft_id",
+        unique: true,
+        allowNull: true,
+        references: {
+          model: 'listing_draft',
+          key: 'draft_id'
+        },
+        comment: "Reference to the draft used to create this developer profile. Each draft can only be published once."
+      },
       
       // Basic Information Fields
       developerName: {
@@ -27,7 +38,6 @@ module.exports = (sequelize, Sequelize) => {
       developerType: {
         type: Sequelize.ENUM('International Developer', 'National Developer', 'Regional Developer'),
         field: "developer_type",
-        allowNull: false
       },
       description: {
         type: Sequelize.TEXT,
@@ -36,7 +46,6 @@ module.exports = (sequelize, Sequelize) => {
       establishedYear: {
         type: Sequelize.INTEGER,
         field: "established_year",
-        allowNull: false
       },
       registrationNumber: {
         type: Sequelize.STRING(100),
@@ -47,12 +56,10 @@ module.exports = (sequelize, Sequelize) => {
       primaryContactEmail: {
         type: Sequelize.STRING(150),
         field: "primary_contact_email",
-        allowNull: false
       },
       primaryContactPhone: {
         type: Sequelize.STRING(20),
         field: "primary_contact_phone",
-        allowNull: false
       },
       socialLinks: {
         type: Sequelize.JSONB,
@@ -89,13 +96,6 @@ module.exports = (sequelize, Sequelize) => {
         defaultValue: [],
         comment: "Array of states where developer operates"
       },
-      
-      // Publishing & Verification Status
-      publishStatus: {
-        type: Sequelize.ENUM('DRAFT', 'PENDING_REVIEW', 'APPROVED', 'REJECTED', 'PUBLISHED'),
-        field: "publish_status",
-        defaultValue: 'DRAFT'
-      },
       verificationStatus: {
         type: Sequelize.ENUM('PENDING', 'AUTOMATED_REVIEW', 'MANUAL_REVIEW', 'APPROVED', 'REJECTED'),
         field: "verification_status",
@@ -121,7 +121,6 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.DATE,
         field: "published_at",
       },
-      
       // SEO & Metadata
       slug: {
         type: Sequelize.STRING(300),
@@ -136,18 +135,6 @@ module.exports = (sequelize, Sequelize) => {
       metaDescription: {
         type: Sequelize.TEXT,
         field: "meta_description",
-      },
-      
-      // Analytics
-      viewCount: {
-        type: Sequelize.INTEGER,
-        field: "view_count",
-        defaultValue: 0
-      },
-      inquiryCount: {
-        type: Sequelize.INTEGER,
-        field: "inquiry_count",
-        defaultValue: 0
       },
       
       // Virtual fields for formatted dates
@@ -186,11 +173,8 @@ module.exports = (sequelize, Sequelize) => {
           fields: ['user_id']
         },
         {
-          fields: ['slug'],
+          fields: ['draft_id'],
           unique: true
-        },
-        {
-          fields: ['publish_status']
         },
         {
           fields: ['developer_type']
@@ -203,3 +187,6 @@ module.exports = (sequelize, Sequelize) => {
   
     return Developer;
 };
+
+
+

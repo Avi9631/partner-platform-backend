@@ -18,41 +18,33 @@ const logger = require("../../../config/winston.config");
  * 
  * @param {Object} params - Activity parameters
  * @param {number} params.userId - User ID
+ * @param {number} params.draftId - Draft ID (required)
  * @param {Object} params.developerData - Developer profile data
  * @returns {Promise<Object>} - Validation result
  */
-async function validateDeveloperData({ userId, developerData }) {
-  logger.info(`[Developer Publishing] Validating data for user ${userId}`);
+async function validateDeveloperData({ userId, draftId, developerData }) {
+  logger.info(`[Developer Publishing] Validating data for user ${userId}, draft ${draftId}`);
   
   try {
     const errors = [];
 
-    // Validate required fields
-    const requiredFields = {
-      developerName: 'Developer name',
-      developerType: 'Developer type',
-      establishedYear: 'Established year',
-      primaryContactEmail: 'Primary contact email',
-      primaryContactPhone: 'Primary contact phone',
-      totalProjectsCompleted: 'Total projects completed',
-      totalProjectsOngoing: 'Total ongoing projects',
-      projectTypes: 'Project types',
-      operatingStates: 'Operating states'
-    };
-
-    for (const [field, label] of Object.entries(requiredFields)) {
-      if (!developerData[field]) {
-        errors.push(`${label} is required`);
-      }
+    // Validate required draftId
+    if (!draftId) {
+      errors.push('Draft ID is required');
     }
 
-    // Validate developer type
+    // Validate required fields
+    if (!developerData.developerName) {
+      errors.push('Developer name is required');
+    }
+
+    // Validate developer type (optional, but if provided must be valid)
     const validDeveloperTypes = ['International Developer', 'National Developer', 'Regional Developer'];
     if (developerData.developerType && !validDeveloperTypes.includes(developerData.developerType)) {
       errors.push('Invalid developer type');
     }
 
-    // Validate established year
+    // Validate established year (optional, but if provided must be valid)
     const currentYear = new Date().getFullYear();
     if (developerData.establishedYear) {
       if (developerData.establishedYear < 1900 || developerData.establishedYear > currentYear) {
@@ -60,7 +52,7 @@ async function validateDeveloperData({ userId, developerData }) {
       }
     }
 
-    // Validate email format
+    // Validate email format (optional, but if provided must be valid)
     if (developerData.primaryContactEmail) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(developerData.primaryContactEmail)) {
@@ -68,7 +60,7 @@ async function validateDeveloperData({ userId, developerData }) {
       }
     }
 
-    // Validate phone format
+    // Validate phone format (optional, but if provided must be valid)
     if (developerData.primaryContactPhone) {
       const phoneRegex = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/;
       if (!phoneRegex.test(developerData.primaryContactPhone)) {
@@ -76,19 +68,30 @@ async function validateDeveloperData({ userId, developerData }) {
       }
     }
 
-    // Validate arrays
-    if (developerData.projectTypes && (!Array.isArray(developerData.projectTypes) || developerData.projectTypes.length === 0)) {
-      errors.push('At least one project type is required');
-    }
+    // Validate arrays (optional, but if provided must be valid)
+    // if (developerData.projectTypes && (!Array.isArray(developerData.projectTypes) || developerData.projectTypes.length === 0)) {
+    //   errors.push('Project types must be a non-empty array if provided');
+    // }
 
-    if (developerData.operatingStates && (!Array.isArray(developerData.operatingStates) || developerData.operatingStates.length === 0)) {
-      errors.push('At least one operating state is required');
-    }
+    // if (developerData.operatingStates && (!Array.isArray(developerData.operatingStates) || developerData.operatingStates.length === 0)) {
+    //   errors.push('Operating states must be a non-empty array if provided');
+    // }
 
     // Check if user exists
     const user = await PlatformUser.findByPk(userId);
     if (!user) {
       errors.push('User not found');
+    }
+
+    // Check if this draft has already been published
+    if (draftId) {
+      const existingDeveloper = await Developer.findOne({
+        where: { draftId }
+      });
+      
+      if (existingDeveloper) {
+        errors.push('This draft has already been published. A draft can only be published once.');
+      }
     }
 
     if (errors.length > 0) {
@@ -113,14 +116,15 @@ async function validateDeveloperData({ userId, developerData }) {
  * 
  * @param {Object} params - Activity parameters
  * @param {number} params.userId - User ID
+ * @param {number} params.draftId - Draft ID (required)
  * @param {Object} params.developerData - Developer profile data
  * @returns {Promise<Object>} - Created developer record
  */
-async function createDeveloperRecord({ userId, developerData }) {
-  logger.info(`[Developer Publishing] Creating developer record for user ${userId}`);
+async function createDeveloperRecord({ userId, draftId, developerData }) {
+  logger.info(`[Developer Publishing] Creating developer record for user ${userId}, draft ${draftId}`);
   
   try {
-    const result = await DeveloperService.createDeveloper(userId, developerData);
+    const result = await DeveloperService.createDeveloper(userId, draftId, developerData);
 
     if (!result.success) {
       throw new Error(result.message);

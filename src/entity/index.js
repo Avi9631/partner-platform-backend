@@ -91,6 +91,18 @@ db.Developer.belongsTo(db.PlatformUser, {
     foreignKey: 'verified_by',
     as: 'verifier'
 });
+
+// Developer belongs to ListingDraft (via draft_id)
+db.Developer.belongsTo(db.ListingDraft, {
+    foreignKey: 'draft_id',
+    as: 'draft'
+});
+
+// ListingDraft has one Developer (published from this draft)
+db.ListingDraft.hasOne(db.Developer, {
+    foreignKey: 'draft_id',
+    as: 'publishedDeveloper'
+});
  
  
  

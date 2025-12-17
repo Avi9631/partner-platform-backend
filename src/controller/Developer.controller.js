@@ -49,15 +49,7 @@ const publishDeveloper = async (req, res) => {
 
     // Validate required fields
     const requiredFields = [
-      'developerName',
-      'developerType',
-      'establishedYear',
-      'primaryContactEmail',
-      'primaryContactPhone',
-      'totalProjectsCompleted',
-      'totalProjectsOngoing',
-      'projectTypes',
-      'operatingStates'
+      'developerName'
     ];
 
     const missingFields = requiredFields.filter(field => !developerData[field]);
@@ -69,35 +61,33 @@ const publishDeveloper = async (req, res) => {
       );
     }
 
-    // Start Temporal workflow for developer publishing
+    // Start Temporal workflow for developer publishing (non-blocking)
     try {
       const temporalClient = await getTemporalClient();
       const workflowId = `developer-publish-${userId}-${Date.now()}`;
 
-      const handle = await temporalClient.workflow.start('developerPublishing', {
-        taskQueue: 'partner-onboarding',
+      await temporalClient.workflow.start('developerPublishing', {
+        taskQueue: 'partner-platform-queue',
         workflowId,
         args: [{
           userId,
+          draftId,
           developerData
         }]
       });
 
       logger.info(`Started developer publishing workflow: ${workflowId}`);
 
-      // Wait for workflow result (you can make this async if needed)
-      const result = await handle.result();
-
-      if (result.success) {
-        return sendSuccessResponse(
-          res,
-          result.data,
-          'Developer profile published successfully',
-          201
-        );
-      } else {
-        return sendErrorResponse(res, result.message || 'Failed to publish developer', 400);
-      }
+      // Return immediately without waiting for workflow completion
+      return sendSuccessResponse(
+        res,
+        { 
+          workflowId,
+          message: 'Developer publishing workflow started successfully'
+        },
+        'Developer profile is being processed',
+        202
+      );
     } catch (temporalError) {
       logger.error('Temporal workflow error:', temporalError);
       
