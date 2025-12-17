@@ -11,6 +11,7 @@ const authRoute = require("./src/routes/auth.route.js");
 const draftRoute = require("./src/routes/draft.route.js");
 const userRoute = require("./src/routes/user.route.js");
 const developerRoute = require("./src/routes/developer.route.js");
+const workflowRoute = require("./src/routes/workflow.route.js");
 const logger = require("./src/config/winston.config.js");
 const app = express();
 const port = process.env.PORT || 3000;
@@ -107,6 +108,7 @@ app.use(authRoute);
 app.use(draftRoute);
 app.use(userRoute);
 app.use("/api/developer", developerRoute);
+app.use(workflowRoute);
 
 const server = app.listen(port, "0.0.0.0", () => {
   console.log(`Example app listening on port ${port}`);
