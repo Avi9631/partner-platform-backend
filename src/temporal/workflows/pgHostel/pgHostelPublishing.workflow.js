@@ -17,6 +17,7 @@ const {
     validatePgHostelData,
     createPgHostelRecord,
     sendPgHostelPublishingNotification,
+    updateListingDraftStatus,
 } = proxyActivities({
     startToCloseTimeout: '2 minutes',
     retry: {
@@ -125,8 +126,19 @@ async function pgHostelPublishing(workflowInput) {
         
         const { pgHostelId, slug, propertyName } = creationResult.data;
         
-        // Step 3: Send notification to user
-        console.log(`[PG Hostel Publishing] Step 3: Sending notification`);
+        // Step 3: Update ListingDraft status to PUBLISHED
+        console.log(`[PG Hostel Publishing] Step 3: Updating ListingDraft status`);
+        
+        try {
+            await updateListingDraftStatus({ draftId });
+            console.log(`[PG Hostel Publishing] ListingDraft status updated to PUBLISHED`);
+        } catch (updateError) {
+            // Log but don't fail the workflow
+            console.error(`[PG Hostel Publishing] Failed to update ListingDraft status:`, updateError);
+        }
+        
+        // Step 4: Send notification to user
+        console.log(`[PG Hostel Publishing] Step 4: Sending notification`);
         
         try {
             await sendPgHostelPublishingNotification({

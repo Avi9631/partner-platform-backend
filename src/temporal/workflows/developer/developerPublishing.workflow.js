@@ -16,6 +16,7 @@ const { proxyActivities } = require('@temporalio/workflow');
 const {
     validateDeveloperData,
     createDeveloperRecord,
+    updateListingDraftStatus,
 } = proxyActivities({
     startToCloseTimeout: '2 minutes',
     retry: {
@@ -126,6 +127,18 @@ async function developerPublishing(workflowInput) {
         const developerId = developer.developerId;
         
         console.log(`[Developer Publishing] Developer record created with ID: ${developerId}`);
+        
+        // Step 3: Update ListingDraft status to PUBLISHED
+        console.log(`[Developer Publishing] Step 3: Updating ListingDraft status`);
+        
+        try {
+            await updateListingDraftStatus({ draftId });
+            console.log(`[Developer Publishing] ListingDraft status updated to PUBLISHED`);
+        } catch (updateError) {
+            // Log but don't fail the workflow
+            console.error(`[Developer Publishing] Failed to update ListingDraft status:`, updateError);
+        }
+        
         console.log(`[Developer Publishing] Workflow completed successfully`);
         
         // Return success result

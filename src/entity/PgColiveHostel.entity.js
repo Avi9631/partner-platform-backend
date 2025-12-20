@@ -40,8 +40,6 @@ module.exports = (sequelize, Sequelize) => {
     slug: {
       type: Sequelize.STRING(255),
       field: "slug",
-      allowNull: false,
-      unique: true,
       comment: 'URL-friendly unique identifier'
     },
     genderAllowed: {
@@ -139,14 +137,12 @@ module.exports = (sequelize, Sequelize) => {
     publishStatus: {
       type: Sequelize.ENUM('PENDING_REVIEW', 'PUBLISHED', 'REJECTED', 'ARCHIVED'),
       field: "publish_status",
-      defaultValue: 'PENDING_REVIEW',
-      comment: 'Publication status'
+      defaultValue: 'PENDING_REVIEW'
     },
     verificationStatus: {
       type: Sequelize.ENUM('PENDING', 'VERIFIED', 'REJECTED'),
       field: "verification_status",
-      defaultValue: 'PENDING',
-      comment: 'Verification status'
+      defaultValue: 'PENDING'
     },
     
     // Virtual fields for formatted date/time
@@ -186,10 +182,7 @@ module.exports = (sequelize, Sequelize) => {
       },
       {
         fields: ['draft_id']
-      },
-      {
-        fields: ['slug']
-      },
+      }, 
       {
         fields: ['property_name']
       },
@@ -213,3 +206,4 @@ module.exports = (sequelize, Sequelize) => {
 
   return PgColiveHostel;
 };
+

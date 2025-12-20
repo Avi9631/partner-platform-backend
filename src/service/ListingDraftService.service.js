@@ -52,43 +52,10 @@ const updateDraft = async (draftId, userId, draftData, draftType) => {
         message: 'Draft not found or unauthorized'
       };
     }
+ 
+    draft.draftData = draftData
 
-    // If draftData contains nested draftData, unwrap it
-    let cleanedDraftData = draftData;
-    if (draftData && draftData.draftData) {
-      console.warn('Detected nested draftData structure, unwrapping...');
-      cleanedDraftData = draftData.draftData;
-    }
-
-    // Merge new data with existing draftData
-    const existingDraftData = draft.draftData || {};
-    const mergedDraftData = {
-      ...existingDraftData,
-      ...cleanedDraftData
-    };
-
-    // Merge media arrays intelligently (preserve existing, add new)
-    const mediaFields = ['media', 'mediaData', 'docMediaData', 'planMediaData'];
-    mediaFields.forEach(field => {
-      if (existingDraftData[field] && cleanedDraftData[field]) {
-        mergedDraftData[field] = [
-          // ...existingDraftData[field],
-          ...cleanedDraftData[field]
-        ];
-      }
-    });
-
-    // Prepare update object
-    const updateObject = {
-      draftData: mergedDraftData
-    };
-
-    // Add draftType to update if provided
-    if (draftType) {
-      updateObject.draftType = draftType;
-    }
-
-    await draft.update(updateObject);
+    await draft.save();
 
     return {
       success: true,

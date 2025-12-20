@@ -11,6 +11,7 @@ const DeveloperService = require("../../../service/DeveloperService.service");
 const db = require("../../../entity");
 const Developer = db.Developer;
 const PlatformUser = db.PlatformUser;
+const ListingDraft = db.ListingDraft;
 const logger = require("../../../config/winston.config");
 
 /**
@@ -349,6 +350,40 @@ async function logDeveloperEvent({ userId, developerId, eventType, metadata }) {
   }
 }
 
+/**
+ * Update ListingDraft status to PUBLISHED
+ * 
+ * @param {Object} params - Activity parameters
+ * @param {number} params.draftId - Draft ID
+ * @returns {Promise<Object>} - Update result
+ */
+async function updateListingDraftStatus({ draftId }) {
+  logger.info(`[Developer Publishing] Updating ListingDraft status for draft ${draftId} to PUBLISHED`);
+  
+  try {
+    const listingDraft = await ListingDraft.findByPk(draftId);
+    
+    if (!listingDraft) {
+      return {
+        success: false,
+        message: 'ListingDraft not found'
+      };
+    }
+
+    await listingDraft.update({ draftStatus: 'PUBLISHED' });
+
+    logger.info(`[Developer Publishing] ListingDraft status updated to PUBLISHED successfully`);
+    return {
+      success: true,
+      message: 'ListingDraft status updated to PUBLISHED'
+    };
+
+  } catch (error) {
+    logger.error(`[Developer Publishing] Error updating ListingDraft status:`, error);
+    throw error;
+  }
+}
+
 module.exports = {
   validateDeveloperData,
   createDeveloperRecord,
@@ -356,5 +391,6 @@ module.exports = {
   updateDeveloperVerificationStatus,
   performAutomatedVerification,
   sendDeveloperPublishingNotification,
-  logDeveloperEvent
+  logDeveloperEvent,
+  updateListingDraftStatus
 };
