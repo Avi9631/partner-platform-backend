@@ -167,31 +167,7 @@ const getDeveloper = async (req, res) => {
   }
 };
 
-/**
- * Get developer by slug (for public pages)
- * GET /api/developer/slug/:slug
- */
-const getDeveloperBySlug = async (req, res) => {
-  try {
-    const { slug } = req.params;
-
-    if (!slug) {
-      return sendErrorResponse(res, 'Slug is required', 400);
-    }
-
-    const result = await DeveloperService.getDeveloperBySlug(slug);
-
-    if (result.success) {
-      return sendSuccessResponse(res, result.data);
-    } else {
-      return sendErrorResponse(res, result.message, 404);
-    }
-  } catch (error) {
-    logger.error('Error in getDeveloperBySlug:', error);
-    return sendErrorResponse(res, 'Failed to get developer profile', 500);
-  }
-};
-
+ 
 /**
  * Get current user's developer profiles (all developers created by user)
  * GET /api/developer/my-profiles
@@ -359,12 +335,12 @@ const deleteDeveloper = async (req, res) => {
   }
 };
 
+
 module.exports = {
   publishDeveloper,
   updateDeveloper,
   getDeveloper,
-  getDeveloperBySlug,
-  getMyDeveloperProfiles,
+   getMyDeveloperProfiles,
   listDevelopers,
   updatePublishStatus,
   updateVerificationStatus,

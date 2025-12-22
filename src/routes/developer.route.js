@@ -36,16 +36,7 @@ router.get(
   DeveloperController.listDevelopers
 );
 
-/**
- * @route   GET /api/developer/slug/:slug
- * @desc    Get developer by slug (for public pages)
- * @access  Public
- */
-router.get(
-  "/slug/:slug",
-  DeveloperController.getDeveloperBySlug
-);
-
+ 
 /**
  * @route   GET /api/developer/:developerId
  * @desc    Get developer by ID

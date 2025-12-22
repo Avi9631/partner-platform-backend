@@ -150,9 +150,7 @@ async function developerPublishing(workflowInput) {
                 developer: {
                     developerId: developer.developerId,
                     developerName: developer.developerName,
-                    developerType: developer.developerType,
-                    slug: developer.slug,
-                    publishStatus: developer.publishStatus,
+                      publishStatus: developer.publishStatus,
                     verificationStatus: developer.verificationStatus
                 }
             }

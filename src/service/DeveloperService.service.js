@@ -3,45 +3,7 @@ const Developer = db.Developer;
 const PlatformUser = db.PlatformUser;
 const { Op } = require("sequelize");
 
-/**
- * Create slug from developer name
- * @param {string} name - Developer name
- * @returns {string} - URL-friendly slug
- */
-const createSlug = (name) => {
-  return name
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, '') // Remove special characters
-    .replace(/\s+/g, '-')      // Replace spaces with hyphens
-    .replace(/--+/g, '-')      // Replace multiple hyphens with single hyphen
-    .trim();
-};
-
-/**
- * Ensure slug is unique by appending number if needed
- * @param {string} baseSlug - Base slug
- * @param {number} excludeDeveloperId - Developer ID to exclude from check
- * @returns {Promise<string>} - Unique slug
- */
-const ensureUniqueSlug = async (baseSlug, excludeDeveloperId = null) => {
-  let slug = baseSlug;
-  let counter = 1;
-  
-  while (true) {
-    const whereClause = { slug };
-    if (excludeDeveloperId) {
-      whereClause.developerId = { [Op.ne]: excludeDeveloperId };
-    }
-    
-    const existing = await Developer.findOne({ where: whereClause });
-    if (!existing) {
-      return slug;
-    }
-    
-    slug = `${baseSlug}-${counter}`;
-    counter++;
-  }
-};
+ 
 
 /**
  * Create a new developer record from draft data
@@ -52,29 +14,15 @@ const ensureUniqueSlug = async (baseSlug, excludeDeveloperId = null) => {
  */
 const createDeveloper = async (userId, draftId, developerData) => {
   try {
-    // Generate unique slug
-    const baseSlug = createSlug(developerData.developerName);
-    const slug = await ensureUniqueSlug(baseSlug);
+ 
 
     // Create developer record
     const developer = await Developer.create({
       userId,
       draftId,
       developerName: developerData.developerName,
-      developerType: developerData.developerType,
-      description: developerData.description,
-      establishedYear: developerData.establishedYear,
-      registrationNumber: developerData.registrationNumber,
-      primaryContactEmail: developerData.primaryContactEmail,
-      primaryContactPhone: developerData.primaryContactPhone,
-      socialLinks: developerData.socialLinks || [],
-      totalProjectsCompleted: developerData.totalProjectsCompleted || 0,
-      totalProjectsOngoing: developerData.totalProjectsOngoing || 0,
-      totalUnitsDelivered: developerData.totalUnitsDelivered || 0,
-      projectTypes: developerData.projectTypes || [],
-      operatingStates: developerData.operatingStates || [],
-      slug,
       publishStatus: 'PENDING_REVIEW',
+      subscribeForDeveloperPage: developerData.subscribeForDeveloperPage || false,
       verificationStatus: 'PENDING'
     });
 
@@ -165,43 +113,7 @@ const getDeveloperById = async (developerId) => {
   }
 };
 
-/**
- * Get developer by slug
- * @param {string} slug - Developer slug
- * @returns {Promise<object>} - Result object
- */
-const getDeveloperBySlug = async (slug) => {
-  try {
-    const developer = await Developer.findOne({
-      where: { slug },
-      include: [
-        {
-          model: PlatformUser,
-          as: 'user',
-          attributes: ['userId', 'firstName', 'lastName', 'userEmail', 'profileImage']
-        }
-      ]
-    });
-
-    if (!developer) {
-      return {
-        success: false,
-        message: 'Developer not found'
-      };
-    }
-
-    // Increment view count
-    await developer.increment('viewCount');
-
-    return {
-      success: true,
-      data: developer
-    };
-  } catch (error) {
-    console.error('Error getting developer by slug:', error);
-    throw error;
-  }
-};
+ 
 
 /**
  * Get developers by user ID (all developers created by this user)
@@ -252,17 +164,9 @@ const listDevelopers = async (filters = {}, page = 1, limit = 20) => {
       whereClause.verificationStatus = filters.verificationStatus;
     }
 
-    if (filters.operatingState) {
-      whereClause.operatingStates = {
-        [Op.contains]: [filters.operatingState]
-      };
-    }
+ 
 
-    if (filters.projectType) {
-      whereClause.projectTypes = {
-        [Op.contains]: [filters.projectType]
-      };
-    }
+    
 
     if (filters.search) {
       whereClause[Op.or] = [
@@ -426,8 +330,7 @@ module.exports = {
   createDeveloper,
   updateDeveloper,
   getDeveloperById,
-  getDeveloperBySlug,
-  getDevelopersByUserId,
+   getDevelopersByUserId,
   listDevelopers,
   updatePublishStatus,
   updateVerificationStatus,

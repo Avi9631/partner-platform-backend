@@ -35,67 +35,14 @@ module.exports = (sequelize, Sequelize) => {
         field: "developer_name",
         allowNull: false
       },
-      developerType: {
-        type: Sequelize.ENUM('International Developer', 'National Developer', 'Regional Developer'),
-        field: "developer_type",
+
+      subscribeForDeveloperPage: {
+        type: Sequelize.BOOLEAN,
+        field: "developer_subscribed_for_page",
+        defaultValue: false
       },
-      description: {
-        type: Sequelize.TEXT,
-        field: "description",
-      },
-      establishedYear: {
-        type: Sequelize.INTEGER,
-        field: "established_year",
-      },
-      registrationNumber: {
-        type: Sequelize.STRING(100),
-        field: "registration_number",
-      },
-      
-      // Contact Information Fields
-      primaryContactEmail: {
-        type: Sequelize.STRING(150),
-        field: "primary_contact_email",
-      },
-      primaryContactPhone: {
-        type: Sequelize.STRING(20),
-        field: "primary_contact_phone",
-      },
-      socialLinks: {
-        type: Sequelize.JSONB,
-        field: "social_links",
-        defaultValue: [],
-        comment: "Array of social media links with type and url"
-      },
-      
-      // Projects & Portfolio Fields
-      totalProjectsCompleted: {
-        type: Sequelize.INTEGER,
-        field: "total_projects_completed",
-        defaultValue: 0
-      },
-      totalProjectsOngoing: {
-        type: Sequelize.INTEGER,
-        field: "total_projects_ongoing",
-        defaultValue: 0
-      },
-      totalUnitsDelivered: {
-        type: Sequelize.INTEGER,
-        field: "total_units_delivered",
-        defaultValue: 0
-      },
-      projectTypes: {
-        type: Sequelize.ARRAY(Sequelize.STRING),
-        field: "project_types",
-        defaultValue: [],
-        comment: "Array of project types like Residential, Commercial, etc."
-      },
-      operatingStates: {
-        type: Sequelize.ARRAY(Sequelize.STRING),
-        field: "operating_states",
-        defaultValue: [],
-        comment: "Array of states where developer operates"
-      },
+   
+      // verification fields
       verificationStatus: {
         type: Sequelize.ENUM('PENDING', 'AUTOMATED_REVIEW', 'MANUAL_REVIEW', 'APPROVED', 'REJECTED'),
         field: "verification_status",
@@ -116,24 +63,6 @@ module.exports = (sequelize, Sequelize) => {
           model: 'platform_user',
           key: 'user_id'
         }
-      },
-      publishedAt: {
-        type: Sequelize.DATE,
-        field: "published_at",
-      },
-      // SEO & Metadata
-      slug: {
-        type: Sequelize.STRING(300),
-        field: "slug",
-        comment: "URL-friendly slug for developer profile"
-      },
-      metaTitle: {
-        type: Sequelize.STRING(200),
-        field: "meta_title",
-      },
-      metaDescription: {
-        type: Sequelize.TEXT,
-        field: "meta_description",
       },
       
       // Virtual fields for formatted dates
@@ -174,10 +103,7 @@ module.exports = (sequelize, Sequelize) => {
         {
           fields: ['draft_id'],
           unique: true
-        },
-        {
-          fields: ['developer_type']
-        },
+        }, 
         {
           fields: ['verification_status']
         }
