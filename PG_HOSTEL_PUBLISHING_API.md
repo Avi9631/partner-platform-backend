@@ -39,7 +39,7 @@ User Request → Controller → Start Temporal Workflow → Activities
 {
   "draftId": 123,
   "propertyName": "SUNRISE PG / HOSTELS",
-  "genderAllowed": "Gents / Ladies / Unisex",
+  "genderAllowed": "Unisex",
   "description": "Premium PG accommodation with all modern amenities...",
   "isBrandManaged": true,
   "brandName": "NestAway",

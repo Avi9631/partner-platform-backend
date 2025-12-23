@@ -4,6 +4,7 @@ const { getTemporalClient } = require("../utils/temporalClient");
 const logger = require("../config/winston.config");
 const db = require("../entity");
 const ListingDraft = db.ListingDraft;
+const PgColiveHostel = db.PgColiveHostel;
 
 /**
  * Publish PG/Colive/Hostel - Create record and trigger workflow
@@ -52,6 +53,13 @@ const publishPgColiveHostel = async (req, res) => {
       return sendErrorResponse(res, 'At least one room type is required', 400);
     }
 
+    // Check if this draft has already been published
+    const existingPgHostel = await PgColiveHostel.findOne({
+      where: { draftId }
+    });
+
+    const isUpdate = !!existingPgHostel;
+
     // Start Temporal workflow for PG/Hostel publishing (non-blocking)
     try {
       const temporalClient = await getTemporalClient();
@@ -74,28 +82,39 @@ const publishPgColiveHostel = async (req, res) => {
         res,
         { 
           workflowId,
-          message: 'PG/Hostel publishing workflow started successfully'
+          isUpdate,
+          message: `PG/Hostel ${isUpdate ? 'update' : 'publishing'} workflow started successfully`
         },
-        'PG/Colive/Hostel is being processed',
+        `PG/Colive/Hostel is being ${isUpdate ? 'updated' : 'processed'}`,
         202
       );
     } catch (temporalError) {
       logger.error('Temporal workflow error:', temporalError);
       
-      // Fallback: Create PG/Hostel directly without workflow
-      const fallbackResult = await PgColiveHostelService.createPgColiveHostel(userId, draftId, pgHostelData);
+      // Fallback: Create or Update PG/Hostel directly without workflow
+      let fallbackResult;
+      
+      if (isUpdate) {
+        fallbackResult = await PgColiveHostelService.updatePgColiveHostel(
+          existingPgHostel.pgHostelId,
+          userId,
+          pgHostelData
+        );
+      } else {
+        fallbackResult = await PgColiveHostelService.createPgColiveHostel(userId, draftId, pgHostelData);
+      }
       
       if (fallbackResult.success) {
         return sendSuccessResponse(
           res,
           fallbackResult.data,
-          'PG/Colive/Hostel published successfully (direct mode)',
-          201
+          `PG/Colive/Hostel ${isUpdate ? 'updated' : 'published'} successfully (direct mode)`,
+          isUpdate ? 200 : 201
         );
       } else {
         return sendErrorResponse(
           res,
-          fallbackResult.message || 'Failed to publish PG/Colive/Hostel',
+          fallbackResult.message || `Failed to ${isUpdate ? 'update' : 'publish'} PG/Colive/Hostel`,
           fallbackResult.statusCode || 500
         );
       }
@@ -181,6 +200,90 @@ const listPgHostels = async (req, res) => {
     return sendErrorResponse(
       res,
       'An error occurred while listing PG/Hostels',
+      500
+    );
+  }
+};
+
+/**
+ * Search PG/Hostels near a location
+ * GET /api/pg-hostel/search-nearby
+ */
+const searchNearbyPgHostels = async (req, res) => {
+  try {
+    const { lat, lng, radius } = req.query;
+
+    // Validate required parameters
+    if (!lat || !lng || !radius) {
+      return sendErrorResponse(
+        res,
+        'Latitude, longitude, and radius are required',
+        400
+      );
+    }
+
+    // Validate numeric values
+    const latitude = parseFloat(lat);
+    const longitude = parseFloat(lng);
+    const radiusKm = parseFloat(radius);
+
+    if (isNaN(latitude) || isNaN(longitude) || isNaN(radiusKm)) {
+      return sendErrorResponse(
+        res,
+        'Invalid latitude, longitude, or radius value',
+        400
+      );
+    }
+
+    // Validate coordinate ranges
+    if (latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) {
+      return sendErrorResponse(
+        res,
+        'Invalid coordinate values. Latitude must be between -90 and 90, longitude between -180 and 180',
+        400
+      );
+    }
+
+    if (radiusKm <= 0 || radiusKm > 100) {
+      return sendErrorResponse(
+        res,
+        'Radius must be between 0 and 100 km',
+        400
+      );
+    }
+
+    const filters = {
+      genderAllowed: req.query.genderAllowed,
+      isBrandManaged: req.query.isBrandManaged,
+      page: req.query.page || 1,
+      limit: req.query.limit || 20
+    };
+
+    const result = await PgColiveHostelService.searchNearbyPgHostels(
+      latitude,
+      longitude,
+      radiusKm,
+      filters
+    );
+
+    if (result.success) {
+      return sendSuccessResponse(
+        res,
+        result.data,
+        'Nearby PG/Hostels fetched successfully'
+      );
+    } else {
+      return sendErrorResponse(
+        res,
+        result.message,
+        result.statusCode || 500
+      );
+    }
+  } catch (error) {
+    logger.error('Error searching nearby PG/Hostels:', error);
+    return sendErrorResponse(
+      res,
+      'An error occurred while searching nearby PG/Hostels',
       500
     );
   }
@@ -295,6 +398,7 @@ module.exports = {
   publishPgColiveHostel,
   getMyPgHostelProfiles,
   listPgHostels,
+  searchNearbyPgHostels,
   getPgHostelBySlug,
   getPgHostelById,
   updatePgHostel

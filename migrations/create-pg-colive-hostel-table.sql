@@ -14,6 +14,8 @@ CREATE TABLE IF NOT EXISTS pg_colive_hostel (
     brand_name VARCHAR(255),
     year_built VARCHAR(50),
     coordinates JSONB,
+    lat DECIMAL(10, 8),
+    lng DECIMAL(11, 8),
     city VARCHAR(100),
     locality VARCHAR(255),
     address_text TEXT,
@@ -37,6 +39,8 @@ COMMENT ON TABLE pg_colive_hostel IS 'Stores PG/Colive/Hostel listing informatio
 COMMENT ON COLUMN pg_colive_hostel.draft_id IS 'Ensures one draft can only be published once';
 COMMENT ON COLUMN pg_colive_hostel.slug IS 'URL-friendly unique identifier';
 COMMENT ON COLUMN pg_colive_hostel.coordinates IS 'Stores { lat, lng }';
+COMMENT ON COLUMN pg_colive_hostel.lat IS 'Latitude coordinate for easy access';
+COMMENT ON COLUMN pg_colive_hostel.lng IS 'Longitude coordinate for easy access';
 COMMENT ON COLUMN pg_colive_hostel.room_types IS 'Array of room type objects with pricing, amenities, images, availability';
 COMMENT ON COLUMN pg_colive_hostel.common_amenities IS 'Array of common amenity objects';
 COMMENT ON COLUMN pg_colive_hostel.food_mess IS 'Food and mess details including meals, menu, timings';

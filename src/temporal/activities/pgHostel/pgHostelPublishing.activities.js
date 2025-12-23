@@ -43,11 +43,24 @@ async function validatePgHostelData({ userId, draftId, pgHostelData }) {
       errors.push('Gender allowed is required');
     }
 
-    // Validate coordinates
-    if (pgHostelData.coordinates) {
-      if (!pgHostelData.coordinates.lat || !pgHostelData.coordinates.lng) {
-        errors.push('Invalid coordinates: both lat and lng are required');
-      }
+    // Validate coordinates (required for location field)
+    if (!pgHostelData.coordinates) {
+      errors.push('Coordinates are required');
+    } else if (!pgHostelData.coordinates.lat || !pgHostelData.coordinates.lng) {
+      errors.push('Invalid coordinates: both lat and lng are required');
+    }
+
+    // Validate city and locality (required fields)
+    if (!pgHostelData.city) {
+      errors.push('City is required');
+    }
+
+    if (!pgHostelData.locality) {
+      errors.push('Locality is required');
+    }
+
+    if (!pgHostelData.addressText) {
+      errors.push('Address text is required');
     }
 
     // Validate room types
@@ -87,13 +100,19 @@ async function validatePgHostelData({ userId, draftId, pgHostelData }) {
     }
 
     // Check if this draft has already been published
+    let isUpdate = false;
+    let existingPgHostelId = null;
+    
     if (draftId) {
       const existingPgHostel = await PgColiveHostel.findOne({
         where: { draftId }
       });
       
       if (existingPgHostel) {
-        errors.push('This draft has already been published. A draft can only be published once.');
+        // Draft already published, this will be an update operation
+        isUpdate = true;
+        existingPgHostelId = existingPgHostel.pgHostelId;
+        logger.info(`[PG Hostel Publishing] Draft ${draftId} already published (PG Hostel ID: ${existingPgHostelId}). This will be an update operation.`);
       }
     }
 
@@ -104,10 +123,12 @@ async function validatePgHostelData({ userId, draftId, pgHostelData }) {
       };
     }
 
-    logger.info(`[PG Hostel Publishing] Validation successful for user ${userId}`);
+    logger.info(`[PG Hostel Publishing] Validation successful for user ${userId} (${isUpdate ? 'UPDATE' : 'CREATE'} mode)`);
     return {
       success: true,
-      message: 'PG/Hostel data validation passed'
+      message: 'PG/Hostel data validation passed',
+      isUpdate,
+      existingPgHostelId
     };
 
   } catch (error) {
@@ -231,6 +252,47 @@ async function updatePgHostelVerificationStatus({ pgHostelId, verificationStatus
 }
 
 /**
+ * Update existing PG/Hostel record in database
+ * 
+ * @param {Object} params - Activity parameters
+ * @param {number} params.pgHostelId - PG Hostel ID to update
+ * @param {number} params.userId - User ID for authorization
+ * @param {Object} params.pgHostelData - Updated PG/Hostel data
+ * @returns {Promise<Object>} - Update result
+ */
+async function updatePgHostelRecord({ pgHostelId, userId, pgHostelData }) {
+  logger.info(`[PG Hostel Publishing] Updating record ${pgHostelId} for user ${userId}`);
+  
+  try {
+    const result = await PgColiveHostelService.updatePgColiveHostel(
+      pgHostelId,
+      userId,
+      pgHostelData
+    );
+
+    if (!result.success) {
+      logger.error(`[PG Hostel Publishing] Failed to update record:`, result);
+      return result;
+    }
+
+    logger.info(`[PG Hostel Publishing] Record updated successfully: ${pgHostelId}`);
+    return {
+      success: true,
+      message: 'PG/Hostel record updated successfully',
+      data: {
+        pgHostelId: result.data.pgHostelId,
+        slug: result.data.slug,
+        propertyName: result.data.propertyName
+      }
+    };
+
+  } catch (error) {
+    logger.error(`[PG Hostel Publishing] Error updating record:`, error);
+    throw error;
+  }
+}
+
+/**
  * Update ListingDraft status to PUBLISHED
  * 
  * @param {Object} params - Activity parameters
@@ -267,6 +329,7 @@ async function updateListingDraftStatus({ draftId }) {
 module.exports = {
   validatePgHostelData,
   createPgHostelRecord,
+  updatePgHostelRecord,
   sendPgHostelPublishingNotification,
   updatePgHostelVerificationStatus,
   updateListingDraftStatus

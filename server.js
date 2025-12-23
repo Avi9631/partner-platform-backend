@@ -65,7 +65,7 @@ app.use(
 
 app.use(
   cors({
-    origin: process.env.ACCESS_CONTROL_ALLOW_ORIGIN, // Update this to your frontend URL
+    origin: process.env.ACCESS_CONTROL_ALLOW_ORIGIN.split(',').map(origin => origin.trim()), // Update this to your frontend URL
     credentials: true, // Allow credentials (cookies, authorization headers)
   })
 );

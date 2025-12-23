@@ -26,6 +26,17 @@ router.get(
 );
 
 /**
+ * @route   GET /api/pg-hostel/search-nearby
+ * @desc    Search PG/Hostels near a location (lat, lng, radius)
+ * @access  Public
+ * @query   lat, lng, radius (in km), genderAllowed, isBrandManaged, page, limit
+ */
+router.get(
+  "/search-nearby",
+  PgColiveHostelController.searchNearbyPgHostels
+);
+
+/**
  * @route   GET /api/pg-hostel/list
  * @desc    List PG/Hostels with filters and pagination
  * @access  Public

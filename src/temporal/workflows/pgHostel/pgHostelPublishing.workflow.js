@@ -16,6 +16,7 @@ const { proxyActivities } = require('@temporalio/workflow');
 const {
     validatePgHostelData,
     createPgHostelRecord,
+    updatePgHostelRecord,
     sendPgHostelPublishingNotification,
     updateListingDraftStatus,
 } = proxyActivities({
@@ -103,38 +104,57 @@ async function pgHostelPublishing(workflowInput) {
         
         console.log(`[PG Hostel Publishing] Validation passed`);
         
-        // Step 2: Create PG/Hostel record in database
-        console.log(`[PG Hostel Publishing] Step 2: Creating PG/Hostel record`);
+        const isUpdate = validationResult.isUpdate || false;
+        const existingPgHostelId = validationResult.existingPgHostelId;
         
-        const creationResult = await createPgHostelRecord({
-            userId,
-            draftId,
-            pgHostelData,
-        });
+        // Step 2: Create or Update PG/Hostel record in database
+        console.log(`[PG Hostel Publishing] Step 2: ${isUpdate ? 'Updating' : 'Creating'} PG/Hostel record`);
         
-        if (!creationResult.success) {
-            console.error(`[PG Hostel Publishing] Record creation failed:`, creationResult);
+        let operationResult;
+        
+        if (isUpdate) {
+            // Update existing record
+            operationResult = await updatePgHostelRecord({
+                pgHostelId: existingPgHostelId,
+                userId,
+                pgHostelData,
+            });
+        } else {
+            // Create new record
+            operationResult = await createPgHostelRecord({
+                userId,
+                draftId,
+                pgHostelData,
+            });
+        }
+        
+        if (!operationResult.success) {
+            console.error(`[PG Hostel Publishing] Record ${isUpdate ? 'update' : 'creation'} failed:`, operationResult);
             return {
                 success: false,
-                message: 'Failed to create PG/Hostel record',
-                error: creationResult.message,
-                step: 'creation'
+                message: `Failed to ${isUpdate ? 'update' : 'create'} PG/Hostel record`,
+                error: operationResult.message,
+                step: isUpdate ? 'update' : 'creation'
             };
         }
         
-        console.log(`[PG Hostel Publishing] Record created: ${creationResult.data.pgHostelId}`);
+        console.log(`[PG Hostel Publishing] Record ${isUpdate ? 'updated' : 'created'}: ${operationResult.data.pgHostelId}`);
         
-        const { pgHostelId, slug, propertyName } = creationResult.data;
+        const { pgHostelId, slug, propertyName } = operationResult.data;
         
-        // Step 3: Update ListingDraft status to PUBLISHED
-        console.log(`[PG Hostel Publishing] Step 3: Updating ListingDraft status`);
-        
-        try {
-            await updateListingDraftStatus({ draftId });
-            console.log(`[PG Hostel Publishing] ListingDraft status updated to PUBLISHED`);
-        } catch (updateError) {
-            // Log but don't fail the workflow
-            console.error(`[PG Hostel Publishing] Failed to update ListingDraft status:`, updateError);
+        // Step 3: Update ListingDraft status to PUBLISHED (only for new creations)
+        if (!isUpdate) {
+            console.log(`[PG Hostel Publishing] Step 3: Updating ListingDraft status`);
+            
+            try {
+                await updateListingDraftStatus({ draftId });
+                console.log(`[PG Hostel Publishing] ListingDraft status updated to PUBLISHED`);
+            } catch (updateError) {
+                // Log but don't fail the workflow
+                console.error(`[PG Hostel Publishing] Failed to update ListingDraft status:`, updateError);
+            }
+        } else {
+            console.log(`[PG Hostel Publishing] Skipping ListingDraft update (update operation)`);
         }
         
         // Step 4: Send notification to user
@@ -156,11 +176,12 @@ async function pgHostelPublishing(workflowInput) {
         // Return success result
         return {
             success: true,
-            message: 'PG/Hostel published successfully',
+            message: `PG/Hostel ${isUpdate ? 'updated' : 'published'} successfully`,
             data: {
                 pgHostelId,
                 slug,
                 propertyName,
+                isUpdate,
                 publishStatus: 'PENDING_REVIEW',
                 verificationStatus: 'PENDING'
             }

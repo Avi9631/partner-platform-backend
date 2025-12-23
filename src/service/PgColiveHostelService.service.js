@@ -56,6 +56,18 @@ const createPgColiveHostel = async (userId, draftId, pgHostelData) => {
     const baseSlug = createSlug(pgHostelData.propertyName);
     const slug = await ensureUniqueSlug(baseSlug);
 
+    // Validate coordinates are provided (required for location field)
+    if (!pgHostelData.coordinates || !pgHostelData.coordinates.lat || !pgHostelData.coordinates.lng) {
+      throw new Error('Coordinates (lat, lng) are required for creating PG/Hostel listing');
+    }
+
+    // Create location point from coordinates
+    const locationPoint = {
+      type: 'Point',
+      coordinates: [pgHostelData.coordinates.lng, pgHostelData.coordinates.lat], // [longitude, latitude] for PostGIS
+      crs: { type: 'name', properties: { name: 'EPSG:4326' } }
+    };
+
     // Create PG/Hostel record
     const pgHostel = await PgColiveHostel.create({
       userId,
@@ -67,7 +79,9 @@ const createPgColiveHostel = async (userId, draftId, pgHostelData) => {
       isBrandManaged: pgHostelData.isBrandManaged || false,
       brandName: pgHostelData.brandName,
       yearBuilt: pgHostelData.yearBuilt,
-      coordinates: pgHostelData.coordinates,
+      location: locationPoint,
+      lat: pgHostelData.coordinates.lat,
+      lng: pgHostelData.coordinates.lng,
       city: pgHostelData.city,
       locality: pgHostelData.locality,
       addressText: pgHostelData.addressText,
@@ -125,6 +139,18 @@ const updatePgColiveHostel = async (pgHostelId, userId, updateData) => {
       updateData.slug = await ensureUniqueSlug(baseSlug, pgHostelId);
     }
 
+    // Update location if coordinates changed
+    if (updateData.coordinates && updateData.coordinates.lat && updateData.coordinates.lng) {
+      updateData.location = {
+        type: 'Point',
+        coordinates: [updateData.coordinates.lng, updateData.coordinates.lat], // [longitude, latitude] for PostGIS
+        crs: { type: 'name', properties: { name: 'EPSG:4326' } }
+      };
+      updateData.lat = updateData.coordinates.lat;
+      updateData.lng = updateData.coordinates.lng;
+      delete updateData.coordinates; // Remove coordinates object as it's not a DB field
+    }
+
     // Update the record
     await pgHostel.update(updateData);
 
@@ -151,7 +177,7 @@ const getPgColiveHostelById = async (pgHostelId) => {
         {
           model: PlatformUser,
           as: 'user',
-          attributes: ['userId', 'name', 'email', 'phoneNumber']
+          attributes: ['userId', 'firstName', 'lastName', 'email', 'phone']
         }
       ]
     });
@@ -187,7 +213,7 @@ const getPgColiveHostelBySlug = async (slug) => {
         {
           model: PlatformUser,
           as: 'user',
-          attributes: ['userId', 'name', 'email', 'phoneNumber']
+          attributes: ['userId', 'firstName', 'lastName', 'email', 'phone']
         }
       ]
     });
@@ -274,7 +300,7 @@ const listPgColiveHostels = async (filters = {}) => {
         {
           model: PlatformUser,
           as: 'user',
-          attributes: ['userId', 'name', 'email']
+          attributes: ['userId', 'firstName', 'lastName', 'email', 'phone']
         }
       ],
       limit: parseInt(limit),
@@ -296,6 +322,113 @@ const listPgColiveHostels = async (filters = {}) => {
     };
   } catch (error) {
     console.error('Error listing PG/Hostels:', error);
+    throw error;
+  }
+};
+
+/**
+ * Search PG/Hostels near a location using PostGIS spatial query
+ * @param {number} latitude - Latitude coordinate
+ * @param {number} longitude - Longitude coordinate
+ * @param {number} radiusKm - Search radius in kilometers
+ * @param {object} filters - Additional filter criteria
+ * @returns {Promise<object>} - Result object
+ */
+const searchNearbyPgHostels = async (latitude, longitude, radiusKm, filters = {}) => {
+  try {
+    const {
+      genderAllowed,
+      isBrandManaged,
+      page = 1,
+      limit = 20
+    } = filters;
+
+    const whereClause = {
+      // publishStatus: 'PUBLISHED',
+      // verificationStatus: 'VERIFIED'
+    };
+
+    // Apply additional filters
+    if (genderAllowed) {
+      whereClause.genderAllowed = genderAllowed;
+    }
+
+    if (isBrandManaged !== undefined) {
+      whereClause.isBrandManaged = isBrandManaged;
+    }
+
+    // Convert radius from km to meters for PostGIS
+    const radiusMeters = radiusKm * 1000;
+
+    // Pagination
+    const offset = (page - 1) * limit;
+
+    // Build base where conditions as array
+    const whereConditions = [];
+    
+    // Add spatial query using raw SQL for PostGIS
+    whereConditions.push(
+      db.sequelize.literal(
+        `ST_DWithin(
+          location::geography,
+          ST_SetSRID(ST_MakePoint(${longitude}, ${latitude}), 4326)::geography,
+          ${radiusMeters}
+        )`
+      )
+    );
+
+    // Use PostGIS ST_DWithin for efficient spatial query
+    const { rows, count } = await PgColiveHostel.findAndCountAll({
+      where: {
+        ...whereClause,
+        [Op.and]: whereConditions
+      },
+      attributes: {
+        include: [
+          // Calculate distance in kilometers and include it in results
+          [
+            db.sequelize.literal(
+              `ROUND(CAST(ST_Distance(location::geography, ST_SetSRID(ST_MakePoint(${longitude}, ${latitude}), 4326)::geography) / 1000 AS numeric), 2)`
+            ),
+            'distance_km'
+          ]
+        ]
+      },
+      include: [
+        {
+          model: PlatformUser,
+          as: 'user',
+          attributes: ['userId', 'firstName', 'lastName', 'email', 'phone']
+        }
+      ],
+      limit: parseInt(limit),
+      offset: parseInt(offset),
+      // Order by distance (nearest first)
+      order: db.sequelize.literal(
+        `ST_Distance(location::geography, ST_SetSRID(ST_MakePoint(${longitude}, ${latitude}), 4326)::geography) ASC`
+      ),
+      subQuery: false
+    });
+
+    return {
+      success: true,
+      data: {
+        pgHostels: rows,
+        searchCenter: {
+          lat: latitude,
+          lng: longitude,
+          radiusKm
+        },
+        pagination: {
+          total: count,
+          page: parseInt(page),
+          limit: parseInt(limit),
+          totalPages: Math.ceil(count / limit)
+        }
+      }
+    };
+  } catch (error) {
+    console.error('Error searching nearby PG/Hostels:', error);
     throw error;
   }
 };
@@ -328,5 +461,6 @@ module.exports = {
   getPgColiveHostelById,
   getPgColiveHostelBySlug,
   listPgColiveHostels,
+  searchNearbyPgHostels,
   getUserPgColiveHostels
 };

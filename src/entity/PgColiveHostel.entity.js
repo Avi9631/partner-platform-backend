@@ -39,14 +39,12 @@ module.exports = (sequelize, Sequelize) => {
     },
     slug: {
       type: Sequelize.STRING(255),
-      field: "slug",
-      comment: 'URL-friendly unique identifier'
+      field: "slug", 
     },
     genderAllowed: {
-      type: Sequelize.STRING(50),
+      type: Sequelize.ENUM('Gents', 'Ladies', 'Unisex'),
       field: "gender_allowed",
-      allowNull: true,
-      comment: 'Gents / Ladies / Unisex'
+      allowNull: false,
     },
     description: {
       type: Sequelize.TEXT,
@@ -64,30 +62,43 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: true,
     },
     yearBuilt: {
-      type: Sequelize.STRING(50),
+      type: Sequelize.INTEGER,
       field: "year_built",
       allowNull: true,
+      comment: 'Year the property was built'
     },
-    coordinates: {
-      type: Sequelize.JSONB,
-      field: "coordinates",
+    location: {
+      type: Sequelize.GEOGRAPHY('POINT', 4326),
+      field: "location",
+      allowNull: false,
+      comment: 'PostGIS geography point (SRID 4326) for efficient spatial queries'
+    },
+    lat: {
+      type: Sequelize.DECIMAL(10, 8),
+      field: "lat",
       allowNull: true,
-      comment: 'Stores { lat, lng }'
+      comment: 'Latitude coordinate for easy access'
+    },
+    lng: {
+      type: Sequelize.DECIMAL(11, 8),
+      field: "lng",
+      allowNull: true,
+      comment: 'Longitude coordinate for easy access'
     },
     city: {
       type: Sequelize.STRING(100),
       field: "city",
-      allowNull: true,
+      allowNull: false,
     },
     locality: {
       type: Sequelize.STRING(255),
       field: "locality",
-      allowNull: true,
+      allowNull: false,
     },
     addressText: {
       type: Sequelize.TEXT,
       field: "address_text",
-      allowNull: true,
+      allowNull: false,
     },
     landmark: {
       type: Sequelize.STRING(255),
@@ -182,28 +193,23 @@ module.exports = (sequelize, Sequelize) => {
       },
       {
         fields: ['draft_id']
-      }, 
-      {
-        fields: ['property_name']
-      },
-      {
-        fields: ['city']
-      },
-      {
-        fields: ['locality']
-      },
-      {
-        fields: ['publish_status']
-      },
-      {
-        fields: ['verification_status']
       },
       {
         fields: ['pg_hostel_created_at']
+      },
+      {
+        fields: ['location'],
+        using: 'GIST',
+        name: 'idx_pg_hostel_location_gist'
+      },
+      {
+        fields: ['city']
       }
     ],
   });
 
   return PgColiveHostel;
 };
+
+
 
