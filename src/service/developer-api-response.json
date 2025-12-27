@@ -1,0 +1,4314 @@
+{
+    "success": true,
+    "metadata": {
+        "total": 100,
+        "lastUpdated": "2024-12-27T10:30:00Z",
+        "version": "1.0"
+    },
+    "pagination": {
+        "totalPages": 5,
+        "totalItems": 100
+    },
+    "data": {
+        "prestige-group": {
+            "id": "prestige-group",
+            "name": "Prestige Group",
+            "tagline": "Building Dreams Since 1986",
+            "logo": "https://logos-api.apistemic.com/domain:prestigeconstructions.com",
+            "establishedYear": 1986,
+            "yearsOfExperience": 38,
+            "description": "Prestige Group is one of India's leading real estate developers with a track record of over 38 years. The group has developed properties across residential, commercial, retail, leisure, and hospitality segments.",
+            "statistics": {
+                "projectsCompleted": 280,
+                "projectsOngoing": 45,
+                "projectsUpcoming": 28
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Prestige Group Head Office",
+                    "city": "Bangalore",
+                    "state": "Karnataka",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 80 2559 9000",
+                "email": "info@prestigeconstructions.com",
+                "website": "www.prestigeconstructions.com",
+                "customerCare": "+91 80 2559 9000",
+                "supportEmail": "info@prestigeconstructions.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/prestige-group",
+                "twitter": "https://twitter.com/prestige-group",
+                "facebook": "https://facebook.com/prestige-group",
+                "instagram": "https://instagram.com/prestige-group",
+                "youtube": "https://youtube.com/prestige-group"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": true,
+                "priority": 1
+            }
+        },
+        "dlf-limited": {
+            "id": "dlf-limited",
+            "name": "DLF Limited",
+            "tagline": "Building India Since 1946",
+            "logo": "https://logos-api.apistemic.com/domain:dlf.in",
+            "establishedYear": 1946,
+            "yearsOfExperience": 78,
+            "description": "DLF Limited is India's largest real estate developer with over 75 years of experience. The company operates across residential, commercial, and retail segments with a strong presence in Delhi NCR.",
+            "statistics": {
+                "projectsCompleted": 310,
+                "projectsOngoing": 35,
+                "projectsUpcoming": 22
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "DLF Limited Head Office",
+                    "city": "Gurugram",
+                    "state": "Haryana",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 124 485 1000",
+                "email": "info@dlf.in",
+                "website": "www.dlf.in",
+                "customerCare": "+91 124 485 1000",
+                "supportEmail": "info@dlf.in"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/dlf-limited",
+                "twitter": "https://twitter.com/dlf-limited",
+                "facebook": "https://facebook.com/dlf-limited",
+                "instagram": "https://instagram.com/dlf-limited",
+                "youtube": "https://youtube.com/dlf-limited"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": true,
+                "priority": 1
+            }
+        },
+        "godrej-properties": {
+            "id": "godrej-properties",
+            "name": "Godrej Properties",
+            "tagline": "Innovation in Real Estate Since 1990",
+            "logo": "https://logos-api.apistemic.com/domain:godrejproperties.com",
+            "establishedYear": 1990,
+            "yearsOfExperience": 34,
+            "description": "Godrej Properties is one of India's leading real estate developers known for innovation, sustainability, and cutting-edge design. Part of the trusted Godrej Group.",
+            "statistics": {
+                "projectsCompleted": 95,
+                "projectsOngoing": 52,
+                "projectsUpcoming": 38
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Godrej Properties Head Office",
+                    "city": "Mumbai",
+                    "state": "Maharashtra",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 22 2518 8070",
+                "email": "customercare@godrejproperties.com",
+                "website": "www.godrejproperties.com",
+                "customerCare": "+91 22 2518 8070",
+                "supportEmail": "customercare@godrejproperties.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/godrej-properties",
+                "twitter": "https://twitter.com/godrej-properties",
+                "facebook": "https://facebook.com/godrej-properties",
+                "instagram": "https://instagram.com/godrej-properties",
+                "youtube": "https://youtube.com/godrej-properties"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "lodha-group": {
+            "id": "lodha-group",
+            "name": "Lodha Group (Macrotech Developers)",
+            "tagline": "Building a Better Life Since 1980",
+            "logo": "https://logos-api.apistemic.com/domain:lodhagroup.in",
+            "establishedYear": 1980,
+            "yearsOfExperience": 44,
+            "description": "Lodha Group is one of India's largest real estate developers with a strong presence in Mumbai, Pune, and London. Known for iconic luxury developments.",
+            "statistics": {
+                "projectsCompleted": 185,
+                "projectsOngoing": 45,
+                "projectsUpcoming": 32
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Lodha Group (Macrotech Developers) Head Office",
+                    "city": "Mumbai",
+                    "state": "Maharashtra",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 22 6191 0000",
+                "email": "customercare@lodhagroup.in",
+                "website": "www.lodhagroup.in",
+                "customerCare": "+91 22 6191 0000",
+                "supportEmail": "customercare@lodhagroup.in"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/lodha-group",
+                "twitter": "https://twitter.com/lodha-group",
+                "facebook": "https://facebook.com/lodha-group",
+                "instagram": "https://instagram.com/lodha-group",
+                "youtube": "https://youtube.com/lodha-group"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": true,
+                "priority": 2
+            }
+        },
+        "oberoi-realty": {
+            "id": "oberoi-realty",
+            "name": "Oberoi Realty",
+            "tagline": "Excellence in Real Estate Since 1980",
+            "logo": "https://logos-api.apistemic.com/domain:oberoirealty.com",
+            "establishedYear": 1980,
+            "yearsOfExperience": 44,
+            "description": "Oberoi Realty is a leading real estate developer known for premium residential and commercial projects in Mumbai. Focuses on luxury and quality.",
+            "statistics": {
+                "projectsCompleted": 48,
+                "projectsOngoing": 18,
+                "projectsUpcoming": 12
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Oberoi Realty Head Office",
+                    "city": "Mumbai",
+                    "state": "Maharashtra",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 22 6677 3333",
+                "email": "contact@oberoirealty.com",
+                "website": "www.oberoirealty.com",
+                "customerCare": "+91 22 6677 3333",
+                "supportEmail": "contact@oberoirealty.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/oberoi-realty",
+                "twitter": "https://twitter.com/oberoi-realty",
+                "facebook": "https://facebook.com/oberoi-realty",
+                "instagram": "https://instagram.com/oberoi-realty",
+                "youtube": "https://youtube.com/oberoi-realty"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "brigade-group": {
+            "id": "brigade-group",
+            "name": "Brigade Group",
+            "tagline": "Building Trust Since 1986",
+            "logo": "https://logos-api.apistemic.com/domain:brigadegroup.com",
+            "establishedYear": 1986,
+            "yearsOfExperience": 38,
+            "description": "Brigade Group is a leading South India real estate developer with diversified portfolio in residential, commercial, retail, and hospitality sectors.",
+            "statistics": {
+                "projectsCompleted": 168,
+                "projectsOngoing": 32,
+                "projectsUpcoming": 24
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Brigade Group Head Office",
+                    "city": "Bangalore",
+                    "state": "Karnataka",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 80 4137 4444",
+                "email": "info@brigadegroup.com",
+                "website": "www.brigadegroup.com",
+                "customerCare": "+91 80 4137 4444",
+                "supportEmail": "info@brigadegroup.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/brigade-group",
+                "twitter": "https://twitter.com/brigade-group",
+                "facebook": "https://facebook.com/brigade-group",
+                "instagram": "https://instagram.com/brigade-group",
+                "youtube": "https://youtube.com/brigade-group"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": true,
+                "priority": 2
+            }
+        },
+        "sobha-limited": {
+            "id": "sobha-limited",
+            "name": "Sobha Limited",
+            "tagline": "Passion at Work Since 1995",
+            "logo": "https://logos-api.apistemic.com/domain:sobha.com",
+            "establishedYear": 1995,
+            "yearsOfExperience": 29,
+            "description": "Sobha Limited is India's only backward integrated real estate developer with in-house capabilities across all construction activities. Known for quality craftsmanship.",
+            "statistics": {
+                "projectsCompleted": 112,
+                "projectsOngoing": 38,
+                "projectsUpcoming": 28
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Sobha Limited Head Office",
+                    "city": "Bangalore",
+                    "state": "Karnataka",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 80 4923 5050",
+                "email": "contact@sobha.com",
+                "website": "www.sobha.com",
+                "customerCare": "+91 80 4923 5050",
+                "supportEmail": "contact@sobha.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/sobha-limited",
+                "twitter": "https://twitter.com/sobha-limited",
+                "facebook": "https://facebook.com/sobha-limited",
+                "instagram": "https://instagram.com/sobha-limited",
+                "youtube": "https://youtube.com/sobha-limited"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": true,
+                "priority": 2
+            }
+        },
+        "mahindra-lifespaces": {
+            "id": "mahindra-lifespaces",
+            "name": "Mahindra Lifespace Developers",
+            "tagline": "Creating Sustainable Communities Since 1994",
+            "logo": "https://logos-api.apistemic.com/domain:mahindralifespaces.com",
+            "establishedYear": 1994,
+            "yearsOfExperience": 30,
+            "description": "Mahindra Lifespaces is committed to sustainable urban development. Part of the Mahindra Group, focuses on green townships and affordable housing.",
+            "statistics": {
+                "projectsCompleted": 78,
+                "projectsOngoing": 28,
+                "projectsUpcoming": 18
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Mahindra Lifespace Developers Head Office",
+                    "city": "Mumbai",
+                    "state": "Maharashtra",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 22 6747 8600",
+                "email": "customercare@mahindralifespaces.com",
+                "website": "www.mahindralifespaces.com",
+                "customerCare": "+91 22 6747 8600",
+                "supportEmail": "customercare@mahindralifespaces.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/mahindra-lifespaces",
+                "twitter": "https://twitter.com/mahindra-lifespaces",
+                "facebook": "https://facebook.com/mahindra-lifespaces",
+                "instagram": "https://instagram.com/mahindra-lifespaces",
+                "youtube": "https://youtube.com/mahindra-lifespaces"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "tata-housing": {
+            "id": "tata-housing",
+            "name": "Tata Housing Development Company",
+            "tagline": "Building With Trust Since 1984",
+            "logo": "https://logos-api.apistemic.com/domain:tatahousing.in",
+            "establishedYear": 1984,
+            "yearsOfExperience": 40,
+            "description": "Tata Housing is a leading real estate developer in India, part of the Tata Group. Known for quality construction and sustainable practices.",
+            "statistics": {
+                "projectsCompleted": 92,
+                "projectsOngoing": 32,
+                "projectsUpcoming": 22
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Tata Housing Development Company Head Office",
+                    "city": "Mumbai",
+                    "state": "Maharashtra",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 22 6778 5656",
+                "email": "care@tatahousing.in",
+                "website": "www.tatahousing.in",
+                "customerCare": "+91 22 6778 5656",
+                "supportEmail": "care@tatahousing.in"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/tata-housing",
+                "twitter": "https://twitter.com/tata-housing",
+                "facebook": "https://facebook.com/tata-housing",
+                "instagram": "https://instagram.com/tata-housing",
+                "youtube": "https://youtube.com/tata-housing"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "kolte-patil": {
+            "id": "kolte-patil",
+            "name": "Kolte-Patil Developers",
+            "tagline": "Excellence in Construction Since 1991",
+            "logo": "https://logos-api.apistemic.com/domain:koltepatil.com",
+            "establishedYear": 1991,
+            "yearsOfExperience": 33,
+            "description": "Kolte-Patil is a leading real estate developer with strong presence in Pune, Mumbai, and Bangalore. Known for quality residential projects.",
+            "statistics": {
+                "projectsCompleted": 96,
+                "projectsOngoing": 28,
+                "projectsUpcoming": 18
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Kolte-Patil Developers Head Office",
+                    "city": "Pune",
+                    "state": "Maharashtra",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 20 6678 5500",
+                "email": "marketing@koltepatil.com",
+                "website": "www.koltepatil.com",
+                "customerCare": "+91 20 6678 5500",
+                "supportEmail": "marketing@koltepatil.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/kolte-patil",
+                "twitter": "https://twitter.com/kolte-patil",
+                "facebook": "https://facebook.com/kolte-patil",
+                "instagram": "https://instagram.com/kolte-patil",
+                "youtube": "https://youtube.com/kolte-patil"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "embassy-group": {
+            "id": "embassy-group",
+            "name": "Embassy Group",
+            "tagline": "Creating World-Class Spaces Since 1993",
+            "logo": "https://logos-api.apistemic.com/domain:embassygroup.com",
+            "establishedYear": 1993,
+            "yearsOfExperience": 31,
+            "description": "Embassy Group is a leading developer of commercial and residential spaces in India. Pioneer of Grade A business parks and REITs in India.",
+            "statistics": {
+                "projectsCompleted": 85,
+                "projectsOngoing": 35,
+                "projectsUpcoming": 25
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Embassy Group Head Office",
+                    "city": "Bangalore",
+                    "state": "Karnataka",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 80 4344 4444",
+                "email": "info@embassygroup.com",
+                "website": "www.embassygroup.com",
+                "customerCare": "+91 80 4344 4444",
+                "supportEmail": "info@embassygroup.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/embassy-group",
+                "twitter": "https://twitter.com/embassy-group",
+                "facebook": "https://facebook.com/embassy-group",
+                "instagram": "https://instagram.com/embassy-group",
+                "youtube": "https://youtube.com/embassy-group"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "puravankara": {
+            "id": "puravankara",
+            "name": "Puravankara Limited",
+            "tagline": "Building Value Since 1975",
+            "logo": "https://logos-api.apistemic.com/domain:puravankara.com",
+            "establishedYear": 1975,
+            "yearsOfExperience": 49,
+            "description": "Puravankara is one of India's leading real estate developers with a focus on value-for-money and customer-centric approaches across multiple cities.",
+            "statistics": {
+                "projectsCompleted": 82,
+                "projectsOngoing": 32,
+                "projectsUpcoming": 24
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Puravankara Limited Head Office",
+                    "city": "Bangalore",
+                    "state": "Karnataka",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 80 4933 5500",
+                "email": "customercare@puravankara.com",
+                "website": "www.puravankara.com",
+                "customerCare": "+91 80 4933 5500",
+                "supportEmail": "customercare@puravankara.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/puravankara",
+                "twitter": "https://twitter.com/puravankara",
+                "facebook": "https://facebook.com/puravankara",
+                "instagram": "https://instagram.com/puravankara",
+                "youtube": "https://youtube.com/puravankara"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "hiranandani-group": {
+            "id": "hiranandani-group",
+            "name": "Hiranandani Group",
+            "tagline": "Shaping Urban Lifestyles Since 1978",
+            "logo": "https://logos-api.apistemic.com/domain:hiranandani.com",
+            "establishedYear": 1978,
+            "yearsOfExperience": 46,
+            "description": "Hiranandani Group is renowned for creating integrated townships and premium residential projects in Mumbai, Chennai, and Bangalore.",
+            "statistics": {
+                "projectsCompleted": 124,
+                "projectsOngoing": 28,
+                "projectsUpcoming": 18
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Hiranandani Group Head Office",
+                    "city": "Mumbai",
+                    "state": "Maharashtra",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 22 6196 1000",
+                "email": "info@hiranandani.com",
+                "website": "www.hiranandani.com",
+                "customerCare": "+91 22 6196 1000",
+                "supportEmail": "info@hiranandani.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/hiranandani-group",
+                "twitter": "https://twitter.com/hiranandani-group",
+                "facebook": "https://facebook.com/hiranandani-group",
+                "instagram": "https://instagram.com/hiranandani-group",
+                "youtube": "https://youtube.com/hiranandani-group"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": true,
+                "priority": 2
+            }
+        },
+        "shapoorji-pallonji": {
+            "id": "shapoorji-pallonji",
+            "name": "Shapoorji Pallonji Real Estate",
+            "tagline": "Building Excellence Since 1865",
+            "logo": "https://logos-api.apistemic.com/domain:shapoorjirealestate.com",
+            "establishedYear": 1865,
+            "yearsOfExperience": 159,
+            "description": "Shapoorji Pallonji is one of India's most respected builders with 155+ years of heritage. Known for iconic structures and quality construction.",
+            "statistics": {
+                "projectsCompleted": 156,
+                "projectsOngoing": 32,
+                "projectsUpcoming": 22
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Shapoorji Pallonji Real Estate Head Office",
+                    "city": "Mumbai",
+                    "state": "Maharashtra",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 22 6749 0000",
+                "email": "info@shapoorjirealestate.com",
+                "website": "www.shapoorjirealestate.com",
+                "customerCare": "+91 22 6749 0000",
+                "supportEmail": "info@shapoorjirealestate.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/shapoorji-pallonji",
+                "twitter": "https://twitter.com/shapoorji-pallonji",
+                "facebook": "https://facebook.com/shapoorji-pallonji",
+                "instagram": "https://instagram.com/shapoorji-pallonji",
+                "youtube": "https://youtube.com/shapoorji-pallonji"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": true,
+                "priority": 2
+            }
+        },
+        "phoenix-mills": {
+            "id": "phoenix-mills",
+            "name": "The Phoenix Mills Limited",
+            "tagline": "Retail Excellence Since 1905",
+            "logo": "https://logos-api.apistemic.com/domain:phoenixmills.com",
+            "establishedYear": 1905,
+            "yearsOfExperience": 119,
+            "description": "Phoenix Mills is India's leading retail-led mixed-use developer. Known for High Street Phoenix and luxury retail destinations.",
+            "statistics": {
+                "projectsCompleted": 42,
+                "projectsOngoing": 15,
+                "projectsUpcoming": 12
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "The Phoenix Mills Limited Head Office",
+                    "city": "Mumbai",
+                    "state": "Maharashtra",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 22 4302 7777",
+                "email": "info@phoenixmills.com",
+                "website": "www.phoenixmills.com",
+                "customerCare": "+91 22 4302 7777",
+                "supportEmail": "info@phoenixmills.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/phoenix-mills",
+                "twitter": "https://twitter.com/phoenix-mills",
+                "facebook": "https://facebook.com/phoenix-mills",
+                "instagram": "https://instagram.com/phoenix-mills",
+                "youtube": "https://youtube.com/phoenix-mills"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "raheja-developers": {
+            "id": "raheja-developers",
+            "name": "K Raheja Corp",
+            "tagline": "Innovation Since 1956",
+            "logo": "https://logos-api.apistemic.com/domain:krahejacorp.com",
+            "establishedYear": 1956,
+            "yearsOfExperience": 68,
+            "description": "K Raheja Corp is a diversified real estate group with presence in retail, hospitality, and residential sectors across major Indian cities.",
+            "statistics": {
+                "projectsCompleted": 142,
+                "projectsOngoing": 32,
+                "projectsUpcoming": 24
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "K Raheja Corp Head Office",
+                    "city": "Mumbai",
+                    "state": "Maharashtra",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 22 2497 0707",
+                "email": "info@krahejacorp.com",
+                "website": "www.krahejacorp.com",
+                "customerCare": "+91 22 2497 0707",
+                "supportEmail": "info@krahejacorp.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/raheja-developers",
+                "twitter": "https://twitter.com/raheja-developers",
+                "facebook": "https://facebook.com/raheja-developers",
+                "instagram": "https://instagram.com/raheja-developers",
+                "youtube": "https://youtube.com/raheja-developers"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": true,
+                "priority": 2
+            }
+        },
+        "salarpuria-sattva": {
+            "id": "salarpuria-sattva",
+            "name": "Salarpuria Sattva Group",
+            "tagline": "Building Communities Since 1986",
+            "logo": "https://logos-api.apistemic.com/domain:sattvagroup.in",
+            "establishedYear": 1986,
+            "yearsOfExperience": 38,
+            "description": "Salarpuria Sattva is a leading real estate developer in South India with expertise in residential, commercial, and retail projects.",
+            "statistics": {
+                "projectsCompleted": 118,
+                "projectsOngoing": 35,
+                "projectsUpcoming": 28
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Salarpuria Sattva Group Head Office",
+                    "city": "Bangalore",
+                    "state": "Karnataka",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 80 4237 2000",
+                "email": "info@sattvagroup.in",
+                "website": "www.sattvagroup.in",
+                "customerCare": "+91 80 4237 2000",
+                "supportEmail": "info@sattvagroup.in"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/salarpuria-sattva",
+                "twitter": "https://twitter.com/salarpuria-sattva",
+                "facebook": "https://facebook.com/salarpuria-sattva",
+                "instagram": "https://instagram.com/salarpuria-sattva",
+                "youtube": "https://youtube.com/salarpuria-sattva"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": true,
+                "priority": 2
+            }
+        },
+        "ats-infrastructure": {
+            "id": "ats-infrastructure",
+            "name": "ATS Infrastructure",
+            "tagline": "Building Homes Since 2001",
+            "logo": "https://logos-api.apistemic.com/domain:atsgreens.com",
+            "establishedYear": 2001,
+            "yearsOfExperience": 23,
+            "description": "ATS Infrastructure is known for premium residential and commercial projects in NCR. Focuses on innovation and customer satisfaction.",
+            "statistics": {
+                "projectsCompleted": 58,
+                "projectsOngoing": 22,
+                "projectsUpcoming": 16
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "ATS Infrastructure Head Office",
+                    "city": "Noida",
+                    "state": "Uttar Pradesh",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 120 671 1000",
+                "email": "info@ats-infrastructure.in",
+                "website": "www.atsgreens.com",
+                "customerCare": "+91 120 671 1000",
+                "supportEmail": "info@ats-infrastructure.in"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/ats-infrastructure",
+                "twitter": "https://twitter.com/ats-infrastructure",
+                "facebook": "https://facebook.com/ats-infrastructure",
+                "instagram": "https://instagram.com/ats-infrastructure",
+                "youtube": "https://youtube.com/ats-infrastructure"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "omaxe-limited": {
+            "id": "omaxe-limited",
+            "name": "Omaxe Limited",
+            "tagline": "Excellence in Real Estate Since 1987",
+            "logo": "https://logos-api.apistemic.com/domain:omaxe.com",
+            "establishedYear": 1987,
+            "yearsOfExperience": 37,
+            "description": "Omaxe is a leading real estate developer with presence across 27 cities. Specializes in townships, residential, and commercial projects.",
+            "statistics": {
+                "projectsCompleted": 128,
+                "projectsOngoing": 36,
+                "projectsUpcoming": 24
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Omaxe Limited Head Office",
+                    "city": "New Delhi",
+                    "state": "Delhi",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 11 4711 6666",
+                "email": "info@omaxe.com",
+                "website": "www.omaxe.com",
+                "customerCare": "+91 11 4711 6666",
+                "supportEmail": "info@omaxe.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/omaxe-limited",
+                "twitter": "https://twitter.com/omaxe-limited",
+                "facebook": "https://facebook.com/omaxe-limited",
+                "instagram": "https://instagram.com/omaxe-limited",
+                "youtube": "https://youtube.com/omaxe-limited"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": true,
+                "priority": 2
+            }
+        },
+        "ansal-api": {
+            "id": "ansal-api",
+            "name": "Ansal Properties & Infrastructure",
+            "tagline": "Building Trust Since 1967",
+            "logo": "https://logos-api.apistemic.com/domain:ansalapi.com",
+            "establishedYear": 1967,
+            "yearsOfExperience": 57,
+            "description": "Ansal API is one of India's oldest real estate developers known for large-scale township projects across North India.",
+            "statistics": {
+                "projectsCompleted": 156,
+                "projectsOngoing": 28,
+                "projectsUpcoming": 18
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Ansal Properties & Infrastructure Head Office",
+                    "city": "New Delhi",
+                    "state": "Delhi",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 11 4655 0000",
+                "email": "customercare@ansalapi.com",
+                "website": "www.ansalapi.com",
+                "customerCare": "+91 11 4655 0000",
+                "supportEmail": "customercare@ansalapi.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/ansal-api",
+                "twitter": "https://twitter.com/ansal-api",
+                "facebook": "https://facebook.com/ansal-api",
+                "instagram": "https://instagram.com/ansal-api",
+                "youtube": "https://youtube.com/ansal-api"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": true,
+                "priority": 2
+            }
+        },
+        "runwal-group": {
+            "id": "runwal-group",
+            "name": "Runwal Group",
+            "tagline": "Building Excellence Since 1978",
+            "logo": "https://logos-api.apistemic.com/domain:runwalgroupindia.com",
+            "establishedYear": 1978,
+            "yearsOfExperience": 46,
+            "description": "Runwal Group is a prominent Mumbai-based developer known for quality construction and timely delivery across residential and commercial segments.",
+            "statistics": {
+                "projectsCompleted": 95,
+                "projectsOngoing": 28,
+                "projectsUpcoming": 20
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Runwal Group Head Office",
+                    "city": "Mumbai",
+                    "state": "Maharashtra",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 22 6768 6900",
+                "email": "info@runwalgroupindia.com",
+                "website": "www.runwalgroupindia.com",
+                "customerCare": "+91 22 6768 6900",
+                "supportEmail": "info@runwalgroupindia.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/runwal-group",
+                "twitter": "https://twitter.com/runwal-group",
+                "facebook": "https://facebook.com/runwal-group",
+                "instagram": "https://instagram.com/runwal-group",
+                "youtube": "https://youtube.com/runwal-group"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "ashiana-housing": {
+            "id": "ashiana-housing",
+            "name": "Ashiana Housing Limited",
+            "tagline": "Building Homes Since 1979",
+            "logo": "https://logos-api.apistemic.com/domain:ashianahousing.com",
+            "establishedYear": 1979,
+            "yearsOfExperience": 45,
+            "description": "Ashiana Housing specializes in senior living and affordable housing projects across India. Known for innovative community living concepts.",
+            "statistics": {
+                "projectsCompleted": 72,
+                "projectsOngoing": 18,
+                "projectsUpcoming": 14
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Ashiana Housing Limited Head Office",
+                    "city": "New Delhi",
+                    "state": "Delhi",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 11 4351 4222",
+                "email": "info@ashianahousing.com",
+                "website": "www.ashianahousing.com",
+                "customerCare": "+91 11 4351 4222",
+                "supportEmail": "info@ashianahousing.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/ashiana-housing",
+                "twitter": "https://twitter.com/ashiana-housing",
+                "facebook": "https://facebook.com/ashiana-housing",
+                "instagram": "https://instagram.com/ashiana-housing",
+                "youtube": "https://youtube.com/ashiana-housing"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "gera-developments": {
+            "id": "gera-developments",
+            "name": "Gera Developments",
+            "tagline": "Quality Living Since 1972",
+            "logo": "https://logos-api.apistemic.com/domain:geradevelopments.com",
+            "establishedYear": 1972,
+            "yearsOfExperience": 52,
+            "description": "Gera Developments is a Pune-based developer known for innovative residential projects and customer-first approach.",
+            "statistics": {
+                "projectsCompleted": 68,
+                "projectsOngoing": 22,
+                "projectsUpcoming": 16
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Gera Developments Head Office",
+                    "city": "Pune",
+                    "state": "Maharashtra",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 20 6786 6000",
+                "email": "care@geradevelopments.com",
+                "website": "www.geradevelopments.com",
+                "customerCare": "+91 20 6786 6000",
+                "supportEmail": "care@geradevelopments.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/gera-developments",
+                "twitter": "https://twitter.com/gera-developments",
+                "facebook": "https://facebook.com/gera-developments",
+                "instagram": "https://instagram.com/gera-developments",
+                "youtube": "https://youtube.com/gera-developments"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "mantri-developers": {
+            "id": "mantri-developers",
+            "name": "Mantri Developers",
+            "tagline": "Building Dreams Since 1999",
+            "logo": "https://logos-api.apistemic.com/domain:mantridevelopers.com",
+            "establishedYear": 1999,
+            "yearsOfExperience": 25,
+            "description": "Mantri Developers is known for large-scale township projects and premium residential developments in Bangalore.",
+            "statistics": {
+                "projectsCompleted": 58,
+                "projectsOngoing": 18,
+                "projectsUpcoming": 14
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Mantri Developers Head Office",
+                    "city": "Bangalore",
+                    "state": "Karnataka",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 80 4212 2222",
+                "email": "info@mantrigroup.in",
+                "website": "www.mantridevelopers.com",
+                "customerCare": "+91 80 4212 2222",
+                "supportEmail": "info@mantrigroup.in"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/mantri-developers",
+                "twitter": "https://twitter.com/mantri-developers",
+                "facebook": "https://facebook.com/mantri-developers",
+                "instagram": "https://instagram.com/mantri-developers",
+                "youtube": "https://youtube.com/mantri-developers"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "rustomjee-group": {
+            "id": "rustomjee-group",
+            "name": "Rustomjee Group",
+            "tagline": "Building Better Lives Since 1995",
+            "logo": "https://logos-api.apistemic.com/domain:rustomjee.com",
+            "establishedYear": 1995,
+            "yearsOfExperience": 29,
+            "description": "Rustomjee is a leading Mumbai developer known for quality residential projects and innovative design in suburbs.",
+            "statistics": {
+                "projectsCompleted": 52,
+                "projectsOngoing": 18,
+                "projectsUpcoming": 12
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Rustomjee Group Head Office",
+                    "city": "Mumbai",
+                    "state": "Maharashtra",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 22 6191 8888",
+                "email": "feedback@rustomjee.com",
+                "website": "www.rustomjee.com",
+                "customerCare": "+91 22 6191 8888",
+                "supportEmail": "feedback@rustomjee.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/rustomjee-group",
+                "twitter": "https://twitter.com/rustomjee-group",
+                "facebook": "https://facebook.com/rustomjee-group",
+                "instagram": "https://instagram.com/rustomjee-group",
+                "youtube": "https://youtube.com/rustomjee-group"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "century-real-estate": {
+            "id": "century-real-estate",
+            "name": "Century Real Estate Holdings",
+            "tagline": "Building Communities Since 2002",
+            "logo": "https://logos-api.apistemic.com/domain:centuryrealestate.in",
+            "establishedYear": 2002,
+            "yearsOfExperience": 22,
+            "description": "Century Real Estate is known for quality residential projects in Bangalore with focus on customer satisfaction and timely delivery.",
+            "statistics": {
+                "projectsCompleted": 48,
+                "projectsOngoing": 16,
+                "projectsUpcoming": 12
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Century Real Estate Holdings Head Office",
+                    "city": "Bangalore",
+                    "state": "Karnataka",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 80 4907 5000",
+                "email": "info@centuryrealestate.in",
+                "website": "www.centuryrealestate.in",
+                "customerCare": "+91 80 4907 5000",
+                "supportEmail": "info@centuryrealestate.in"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/century-real-estate",
+                "twitter": "https://twitter.com/century-real-estate",
+                "facebook": "https://facebook.com/century-real-estate",
+                "instagram": "https://instagram.com/century-real-estate",
+                "youtube": "https://youtube.com/century-real-estate"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "shriram-properties": {
+            "id": "shriram-properties",
+            "name": "Shriram Properties",
+            "tagline": "Building Aspirations Since 1995",
+            "logo": "https://logos-api.apistemic.com/domain:shriramproperties.com",
+            "establishedYear": 1995,
+            "yearsOfExperience": 29,
+            "description": "Shriram Properties focuses on affordable and mid-income housing across South India. Part of the Shriram Group.",
+            "statistics": {
+                "projectsCompleted": 78,
+                "projectsOngoing": 24,
+                "projectsUpcoming": 18
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Shriram Properties Head Office",
+                    "city": "Bangalore",
+                    "state": "Karnataka",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 80 4563 4500",
+                "email": "customercare@shriramproperties.com",
+                "website": "www.shriramproperties.com",
+                "customerCare": "+91 80 4563 4500",
+                "supportEmail": "customercare@shriramproperties.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/shriram-properties",
+                "twitter": "https://twitter.com/shriram-properties",
+                "facebook": "https://facebook.com/shriram-properties",
+                "instagram": "https://instagram.com/shriram-properties",
+                "youtube": "https://youtube.com/shriram-properties"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "nitesh-estates": {
+            "id": "nitesh-estates",
+            "name": "Nitesh Estates",
+            "tagline": "Creating Value Since 2004",
+            "logo": "https://logos-api.apistemic.com/domain:niteshestates.com",
+            "establishedYear": 2004,
+            "yearsOfExperience": 20,
+            "description": "Nitesh Estates specializes in luxury residential and commercial projects in Bangalore with focus on quality and innovation.",
+            "statistics": {
+                "projectsCompleted": 32,
+                "projectsOngoing": 12,
+                "projectsUpcoming": 8
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Nitesh Estates Head Office",
+                    "city": "Bangalore",
+                    "state": "Karnataka",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 80 4172 2222",
+                "email": "info@niteshestates.com",
+                "website": "www.niteshestates.com",
+                "customerCare": "+91 80 4172 2222",
+                "supportEmail": "info@niteshestates.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/nitesh-estates",
+                "twitter": "https://twitter.com/nitesh-estates",
+                "facebook": "https://facebook.com/nitesh-estates",
+                "instagram": "https://instagram.com/nitesh-estates",
+                "youtube": "https://youtube.com/nitesh-estates"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "marvel-realtors": {
+            "id": "marvel-realtors",
+            "name": "Marvel Realtors",
+            "tagline": "Creating Landmarks Since 2002",
+            "logo": "https://logos-api.apistemic.com/domain:marvelrealtors.in",
+            "establishedYear": 2002,
+            "yearsOfExperience": 22,
+            "description": "Marvel Realtors is a prominent Pune developer known for residential and commercial projects with modern amenities.",
+            "statistics": {
+                "projectsCompleted": 42,
+                "projectsOngoing": 16,
+                "projectsUpcoming": 12
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Marvel Realtors Head Office",
+                    "city": "Pune",
+                    "state": "Maharashtra",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 20 6619 9000",
+                "email": "info@marvelrealtors.in",
+                "website": "www.marvelrealtors.in",
+                "customerCare": "+91 20 6619 9000",
+                "supportEmail": "info@marvelrealtors.in"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/marvel-realtors",
+                "twitter": "https://twitter.com/marvel-realtors",
+                "facebook": "https://facebook.com/marvel-realtors",
+                "instagram": "https://instagram.com/marvel-realtors",
+                "youtube": "https://youtube.com/marvel-realtors"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "sunteck-realty": {
+            "id": "sunteck-realty",
+            "name": "Sunteck Realty",
+            "tagline": "Building Better Tomorrow Since 1981",
+            "logo": "https://logos-api.apistemic.com/domain:sunteckrealty.com",
+            "establishedYear": 1981,
+            "yearsOfExperience": 43,
+            "description": "Sunteck Realty is a listed real estate developer with focus on premium residential projects in Mumbai Metropolitan Region.",
+            "statistics": {
+                "projectsCompleted": 38,
+                "projectsOngoing": 14,
+                "projectsUpcoming": 10
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Sunteck Realty Head Office",
+                    "city": "Mumbai",
+                    "state": "Maharashtra",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 22 6191 0000",
+                "email": "info@sunteckrealty.com",
+                "website": "www.sunteckrealty.com",
+                "customerCare": "+91 22 6191 0000",
+                "supportEmail": "info@sunteckrealty.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/sunteck-realty",
+                "twitter": "https://twitter.com/sunteck-realty",
+                "facebook": "https://facebook.com/sunteck-realty",
+                "instagram": "https://instagram.com/sunteck-realty",
+                "youtube": "https://youtube.com/sunteck-realty"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "emaar-india": {
+            "id": "emaar-india",
+            "name": "Emaar India",
+            "tagline": "Excellence in Real Estate Since 2005",
+            "logo": "https://logos-api.apistemic.com/domain:emaarmgf.com",
+            "establishedYear": 2005,
+            "yearsOfExperience": 19,
+            "description": "Emaar India is a leading developer known for luxury townships and high-rise residential projects in NCR region.",
+            "statistics": {
+                "projectsCompleted": 45,
+                "projectsOngoing": 18,
+                "projectsUpcoming": 14
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Emaar India Head Office",
+                    "city": "Gurugram",
+                    "state": "Haryana",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 124 457 4444",
+                "email": "customercare@emaar-india.com",
+                "website": "www.emaarmgf.com",
+                "customerCare": "+91 124 457 4444",
+                "supportEmail": "customercare@emaar-india.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/emaar-india",
+                "twitter": "https://twitter.com/emaar-india",
+                "facebook": "https://facebook.com/emaar-india",
+                "instagram": "https://instagram.com/emaar-india",
+                "youtube": "https://youtube.com/emaar-india"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "ajmera-realty": {
+            "id": "ajmera-realty",
+            "name": "Ajmera Realty & Infra India",
+            "tagline": "Building Trust Since 1968",
+            "logo": "https://logos-api.apistemic.com/domain:ajmerarealty.com",
+            "establishedYear": 1968,
+            "yearsOfExperience": 56,
+            "description": "Ajmera Realty is a prominent developer with projects across Mumbai, Bangalore, and Ahmedabad. Known for quality and reliability.",
+            "statistics": {
+                "projectsCompleted": 92,
+                "projectsOngoing": 22,
+                "projectsUpcoming": 16
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Ajmera Realty & Infra India Head Office",
+                    "city": "Mumbai",
+                    "state": "Maharashtra",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 22 6707 8888",
+                "email": "info@ajmerarealty.com",
+                "website": "www.ajmerarealty.com",
+                "customerCare": "+91 22 6707 8888",
+                "supportEmail": "info@ajmerarealty.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/ajmera-realty",
+                "twitter": "https://twitter.com/ajmera-realty",
+                "facebook": "https://facebook.com/ajmera-realty",
+                "instagram": "https://instagram.com/ajmera-realty",
+                "youtube": "https://youtube.com/ajmera-realty"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "parsvnath-developers": {
+            "id": "parsvnath-developers",
+            "name": "Parsvnath Developers",
+            "tagline": "Building Excellence Since 1990",
+            "logo": "https://logos-api.apistemic.com/domain:parsvnath.com",
+            "establishedYear": 1990,
+            "yearsOfExperience": 34,
+            "description": "Parsvnath is a leading developer with diversified portfolio in residential, commercial, and retail segments across India.",
+            "statistics": {
+                "projectsCompleted": 85,
+                "projectsOngoing": 24,
+                "projectsUpcoming": 18
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Parsvnath Developers Head Office",
+                    "city": "New Delhi",
+                    "state": "Delhi",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 11 4656 2000",
+                "email": "info@parsvnath.com",
+                "website": "www.parsvnath.com",
+                "customerCare": "+91 11 4656 2000",
+                "supportEmail": "info@parsvnath.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/parsvnath-developers",
+                "twitter": "https://twitter.com/parsvnath-developers",
+                "facebook": "https://facebook.com/parsvnath-developers",
+                "instagram": "https://instagram.com/parsvnath-developers",
+                "youtube": "https://youtube.com/parsvnath-developers"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "gaurs-group": {
+            "id": "gaurs-group",
+            "name": "Gaurs Group (Gaursons)",
+            "tagline": "Building With Commitment Since 1995",
+            "logo": "https://logos-api.apistemic.com/domain:gaursgroup.com",
+            "establishedYear": 1995,
+            "yearsOfExperience": 29,
+            "description": "Gaurs Group is one of NCR's largest developers specializing in affordable and mid-segment housing projects.",
+            "statistics": {
+                "projectsCompleted": 98,
+                "projectsOngoing": 32,
+                "projectsUpcoming": 24
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Gaurs Group (Gaursons) Head Office",
+                    "city": "Greater Noida",
+                    "state": "Uttar Pradesh",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 120 478 8000",
+                "email": "info@gaursgroup.com",
+                "website": "www.gaursgroup.com",
+                "customerCare": "+91 120 478 8000",
+                "supportEmail": "info@gaursgroup.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/gaurs-group",
+                "twitter": "https://twitter.com/gaurs-group",
+                "facebook": "https://facebook.com/gaurs-group",
+                "instagram": "https://instagram.com/gaurs-group",
+                "youtube": "https://youtube.com/gaurs-group"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "signature-global": {
+            "id": "signature-global",
+            "name": "Signature Global",
+            "tagline": "Affordable Housing Excellence Since 2014",
+            "logo": "https://logos-api.apistemic.com/domain:signatureglobal.in",
+            "establishedYear": 2014,
+            "yearsOfExperience": 10,
+            "description": "Signature Global specializes in affordable housing projects in Gurugram with focus on delivering value-for-money homes.",
+            "statistics": {
+                "projectsCompleted": 28,
+                "projectsOngoing": 18,
+                "projectsUpcoming": 14
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Signature Global Head Office",
+                    "city": "Gurugram",
+                    "state": "Haryana",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 124 467 7777",
+                "email": "info@signatureglobal.in",
+                "website": "www.signatureglobal.in",
+                "customerCare": "+91 124 467 7777",
+                "supportEmail": "info@signatureglobal.in"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/signature-global",
+                "twitter": "https://twitter.com/signature-global",
+                "facebook": "https://facebook.com/signature-global",
+                "instagram": "https://instagram.com/signature-global",
+                "youtube": "https://youtube.com/signature-global"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "l-and-t-realty": {
+            "id": "l-and-t-realty",
+            "name": "L&T Realty",
+            "tagline": "Engineering Excellence Since 2011",
+            "logo": "https://logos-api.apistemic.com/domain:lntrealty.com",
+            "establishedYear": 2011,
+            "yearsOfExperience": 13,
+            "description": "L&T Realty is part of L&T Group, known for premium residential and commercial projects with engineering excellence.",
+            "statistics": {
+                "projectsCompleted": 32,
+                "projectsOngoing": 16,
+                "projectsUpcoming": 12
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "L&T Realty Head Office",
+                    "city": "Mumbai",
+                    "state": "Maharashtra",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 22 6752 5000",
+                "email": "customercare@lntrealty.com",
+                "website": "www.lntrealty.com",
+                "customerCare": "+91 22 6752 5000",
+                "supportEmail": "customercare@lntrealty.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/l-and-t-realty",
+                "twitter": "https://twitter.com/l-and-t-realty",
+                "facebook": "https://facebook.com/l-and-t-realty",
+                "instagram": "https://instagram.com/l-and-t-realty",
+                "youtube": "https://youtube.com/l-and-t-realty"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "piramal-realty": {
+            "id": "piramal-realty",
+            "name": "Piramal Realty",
+            "tagline": "Luxury Living Since 2012",
+            "logo": "https://logos-api.apistemic.com/domain:piramalrealty.com",
+            "establishedYear": 2012,
+            "yearsOfExperience": 12,
+            "description": "Piramal Realty is known for ultra-luxury residential projects in Mumbai. Part of the Piramal Group.",
+            "statistics": {
+                "projectsCompleted": 15,
+                "projectsOngoing": 8,
+                "projectsUpcoming": 6
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Piramal Realty Head Office",
+                    "city": "Mumbai",
+                    "state": "Maharashtra",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 22 3046 9999",
+                "email": "info@piramalrealty.com",
+                "website": "www.piramalrealty.com",
+                "customerCare": "+91 22 3046 9999",
+                "supportEmail": "info@piramalrealty.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/piramal-realty",
+                "twitter": "https://twitter.com/piramal-realty",
+                "facebook": "https://facebook.com/piramal-realty",
+                "instagram": "https://instagram.com/piramal-realty",
+                "youtube": "https://youtube.com/piramal-realty"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "supertech-limited": {
+            "id": "supertech-limited",
+            "name": "Supertech Limited",
+            "tagline": "Building Innovation Since 1988",
+            "logo": "https://logos-api.apistemic.com/domain:supertech.org",
+            "establishedYear": 1988,
+            "yearsOfExperience": 36,
+            "description": "Supertech is a prominent NCR developer known for affordable housing and commercial projects across Delhi-NCR.",
+            "statistics": {
+                "projectsCompleted": 128,
+                "projectsOngoing": 32,
+                "projectsUpcoming": 24
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Supertech Limited Head Office",
+                    "city": "Noida",
+                    "state": "Uttar Pradesh",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 120 411 9999",
+                "email": "info@supertech.org",
+                "website": "www.supertech.org",
+                "customerCare": "+91 120 411 9999",
+                "supportEmail": "info@supertech.org"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/supertech-limited",
+                "twitter": "https://twitter.com/supertech-limited",
+                "facebook": "https://facebook.com/supertech-limited",
+                "instagram": "https://instagram.com/supertech-limited",
+                "youtube": "https://youtube.com/supertech-limited"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": true,
+                "priority": 2
+            }
+        },
+        "unitech-group": {
+            "id": "unitech-group",
+            "name": "Unitech Limited",
+            "tagline": "Building the Future Since 1972",
+            "logo": "https://logos-api.apistemic.com/domain:unitechgroup.com",
+            "establishedYear": 1972,
+            "yearsOfExperience": 52,
+            "description": "Unitech is one of India's largest real estate developers with diversified portfolio in residential and commercial sectors.",
+            "statistics": {
+                "projectsCompleted": 145,
+                "projectsOngoing": 28,
+                "projectsUpcoming": 18
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Unitech Limited Head Office",
+                    "city": "Gurugram",
+                    "state": "Haryana",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 124 469 2000",
+                "email": "info@unitechgroup.com",
+                "website": "www.unitechgroup.com",
+                "customerCare": "+91 124 469 2000",
+                "supportEmail": "info@unitechgroup.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/unitech-group",
+                "twitter": "https://twitter.com/unitech-group",
+                "facebook": "https://facebook.com/unitech-group",
+                "instagram": "https://instagram.com/unitech-group",
+                "youtube": "https://youtube.com/unitech-group"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": true,
+                "priority": 2
+            }
+        },
+        "nbcc-india": {
+            "id": "nbcc-india",
+            "name": "NBCC (India) Limited",
+            "tagline": "Nation Building Since 1960",
+            "logo": "https://logos-api.apistemic.com/domain:nbccindia.com",
+            "establishedYear": 1960,
+            "yearsOfExperience": 64,
+            "description": "NBCC is a Government of India enterprise and leading construction company involved in project management and real estate development.",
+            "statistics": {
+                "projectsCompleted": 185,
+                "projectsOngoing": 42,
+                "projectsUpcoming": 32
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "NBCC (India) Limited Head Office",
+                    "city": "New Delhi",
+                    "state": "Delhi",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 11 2436 5011",
+                "email": "info@nbccindia.in",
+                "website": "www.nbccindia.com",
+                "customerCare": "+91 11 2436 5011",
+                "supportEmail": "info@nbccindia.in"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/nbcc-india",
+                "twitter": "https://twitter.com/nbcc-india",
+                "facebook": "https://facebook.com/nbcc-india",
+                "instagram": "https://instagram.com/nbcc-india",
+                "youtube": "https://youtube.com/nbcc-india"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": true,
+                "priority": 2
+            }
+        },
+        "kanakia-spaces": {
+            "id": "kanakia-spaces",
+            "name": "Kanakia Spaces Realty",
+            "tagline": "Creating Architectural Marvels Since 2008",
+            "logo": "https://logos-api.apistemic.com/domain:kanakiaspaces.com",
+            "establishedYear": 2008,
+            "yearsOfExperience": 16,
+            "description": "Kanakia Spaces is known for premium residential and commercial projects in Mumbai with focus on luxury and innovation.",
+            "statistics": {
+                "projectsCompleted": 28,
+                "projectsOngoing": 12,
+                "projectsUpcoming": 8
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Kanakia Spaces Realty Head Office",
+                    "city": "Mumbai",
+                    "state": "Maharashtra",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 22 6191 8888",
+                "email": "info@kanakiaspaces.com",
+                "website": "www.kanakiaspaces.com",
+                "customerCare": "+91 22 6191 8888",
+                "supportEmail": "info@kanakiaspaces.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/kanakia-spaces",
+                "twitter": "https://twitter.com/kanakia-spaces",
+                "facebook": "https://facebook.com/kanakia-spaces",
+                "instagram": "https://instagram.com/kanakia-spaces",
+                "youtube": "https://youtube.com/kanakia-spaces"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "vascon-engineers": {
+            "id": "vascon-engineers",
+            "name": "Vascon Engineers",
+            "tagline": "Engineering Excellence Since 1986",
+            "logo": "https://logos-api.apistemic.com/domain:vascon.com",
+            "establishedYear": 1986,
+            "yearsOfExperience": 38,
+            "description": "Vascon Engineers is an integrated real estate and EPC company with strong presence in Pune, Bangalore, and NCR.",
+            "statistics": {
+                "projectsCompleted": 72,
+                "projectsOngoing": 22,
+                "projectsUpcoming": 16
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Vascon Engineers Head Office",
+                    "city": "Pune",
+                    "state": "Maharashtra",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 20 6622 2111",
+                "email": "info@vascon.com",
+                "website": "www.vascon.com",
+                "customerCare": "+91 20 6622 2111",
+                "supportEmail": "info@vascon.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/vascon-engineers",
+                "twitter": "https://twitter.com/vascon-engineers",
+                "facebook": "https://facebook.com/vascon-engineers",
+                "instagram": "https://instagram.com/vascon-engineers",
+                "youtube": "https://youtube.com/vascon-engineers"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "bhartiya-urban": {
+            "id": "bhartiya-urban",
+            "name": "Bhartiya Urban",
+            "tagline": "Creating World-Class Townships Since 2008",
+            "logo": "https://logos-api.apistemic.com/domain:bhartiyaurban.com",
+            "establishedYear": 2008,
+            "yearsOfExperience": 16,
+            "description": "Bhartiya Urban is known for Bhartiya City, one of India's largest integrated townships in Bangalore.",
+            "statistics": {
+                "projectsCompleted": 8,
+                "projectsOngoing": 6,
+                "projectsUpcoming": 4
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Bhartiya Urban Head Office",
+                    "city": "Bangalore",
+                    "state": "Karnataka",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 80 6191 9999",
+                "email": "info@bhartiyaurban.com",
+                "website": "www.bhartiyaurban.com",
+                "customerCare": "+91 80 6191 9999",
+                "supportEmail": "info@bhartiyaurban.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/bhartiya-urban",
+                "twitter": "https://twitter.com/bhartiya-urban",
+                "facebook": "https://facebook.com/bhartiya-urban",
+                "instagram": "https://instagram.com/bhartiya-urban",
+                "youtube": "https://youtube.com/bhartiya-urban"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "rmz-corp": {
+            "id": "rmz-corp",
+            "name": "RMZ Corp",
+            "tagline": "Building Commercial Excellence Since 2002",
+            "logo": "https://logos-api.apistemic.com/domain:rmz.com",
+            "establishedYear": 2002,
+            "yearsOfExperience": 22,
+            "description": "RMZ Corp is India's leading commercial real estate developer with premium office spaces and IT parks across major cities.",
+            "statistics": {
+                "projectsCompleted": 42,
+                "projectsOngoing": 18,
+                "projectsUpcoming": 14
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "RMZ Corp Head Office",
+                    "city": "Bangalore",
+                    "state": "Karnataka",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 80 6191 9999",
+                "email": "info@rmzcorp.com",
+                "website": "www.rmz.com",
+                "customerCare": "+91 80 6191 9999",
+                "supportEmail": "info@rmzcorp.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/rmz-corp",
+                "twitter": "https://twitter.com/rmz-corp",
+                "facebook": "https://facebook.com/rmz-corp",
+                "instagram": "https://instagram.com/rmz-corp",
+                "youtube": "https://youtube.com/rmz-corp"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "sjr-primecorp": {
+            "id": "sjr-primecorp",
+            "name": "SJR Primecorp",
+            "tagline": "Building Quality Since 2010",
+            "logo": "https://logos-api.apistemic.com/domain:sjrprimecorp.com",
+            "establishedYear": 2010,
+            "yearsOfExperience": 14,
+            "description": "SJR Primecorp is a Bangalore-based developer known for quality residential projects and transparent business practices.",
+            "statistics": {
+                "projectsCompleted": 22,
+                "projectsOngoing": 12,
+                "projectsUpcoming": 8
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "SJR Primecorp Head Office",
+                    "city": "Bangalore",
+                    "state": "Karnataka",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 80 4244 4444",
+                "email": "info@sjrprimecorp.com",
+                "website": "www.sjrprimecorp.com",
+                "customerCare": "+91 80 4244 4444",
+                "supportEmail": "info@sjrprimecorp.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/sjr-primecorp",
+                "twitter": "https://twitter.com/sjr-primecorp",
+                "facebook": "https://facebook.com/sjr-primecorp",
+                "instagram": "https://instagram.com/sjr-primecorp",
+                "youtube": "https://youtube.com/sjr-primecorp"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "my-home-group": {
+            "id": "my-home-group",
+            "name": "My Home Group",
+            "tagline": "Building Dreams Since 1999",
+            "logo": "https://logos-api.apistemic.com/domain:myhomegroup.co.in",
+            "establishedYear": 1999,
+            "yearsOfExperience": 25,
+            "description": "My Home Group is a leading Hyderabad developer known for large-scale residential townships and premium projects.",
+            "statistics": {
+                "projectsCompleted": 48,
+                "projectsOngoing": 18,
+                "projectsUpcoming": 14
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "My Home Group Head Office",
+                    "city": "Hyderabad",
+                    "state": "Telangana",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 40 6628 6628",
+                "email": "info@myhomegroup.co.in",
+                "website": "www.myhomegroup.co.in",
+                "customerCare": "+91 40 6628 6628",
+                "supportEmail": "info@myhomegroup.co.in"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/my-home-group",
+                "twitter": "https://twitter.com/my-home-group",
+                "facebook": "https://facebook.com/my-home-group",
+                "instagram": "https://instagram.com/my-home-group",
+                "youtube": "https://youtube.com/my-home-group"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "incor-group": {
+            "id": "incor-group",
+            "name": "INCOR Group",
+            "tagline": "Excellence in Real Estate Since 2008",
+            "logo": "https://logos-api.apistemic.com/domain:incorgroup.com",
+            "establishedYear": 2008,
+            "yearsOfExperience": 16,
+            "description": "INCOR is a Hyderabad-based developer known for luxury residential and commercial projects with international standards.",
+            "statistics": {
+                "projectsCompleted": 32,
+                "projectsOngoing": 14,
+                "projectsUpcoming": 10
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "INCOR Group Head Office",
+                    "city": "Hyderabad",
+                    "state": "Telangana",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 40 4455 5555",
+                "email": "info@incorgroup.com",
+                "website": "www.incorgroup.com",
+                "customerCare": "+91 40 4455 5555",
+                "supportEmail": "info@incorgroup.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/incor-group",
+                "twitter": "https://twitter.com/incor-group",
+                "facebook": "https://facebook.com/incor-group",
+                "instagram": "https://instagram.com/incor-group",
+                "youtube": "https://youtube.com/incor-group"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "aparna-constructions": {
+            "id": "aparna-constructions",
+            "name": "Aparna Constructions",
+            "tagline": "Building Quality Since 1996",
+            "logo": "https://logos-api.apistemic.com/domain:aparnaconstructions.com",
+            "establishedYear": 1996,
+            "yearsOfExperience": 28,
+            "description": "Aparna Constructions is a leading Hyderabad developer known for quality residential apartments and villas.",
+            "statistics": {
+                "projectsCompleted": 68,
+                "projectsOngoing": 22,
+                "projectsUpcoming": 16
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Aparna Constructions Head Office",
+                    "city": "Hyderabad",
+                    "state": "Telangana",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 40 4455 4455",
+                "email": "info@aparnaconstructions.com",
+                "website": "www.aparnaconstructions.com",
+                "customerCare": "+91 40 4455 4455",
+                "supportEmail": "info@aparnaconstructions.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/aparna-constructions",
+                "twitter": "https://twitter.com/aparna-constructions",
+                "facebook": "https://facebook.com/aparna-constructions",
+                "instagram": "https://instagram.com/aparna-constructions",
+                "youtube": "https://youtube.com/aparna-constructions"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "naiknavare-developers": {
+            "id": "naiknavare-developers",
+            "name": "Naiknavare Developers",
+            "tagline": "Building Excellence Since 1989",
+            "logo": "https://logos-api.apistemic.com/domain:naiknavare.com",
+            "establishedYear": 1989,
+            "yearsOfExperience": 35,
+            "description": "Naiknavare Developers is a Pune-based developer known for quality residential projects and customer satisfaction.",
+            "statistics": {
+                "projectsCompleted": 52,
+                "projectsOngoing": 18,
+                "projectsUpcoming": 12
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Naiknavare Developers Head Office",
+                    "city": "Pune",
+                    "state": "Maharashtra",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 20 6767 6767",
+                "email": "info@naiknavare.com",
+                "website": "www.naiknavare.com",
+                "customerCare": "+91 20 6767 6767",
+                "supportEmail": "info@naiknavare.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/naiknavare-developers",
+                "twitter": "https://twitter.com/naiknavare-developers",
+                "facebook": "https://facebook.com/naiknavare-developers",
+                "instagram": "https://instagram.com/naiknavare-developers",
+                "youtube": "https://youtube.com/naiknavare-developers"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "xrbia-developers": {
+            "id": "xrbia-developers",
+            "name": "XRBIA Developers",
+            "tagline": "Affordable Luxury Since 2006",
+            "logo": "https://logos-api.apistemic.com/domain:xrbia.com",
+            "establishedYear": 2006,
+            "yearsOfExperience": 18,
+            "description": "XRBIA focuses on affordable housing projects in Mumbai Metropolitan Region with innovative financing solutions.",
+            "statistics": {
+                "projectsCompleted": 32,
+                "projectsOngoing": 16,
+                "projectsUpcoming": 12
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "XRBIA Developers Head Office",
+                    "city": "Mumbai",
+                    "state": "Maharashtra",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 22 6191 9000",
+                "email": "info@xrbia.com",
+                "website": "www.xrbia.com",
+                "customerCare": "+91 22 6191 9000",
+                "supportEmail": "info@xrbia.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/xrbia-developers",
+                "twitter": "https://twitter.com/xrbia-developers",
+                "facebook": "https://facebook.com/xrbia-developers",
+                "instagram": "https://instagram.com/xrbia-developers",
+                "youtube": "https://youtube.com/xrbia-developers"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "provident-housing": {
+            "id": "provident-housing",
+            "name": "Provident Housing",
+            "tagline": "Building Homes Since 2008",
+            "logo": "https://logos-api.apistemic.com/domain:providenthousing.com",
+            "establishedYear": 2008,
+            "yearsOfExperience": 16,
+            "description": "Provident Housing is the affordable housing arm of Puravankara Group, focusing on value-for-money projects.",
+            "statistics": {
+                "projectsCompleted": 42,
+                "projectsOngoing": 18,
+                "projectsUpcoming": 14
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Provident Housing Head Office",
+                    "city": "Bangalore",
+                    "state": "Karnataka",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 80 4933 5533",
+                "email": "info@providenthousing.com",
+                "website": "www.providenthousing.com",
+                "customerCare": "+91 80 4933 5533",
+                "supportEmail": "info@providenthousing.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/provident-housing",
+                "twitter": "https://twitter.com/provident-housing",
+                "facebook": "https://facebook.com/provident-housing",
+                "instagram": "https://instagram.com/provident-housing",
+                "youtube": "https://youtube.com/provident-housing"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "merlin-group": {
+            "id": "merlin-group",
+            "name": "Merlin Group",
+            "tagline": "Building Dreams Since 1976",
+            "logo": "https://logos-api.apistemic.com/domain:merlingroup.co.in",
+            "establishedYear": 1976,
+            "yearsOfExperience": 48,
+            "description": "Merlin Group is one of Kolkata's leading developers with diversified portfolio in residential and commercial projects.",
+            "statistics": {
+                "projectsCompleted": 92,
+                "projectsOngoing": 24,
+                "projectsUpcoming": 18
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Merlin Group Head Office",
+                    "city": "Kolkata",
+                    "state": "West Bengal",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 33 2288 8888",
+                "email": "info@merlingroup.co.in",
+                "website": "www.merlingroup.co.in",
+                "customerCare": "+91 33 2288 8888",
+                "supportEmail": "info@merlingroup.co.in"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/merlin-group",
+                "twitter": "https://twitter.com/merlin-group",
+                "facebook": "https://facebook.com/merlin-group",
+                "instagram": "https://instagram.com/merlin-group",
+                "youtube": "https://youtube.com/merlin-group"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "jain-housing": {
+            "id": "jain-housing",
+            "name": "Jain Housing & Construction",
+            "tagline": "Building Trust Since 1973",
+            "logo": "https://logos-api.apistemic.com/domain:jainhousing.com",
+            "establishedYear": 1973,
+            "yearsOfExperience": 51,
+            "description": "Jain Housing is a leading Chennai developer known for quality residential apartments and villas.",
+            "statistics": {
+                "projectsCompleted": 78,
+                "projectsOngoing": 22,
+                "projectsUpcoming": 16
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Jain Housing & Construction Head Office",
+                    "city": "Chennai",
+                    "state": "Tamil Nadu",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 44 2827 2727",
+                "email": "info@jainhousing.com",
+                "website": "www.jainhousing.com",
+                "customerCare": "+91 44 2827 2727",
+                "supportEmail": "info@jainhousing.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/jain-housing",
+                "twitter": "https://twitter.com/jain-housing",
+                "facebook": "https://facebook.com/jain-housing",
+                "instagram": "https://instagram.com/jain-housing",
+                "youtube": "https://youtube.com/jain-housing"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "casagrand-builder": {
+            "id": "casagrand-builder",
+            "name": "Casagrand Builder",
+            "tagline": "Building Happiness Since 2003",
+            "logo": "https://logos-api.apistemic.com/domain:casagrand.co.in",
+            "establishedYear": 2003,
+            "yearsOfExperience": 21,
+            "description": "Casagrand is one of South India's fastest-growing developers with focus on affordable and mid-segment housing.",
+            "statistics": {
+                "projectsCompleted": 62,
+                "projectsOngoing": 28,
+                "projectsUpcoming": 22
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Casagrand Builder Head Office",
+                    "city": "Chennai",
+                    "state": "Tamil Nadu",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 44 4868 8888",
+                "email": "info@casagrand.co.in",
+                "website": "www.casagrand.co.in",
+                "customerCare": "+91 44 4868 8888",
+                "supportEmail": "info@casagrand.co.in"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/casagrand-builder",
+                "twitter": "https://twitter.com/casagrand-builder",
+                "facebook": "https://facebook.com/casagrand-builder",
+                "instagram": "https://instagram.com/casagrand-builder",
+                "youtube": "https://youtube.com/casagrand-builder"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "pacifica-companies": {
+            "id": "pacifica-companies",
+            "name": "Pacifica Companies",
+            "tagline": "Building Excellence Since 2006",
+            "logo": "https://logos-api.apistemic.com/domain:pacificacompanies.com",
+            "establishedYear": 2006,
+            "yearsOfExperience": 18,
+            "description": "Pacifica is a Chennai-based developer known for contemporary residential projects with modern amenities.",
+            "statistics": {
+                "projectsCompleted": 38,
+                "projectsOngoing": 16,
+                "projectsUpcoming": 12
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Pacifica Companies Head Office",
+                    "city": "Chennai",
+                    "state": "Tamil Nadu",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 44 4868 5000",
+                "email": "info@pacificacompanies.com",
+                "website": "www.pacificacompanies.com",
+                "customerCare": "+91 44 4868 5000",
+                "supportEmail": "info@pacificacompanies.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/pacifica-companies",
+                "twitter": "https://twitter.com/pacifica-companies",
+                "facebook": "https://facebook.com/pacifica-companies",
+                "instagram": "https://instagram.com/pacifica-companies",
+                "youtube": "https://youtube.com/pacifica-companies"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "tvs-emerald": {
+            "id": "tvs-emerald",
+            "name": "TVS Emerald",
+            "tagline": "Building Quality Since 1987",
+            "logo": "https://logos-api.apistemic.com/domain:tvsemerald.in",
+            "establishedYear": 1987,
+            "yearsOfExperience": 37,
+            "description": "TVS Emerald is part of the TVS Group, known for premium residential projects in Chennai.",
+            "statistics": {
+                "projectsCompleted": 48,
+                "projectsOngoing": 18,
+                "projectsUpcoming": 14
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "TVS Emerald Head Office",
+                    "city": "Chennai",
+                    "state": "Tamil Nadu",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 44 4868 9999",
+                "email": "info@tvsemerald.in",
+                "website": "www.tvsemerald.in",
+                "customerCare": "+91 44 4868 9999",
+                "supportEmail": "info@tvsemerald.in"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/tvs-emerald",
+                "twitter": "https://twitter.com/tvs-emerald",
+                "facebook": "https://facebook.com/tvs-emerald",
+                "instagram": "https://instagram.com/tvs-emerald",
+                "youtube": "https://youtube.com/tvs-emerald"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "vaishnavi-group": {
+            "id": "vaishnavi-group",
+            "name": "Vaishnavi Group",
+            "tagline": "Building Excellence Since 1990",
+            "logo": "https://logos-api.apistemic.com/domain:vaishnavigroup.com",
+            "establishedYear": 1990,
+            "yearsOfExperience": 34,
+            "description": "Vaishnavi Group is known for premium residential and commercial projects in Bangalore with timely delivery.",
+            "statistics": {
+                "projectsCompleted": 52,
+                "projectsOngoing": 18,
+                "projectsUpcoming": 14
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Vaishnavi Group Head Office",
+                    "city": "Bangalore",
+                    "state": "Karnataka",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 80 4191 9191",
+                "email": "info@vaishnavigroup.com",
+                "website": "www.vaishnavigroup.com",
+                "customerCare": "+91 80 4191 9191",
+                "supportEmail": "info@vaishnavigroup.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/vaishnavi-group",
+                "twitter": "https://twitter.com/vaishnavi-group",
+                "facebook": "https://facebook.com/vaishnavi-group",
+                "instagram": "https://instagram.com/vaishnavi-group",
+                "youtube": "https://youtube.com/vaishnavi-group"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "total-environment": {
+            "id": "total-environment",
+            "name": "Total Environment Building Systems",
+            "tagline": "Designing for Life Since 1996",
+            "logo": "https://logos-api.apistemic.com/domain:totalenvironment.in",
+            "establishedYear": 1996,
+            "yearsOfExperience": 28,
+            "description": "Total Environment is known for customized eco-friendly homes with unique architectural design in Bangalore.",
+            "statistics": {
+                "projectsCompleted": 32,
+                "projectsOngoing": 12,
+                "projectsUpcoming": 8
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Total Environment Building Systems Head Office",
+                    "city": "Bangalore",
+                    "state": "Karnataka",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 80 2555 5555",
+                "email": "info@totalenvironment.in",
+                "website": "www.totalenvironment.in",
+                "customerCare": "+91 80 2555 5555",
+                "supportEmail": "info@totalenvironment.in"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/total-environment",
+                "twitter": "https://twitter.com/total-environment",
+                "facebook": "https://facebook.com/total-environment",
+                "instagram": "https://instagram.com/total-environment",
+                "youtube": "https://youtube.com/total-environment"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "mahaveer-group": {
+            "id": "mahaveer-group",
+            "name": "Mahaveer Group",
+            "tagline": "Building Trust Since 1998",
+            "logo": "https://logos-api.apistemic.com/domain:mahaveergroup.co.in",
+            "establishedYear": 1998,
+            "yearsOfExperience": 26,
+            "description": "Mahaveer Group is a Bangalore developer known for quality residential projects across various price segments.",
+            "statistics": {
+                "projectsCompleted": 72,
+                "projectsOngoing": 24,
+                "projectsUpcoming": 18
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Mahaveer Group Head Office",
+                    "city": "Bangalore",
+                    "state": "Karnataka",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 80 4344 5555",
+                "email": "info@mahaveergroup.co.in",
+                "website": "www.mahaveergroup.co.in",
+                "customerCare": "+91 80 4344 5555",
+                "supportEmail": "info@mahaveergroup.co.in"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/mahaveer-group",
+                "twitter": "https://twitter.com/mahaveer-group",
+                "facebook": "https://facebook.com/mahaveer-group",
+                "instagram": "https://instagram.com/mahaveer-group",
+                "youtube": "https://youtube.com/mahaveer-group"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "dsmax-properties": {
+            "id": "dsmax-properties",
+            "name": "DS-MAX Properties",
+            "tagline": "Building Dreams Since 2005",
+            "logo": "https://logos-api.apistemic.com/domain:dsmaxproperties.com",
+            "establishedYear": 2005,
+            "yearsOfExperience": 19,
+            "description": "DS-MAX Properties is a rapidly growing Bangalore developer known for affordable housing projects.",
+            "statistics": {
+                "projectsCompleted": 58,
+                "projectsOngoing": 22,
+                "projectsUpcoming": 16
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "DS-MAX Properties Head Office",
+                    "city": "Bangalore",
+                    "state": "Karnataka",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 80 4567 8900",
+                "email": "info@dsmaxproperties.com",
+                "website": "www.dsmaxproperties.com",
+                "customerCare": "+91 80 4567 8900",
+                "supportEmail": "info@dsmaxproperties.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/dsmax-properties",
+                "twitter": "https://twitter.com/dsmax-properties",
+                "facebook": "https://facebook.com/dsmax-properties",
+                "instagram": "https://instagram.com/dsmax-properties",
+                "youtube": "https://youtube.com/dsmax-properties"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "concorde-group": {
+            "id": "concorde-group",
+            "name": "Concorde Group",
+            "tagline": "Excellence in Construction Since 1971",
+            "logo": "https://logos-api.apistemic.com/domain:concordegroup.in",
+            "establishedYear": 1971,
+            "yearsOfExperience": 53,
+            "description": "Concorde Group is one of Bangalore's oldest developers known for quality residential and commercial projects.",
+            "statistics": {
+                "projectsCompleted": 88,
+                "projectsOngoing": 18,
+                "projectsUpcoming": 12
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Concorde Group Head Office",
+                    "city": "Bangalore",
+                    "state": "Karnataka",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 80 2555 6666",
+                "email": "info@concordegroup.in",
+                "website": "www.concordegroup.in",
+                "customerCare": "+91 80 2555 6666",
+                "supportEmail": "info@concordegroup.in"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/concorde-group",
+                "twitter": "https://twitter.com/concorde-group",
+                "facebook": "https://facebook.com/concorde-group",
+                "instagram": "https://instagram.com/concorde-group",
+                "youtube": "https://youtube.com/concorde-group"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "sumadhura-group": {
+            "id": "sumadhura-group",
+            "name": "Sumadhura Group",
+            "tagline": "Building Excellence Since 1999",
+            "logo": "https://logos-api.apistemic.com/domain:sumadhuragroup.com",
+            "establishedYear": 1999,
+            "yearsOfExperience": 25,
+            "description": "Sumadhura Group is a Bangalore developer known for quality residential apartments in prime locations.",
+            "statistics": {
+                "projectsCompleted": 42,
+                "projectsOngoing": 16,
+                "projectsUpcoming": 12
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Sumadhura Group Head Office",
+                    "city": "Bangalore",
+                    "state": "Karnataka",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 80 4191 6666",
+                "email": "info@sumadhuragroup.com",
+                "website": "www.sumadhuragroup.com",
+                "customerCare": "+91 80 4191 6666",
+                "supportEmail": "info@sumadhuragroup.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/sumadhura-group",
+                "twitter": "https://twitter.com/sumadhura-group",
+                "facebook": "https://facebook.com/sumadhura-group",
+                "instagram": "https://instagram.com/sumadhura-group",
+                "youtube": "https://youtube.com/sumadhura-group"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "assetz-property": {
+            "id": "assetz-property",
+            "name": "Assetz Property Group",
+            "tagline": "Building Quality Since 2006",
+            "logo": "https://logos-api.apistemic.com/domain:assetzproperty.com",
+            "establishedYear": 2006,
+            "yearsOfExperience": 18,
+            "description": "Assetz Property Group is known for premium residential projects in Bangalore with focus on quality and design.",
+            "statistics": {
+                "projectsCompleted": 28,
+                "projectsOngoing": 14,
+                "projectsUpcoming": 10
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Assetz Property Group Head Office",
+                    "city": "Bangalore",
+                    "state": "Karnataka",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 80 4868 4868",
+                "email": "info@assetzproperty.com",
+                "website": "www.assetzproperty.com",
+                "customerCare": "+91 80 4868 4868",
+                "supportEmail": "info@assetzproperty.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/assetz-property",
+                "twitter": "https://twitter.com/assetz-property",
+                "facebook": "https://facebook.com/assetz-property",
+                "instagram": "https://instagram.com/assetz-property",
+                "youtube": "https://youtube.com/assetz-property"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "adarsh-developers": {
+            "id": "adarsh-developers",
+            "name": "Adarsh Developers",
+            "tagline": "Building Trust Since 1974",
+            "logo": "https://logos-api.apistemic.com/domain:adarshdevelopers.com",
+            "establishedYear": 1974,
+            "yearsOfExperience": 50,
+            "description": "Adarsh Developers is one of Bangalore's pioneering developers known for quality construction and timely delivery.",
+            "statistics": {
+                "projectsCompleted": 62,
+                "projectsOngoing": 18,
+                "projectsUpcoming": 12
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Adarsh Developers Head Office",
+                    "city": "Bangalore",
+                    "state": "Karnataka",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 80 2559 9999",
+                "email": "info@adarshdevelopers.com",
+                "website": "www.adarshdevelopers.com",
+                "customerCare": "+91 80 2559 9999",
+                "supportEmail": "info@adarshdevelopers.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/adarsh-developers",
+                "twitter": "https://twitter.com/adarsh-developers",
+                "facebook": "https://facebook.com/adarsh-developers",
+                "instagram": "https://instagram.com/adarsh-developers",
+                "youtube": "https://youtube.com/adarsh-developers"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "jaypee-greens": {
+            "id": "jaypee-greens",
+            "name": "Jaypee Greens",
+            "tagline": "Creating Green Spaces Since 2003",
+            "logo": "https://logos-api.apistemic.com/domain:jaypeegreens.com",
+            "establishedYear": 2003,
+            "yearsOfExperience": 21,
+            "description": "Jaypee Greens is known for large-scale integrated townships with golf courses and sports facilities in Greater Noida.",
+            "statistics": {
+                "projectsCompleted": 42,
+                "projectsOngoing": 16,
+                "projectsUpcoming": 12
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Jaypee Greens Head Office",
+                    "city": "Greater Noida",
+                    "state": "Uttar Pradesh",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 120 235 3535",
+                "email": "info@jaypeegreens.com",
+                "website": "www.jaypeegreens.com",
+                "customerCare": "+91 120 235 3535",
+                "supportEmail": "info@jaypeegreens.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/jaypee-greens",
+                "twitter": "https://twitter.com/jaypee-greens",
+                "facebook": "https://facebook.com/jaypee-greens",
+                "instagram": "https://instagram.com/jaypee-greens",
+                "youtube": "https://youtube.com/jaypee-greens"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "mahagun-india": {
+            "id": "mahagun-india",
+            "name": "Mahagun India",
+            "tagline": "Building Dreams Since 1983",
+            "logo": "https://logos-api.apistemic.com/domain:mahagun.co.in",
+            "establishedYear": 1983,
+            "yearsOfExperience": 41,
+            "description": "Mahagun is a prominent NCR developer known for residential and commercial projects with modern amenities.",
+            "statistics": {
+                "projectsCompleted": 68,
+                "projectsOngoing": 24,
+                "projectsUpcoming": 18
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Mahagun India Head Office",
+                    "city": "Noida",
+                    "state": "Uttar Pradesh",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 120 471 5050",
+                "email": "info@mahagun.co.in",
+                "website": "www.mahagun.co.in",
+                "customerCare": "+91 120 471 5050",
+                "supportEmail": "info@mahagun.co.in"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/mahagun-india",
+                "twitter": "https://twitter.com/mahagun-india",
+                "facebook": "https://facebook.com/mahagun-india",
+                "instagram": "https://instagram.com/mahagun-india",
+                "youtube": "https://youtube.com/mahagun-india"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "ace-group": {
+            "id": "ace-group",
+            "name": "ACE Group",
+            "tagline": "Building Excellence Since 1990",
+            "logo": "https://logos-api.apistemic.com/domain:acegroupindia.com",
+            "establishedYear": 1990,
+            "yearsOfExperience": 34,
+            "description": "ACE Group is known for premium residential and commercial projects in Greater Noida with international standards.",
+            "statistics": {
+                "projectsCompleted": 48,
+                "projectsOngoing": 18,
+                "projectsUpcoming": 14
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "ACE Group Head Office",
+                    "city": "Greater Noida",
+                    "state": "Uttar Pradesh",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 120 411 4444",
+                "email": "info@acegroupindia.com",
+                "website": "www.acegroupindia.com",
+                "customerCare": "+91 120 411 4444",
+                "supportEmail": "info@acegroupindia.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/ace-group",
+                "twitter": "https://twitter.com/ace-group",
+                "facebook": "https://facebook.com/ace-group",
+                "instagram": "https://instagram.com/ace-group",
+                "youtube": "https://youtube.com/ace-group"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "m3m-india": {
+            "id": "m3m-india",
+            "name": "M3M India",
+            "tagline": "Creating Landmarks Since 2010",
+            "logo": "https://logos-api.apistemic.com/domain:m3mindia.com",
+            "establishedYear": 2010,
+            "yearsOfExperience": 14,
+            "description": "M3M India is a leading developer known for luxury residential and commercial projects in Gurugram.",
+            "statistics": {
+                "projectsCompleted": 32,
+                "projectsOngoing": 18,
+                "projectsUpcoming": 14
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "M3M India Head Office",
+                    "city": "Gurugram",
+                    "state": "Haryana",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 124 467 7000",
+                "email": "info@m3mindia.com",
+                "website": "www.m3mindia.com",
+                "customerCare": "+91 124 467 7000",
+                "supportEmail": "info@m3mindia.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/m3m-india",
+                "twitter": "https://twitter.com/m3m-india",
+                "facebook": "https://facebook.com/m3m-india",
+                "instagram": "https://instagram.com/m3m-india",
+                "youtube": "https://youtube.com/m3m-india"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "aba-corp": {
+            "id": "aba-corp",
+            "name": "ABA Corp",
+            "tagline": "Orange County Living Since 2000",
+            "logo": "https://logos-api.apistemic.com/domain:orangecounty.co.in",
+            "establishedYear": 2000,
+            "yearsOfExperience": 24,
+            "description": "ABA Corp is known for Orange County township project, one of the largest residential townships in NCR.",
+            "statistics": {
+                "projectsCompleted": 28,
+                "projectsOngoing": 12,
+                "projectsUpcoming": 8
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "ABA Corp Head Office",
+                    "city": "Greater Noida",
+                    "state": "Uttar Pradesh",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 120 419 8888",
+                "email": "info@abacorp.in",
+                "website": "www.orangecounty.co.in",
+                "customerCare": "+91 120 419 8888",
+                "supportEmail": "info@abacorp.in"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/aba-corp",
+                "twitter": "https://twitter.com/aba-corp",
+                "facebook": "https://facebook.com/aba-corp",
+                "instagram": "https://instagram.com/aba-corp",
+                "youtube": "https://youtube.com/aba-corp"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "rna-corp": {
+            "id": "rna-corp",
+            "name": "RNA Corp",
+            "tagline": "Building Excellence Since 2000",
+            "logo": "https://logos-api.apistemic.com/domain:rnacorp.in",
+            "establishedYear": 2000,
+            "yearsOfExperience": 24,
+            "description": "RNA Corp is a Mumbai developer known for residential and commercial projects in suburbs with modern amenities.",
+            "statistics": {
+                "projectsCompleted": 42,
+                "projectsOngoing": 16,
+                "projectsUpcoming": 12
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "RNA Corp Head Office",
+                    "city": "Mumbai",
+                    "state": "Maharashtra",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 22 6191 7777",
+                "email": "info@rnacorp.in",
+                "website": "www.rnacorp.in",
+                "customerCare": "+91 22 6191 7777",
+                "supportEmail": "info@rnacorp.in"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/rna-corp",
+                "twitter": "https://twitter.com/rna-corp",
+                "facebook": "https://facebook.com/rna-corp",
+                "instagram": "https://instagram.com/rna-corp",
+                "youtube": "https://youtube.com/rna-corp"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "db-realty": {
+            "id": "db-realty",
+            "name": "DB Realty",
+            "tagline": "Redefining Real Estate Since 2006",
+            "logo": "https://logos-api.apistemic.com/domain:dbrealty.in",
+            "establishedYear": 2006,
+            "yearsOfExperience": 18,
+            "description": "DB Realty is known for premium residential and commercial projects in Mumbai with focus on luxury.",
+            "statistics": {
+                "projectsCompleted": 32,
+                "projectsOngoing": 14,
+                "projectsUpcoming": 10
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "DB Realty Head Office",
+                    "city": "Mumbai",
+                    "state": "Maharashtra",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 22 6191 6666",
+                "email": "info@dbrealty.in",
+                "website": "www.dbrealty.in",
+                "customerCare": "+91 22 6191 6666",
+                "supportEmail": "info@dbrealty.in"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/db-realty",
+                "twitter": "https://twitter.com/db-realty",
+                "facebook": "https://facebook.com/db-realty",
+                "instagram": "https://instagram.com/db-realty",
+                "youtube": "https://youtube.com/db-realty"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "ekta-world": {
+            "id": "ekta-world",
+            "name": "Ekta World",
+            "tagline": "Building Dreams Since 1987",
+            "logo": "https://logos-api.apistemic.com/domain:ektaworld.com",
+            "establishedYear": 1987,
+            "yearsOfExperience": 37,
+            "description": "Ekta World is a Mumbai developer known for residential projects in suburbs with focus on affordability.",
+            "statistics": {
+                "projectsCompleted": 52,
+                "projectsOngoing": 18,
+                "projectsUpcoming": 14
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Ekta World Head Office",
+                    "city": "Mumbai",
+                    "state": "Maharashtra",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 22 6191 5555",
+                "email": "info@ektaworld.com",
+                "website": "www.ektaworld.com",
+                "customerCare": "+91 22 6191 5555",
+                "supportEmail": "info@ektaworld.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/ekta-world",
+                "twitter": "https://twitter.com/ekta-world",
+                "facebook": "https://facebook.com/ekta-world",
+                "instagram": "https://instagram.com/ekta-world",
+                "youtube": "https://youtube.com/ekta-world"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "adani-realty": {
+            "id": "adani-realty",
+            "name": "Adani Realty",
+            "tagline": "Building the Future Since 2012",
+            "logo": "https://logos-api.apistemic.com/domain:adanirealty.com",
+            "establishedYear": 2012,
+            "yearsOfExperience": 12,
+            "description": "Adani Realty is part of Adani Group, focusing on integrated townships and commercial projects in Gujarat.",
+            "statistics": {
+                "projectsCompleted": 18,
+                "projectsOngoing": 12,
+                "projectsUpcoming": 8
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Adani Realty Head Office",
+                    "city": "Ahmedabad",
+                    "state": "Gujarat",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 79 2656 5555",
+                "email": "info@adanirealty.com",
+                "website": "www.adanirealty.com",
+                "customerCare": "+91 79 2656 5555",
+                "supportEmail": "info@adanirealty.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/adani-realty",
+                "twitter": "https://twitter.com/adani-realty",
+                "facebook": "https://facebook.com/adani-realty",
+                "instagram": "https://instagram.com/adani-realty",
+                "youtube": "https://youtube.com/adani-realty"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "goyal-and-co": {
+            "id": "goyal-and-co",
+            "name": "Goyal & Co",
+            "tagline": "Building Excellence Since 1976",
+            "logo": "https://logos-api.apistemic.com/domain:goyal-co.com",
+            "establishedYear": 1976,
+            "yearsOfExperience": 48,
+            "description": "Goyal & Co is a leading Ahmedabad developer known for quality residential and commercial projects.",
+            "statistics": {
+                "projectsCompleted": 68,
+                "projectsOngoing": 22,
+                "projectsUpcoming": 16
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Goyal & Co Head Office",
+                    "city": "Ahmedabad",
+                    "state": "Gujarat",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 79 2646 4646",
+                "email": "info@goyal-co.com",
+                "website": "www.goyal-co.com",
+                "customerCare": "+91 79 2646 4646",
+                "supportEmail": "info@goyal-co.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/goyal-and-co",
+                "twitter": "https://twitter.com/goyal-and-co",
+                "facebook": "https://facebook.com/goyal-and-co",
+                "instagram": "https://instagram.com/goyal-and-co",
+                "youtube": "https://youtube.com/goyal-and-co"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "arvind-smartspaces": {
+            "id": "arvind-smartspaces",
+            "name": "Arvind SmartSpaces",
+            "tagline": "Building Smart Since 2008",
+            "logo": "https://logos-api.apistemic.com/domain:arvindsmartspaces.com",
+            "establishedYear": 2008,
+            "yearsOfExperience": 16,
+            "description": "Arvind SmartSpaces is the real estate arm of Lalbhai Group, known for residential and commercial projects in Gujarat.",
+            "statistics": {
+                "projectsCompleted": 38,
+                "projectsOngoing": 16,
+                "projectsUpcoming": 12
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Arvind SmartSpaces Head Office",
+                    "city": "Ahmedabad",
+                    "state": "Gujarat",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 79 6619 4000",
+                "email": "info@arvindsmartspaces.com",
+                "website": "www.arvindsmartspaces.com",
+                "customerCare": "+91 79 6619 4000",
+                "supportEmail": "info@arvindsmartspaces.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/arvind-smartspaces",
+                "twitter": "https://twitter.com/arvind-smartspaces",
+                "facebook": "https://facebook.com/arvind-smartspaces",
+                "instagram": "https://instagram.com/arvind-smartspaces",
+                "youtube": "https://youtube.com/arvind-smartspaces"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "panchshil-realty": {
+            "id": "panchshil-realty",
+            "name": "Panchshil Realty",
+            "tagline": "Creating Landmarks Since 2002",
+            "logo": "https://logos-api.apistemic.com/domain:panchshilrealty.com",
+            "establishedYear": 2002,
+            "yearsOfExperience": 22,
+            "description": "Panchshil Realty is known for luxury residential and commercial projects in Pune with international design standards.",
+            "statistics": {
+                "projectsCompleted": 32,
+                "projectsOngoing": 14,
+                "projectsUpcoming": 10
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Panchshil Realty Head Office",
+                    "city": "Pune",
+                    "state": "Maharashtra",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 20 6767 9999",
+                "email": "info@panchshilrealty.com",
+                "website": "www.panchshilrealty.com",
+                "customerCare": "+91 20 6767 9999",
+                "supportEmail": "info@panchshilrealty.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/panchshil-realty",
+                "twitter": "https://twitter.com/panchshil-realty",
+                "facebook": "https://facebook.com/panchshil-realty",
+                "instagram": "https://instagram.com/panchshil-realty",
+                "youtube": "https://youtube.com/panchshil-realty"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "kumar-properties": {
+            "id": "kumar-properties",
+            "name": "Kumar Properties",
+            "tagline": "Building Excellence Since 1983",
+            "logo": "https://logos-api.apistemic.com/domain:kumarproperties.com",
+            "establishedYear": 1983,
+            "yearsOfExperience": 41,
+            "description": "Kumar Properties is a Pune-based developer known for quality residential projects across various segments.",
+            "statistics": {
+                "projectsCompleted": 78,
+                "projectsOngoing": 24,
+                "projectsUpcoming": 18
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Kumar Properties Head Office",
+                    "city": "Pune",
+                    "state": "Maharashtra",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 20 6767 5000",
+                "email": "info@kumarproperties.com",
+                "website": "www.kumarproperties.com",
+                "customerCare": "+91 20 6767 5000",
+                "supportEmail": "info@kumarproperties.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/kumar-properties",
+                "twitter": "https://twitter.com/kumar-properties",
+                "facebook": "https://facebook.com/kumar-properties",
+                "instagram": "https://instagram.com/kumar-properties",
+                "youtube": "https://youtube.com/kumar-properties"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "rohan-builders": {
+            "id": "rohan-builders",
+            "name": "Rohan Builders",
+            "tagline": "Building Quality Since 1993",
+            "logo": "https://logos-api.apistemic.com/domain:rohanbuilders.com",
+            "establishedYear": 1993,
+            "yearsOfExperience": 31,
+            "description": "Rohan Builders is a Pune developer known for innovative residential projects with modern amenities.",
+            "statistics": {
+                "projectsCompleted": 52,
+                "projectsOngoing": 18,
+                "projectsUpcoming": 14
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Rohan Builders Head Office",
+                    "city": "Pune",
+                    "state": "Maharashtra",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 20 6767 4000",
+                "email": "info@rohanbuilders.com",
+                "website": "www.rohanbuilders.com",
+                "customerCare": "+91 20 6767 4000",
+                "supportEmail": "info@rohanbuilders.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/rohan-builders",
+                "twitter": "https://twitter.com/rohan-builders",
+                "facebook": "https://facebook.com/rohan-builders",
+                "instagram": "https://instagram.com/rohan-builders",
+                "youtube": "https://youtube.com/rohan-builders"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "kalpataru-limited": {
+            "id": "kalpataru-limited",
+            "name": "Kalpataru Limited",
+            "tagline": "Building Dreams Since 1969",
+            "logo": "https://logos-api.apistemic.com/domain:kalpaprojects.com",
+            "establishedYear": 1969,
+            "yearsOfExperience": 55,
+            "description": "Kalpataru is a leading developer with diversified portfolio in residential and commercial projects across India.",
+            "statistics": {
+                "projectsCompleted": 95,
+                "projectsOngoing": 28,
+                "projectsUpcoming": 20
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Kalpataru Limited Head Office",
+                    "city": "Mumbai",
+                    "state": "Maharashtra",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 22 6191 0000",
+                "email": "info@kalpaprojects.com",
+                "website": "www.kalpaprojects.com",
+                "customerCare": "+91 22 6191 0000",
+                "supportEmail": "info@kalpaprojects.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/kalpataru-limited",
+                "twitter": "https://twitter.com/kalpataru-limited",
+                "facebook": "https://facebook.com/kalpataru-limited",
+                "instagram": "https://instagram.com/kalpataru-limited",
+                "youtube": "https://youtube.com/kalpataru-limited"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "wadhwa-group": {
+            "id": "wadhwa-group",
+            "name": "Wadhwa Group",
+            "tagline": "Building Excellence Since 1983",
+            "logo": "https://logos-api.apistemic.com/domain:wadhwagroup.com",
+            "establishedYear": 1983,
+            "yearsOfExperience": 41,
+            "description": "Wadhwa Group is a Mumbai developer known for quality residential projects in suburbs with focus on customer satisfaction.",
+            "statistics": {
+                "projectsCompleted": 68,
+                "projectsOngoing": 22,
+                "projectsUpcoming": 16
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Wadhwa Group Head Office",
+                    "city": "Mumbai",
+                    "state": "Maharashtra",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 22 6191 2222",
+                "email": "info@wadhwagroup.com",
+                "website": "www.wadhwagroup.com",
+                "customerCare": "+91 22 6191 2222",
+                "supportEmail": "info@wadhwagroup.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/wadhwa-group",
+                "twitter": "https://twitter.com/wadhwa-group",
+                "facebook": "https://facebook.com/wadhwa-group",
+                "instagram": "https://instagram.com/wadhwa-group",
+                "youtube": "https://youtube.com/wadhwa-group"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "Raymond-realty": {
+            "id": "Raymond-realty",
+            "name": "Raymond Realty",
+            "tagline": "Creating Quality Spaces Since 2017",
+            "logo": "https://logos-api.apistemic.com/domain:raymondrealty.in",
+            "establishedYear": 2017,
+            "yearsOfExperience": 7,
+            "description": "Raymond Realty is the real estate arm of Raymond Group, focusing on large-scale township development in Thane.",
+            "statistics": {
+                "projectsCompleted": 8,
+                "projectsOngoing": 6,
+                "projectsUpcoming": 4
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Raymond Realty Head Office",
+                    "city": "Thane",
+                    "state": "Maharashtra",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 22 6191 3333",
+                "email": "info@raymondrealty.in",
+                "website": "www.raymondrealty.in",
+                "customerCare": "+91 22 6191 3333",
+                "supportEmail": "info@raymondrealty.in"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/Raymond-realty",
+                "twitter": "https://twitter.com/Raymond-realty",
+                "facebook": "https://facebook.com/Raymond-realty",
+                "instagram": "https://instagram.com/Raymond-realty",
+                "youtube": "https://youtube.com/Raymond-realty"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "brigade-hoysala": {
+            "id": "brigade-hoysala",
+            "name": "Mahindra World City Developers",
+            "tagline": "Integrated Cities Since 2004",
+            "logo": "https://logos-api.apistemic.com/domain:mahindraworldcity.com",
+            "establishedYear": 2004,
+            "yearsOfExperience": 20,
+            "description": "Developer of integrated business cities with SEZ facilities, providing world-class infrastructure for businesses.",
+            "statistics": {
+                "projectsCompleted": 12,
+                "projectsOngoing": 8,
+                "projectsUpcoming": 6
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Mahindra World City Developers Head Office",
+                    "city": "Chennai",
+                    "state": "Tamil Nadu",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 44 4299 9999",
+                "email": "info@mahindraworldcity.com",
+                "website": "www.mahindraworldcity.com",
+                "customerCare": "+91 44 4299 9999",
+                "supportEmail": "info@mahindraworldcity.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/brigade-hoysala",
+                "twitter": "https://twitter.com/brigade-hoysala",
+                "facebook": "https://facebook.com/brigade-hoysala",
+                "instagram": "https://instagram.com/brigade-hoysala",
+                "youtube": "https://youtube.com/brigade-hoysala"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "max-estates": {
+            "id": "max-estates",
+            "name": "Max Estates",
+            "tagline": "Building Excellence Since 2015",
+            "logo": "https://logos-api.apistemic.com/domain:maxestates.com",
+            "establishedYear": 2015,
+            "yearsOfExperience": 9,
+            "description": "Max Estates focuses on premium commercial and residential projects in NCR with focus on quality and sustainability.",
+            "statistics": {
+                "projectsCompleted": 12,
+                "projectsOngoing": 8,
+                "projectsUpcoming": 6
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Max Estates Head Office",
+                    "city": "New Delhi",
+                    "state": "Delhi",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 11 4718 1000",
+                "email": "info@maxestates.com",
+                "website": "www.maxestates.com",
+                "customerCare": "+91 11 4718 1000",
+                "supportEmail": "info@maxestates.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/max-estates",
+                "twitter": "https://twitter.com/max-estates",
+                "facebook": "https://facebook.com/max-estates",
+                "instagram": "https://instagram.com/max-estates",
+                "youtube": "https://youtube.com/max-estates"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "house-of-hiranandani": {
+            "id": "house-of-hiranandani",
+            "name": "House of Hiranandani",
+            "tagline": "Premium Living Since 2013",
+            "logo": "https://logos-api.apistemic.com/domain:houseofhiranandani.com",
+            "establishedYear": 2013,
+            "yearsOfExperience": 11,
+            "description": "House of Hiranandani focuses on luxury residential projects in Mumbai with world-class amenities.",
+            "statistics": {
+                "projectsCompleted": 22,
+                "projectsOngoing": 12,
+                "projectsUpcoming": 8
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "House of Hiranandani Head Office",
+                    "city": "Mumbai",
+                    "state": "Maharashtra",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 22 6196 8888",
+                "email": "info@houseofhiranandani.com",
+                "website": "www.houseofhiranandani.com",
+                "customerCare": "+91 22 6196 8888",
+                "supportEmail": "info@houseofhiranandani.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/house-of-hiranandani",
+                "twitter": "https://twitter.com/house-of-hiranandani",
+                "facebook": "https://facebook.com/house-of-hiranandani",
+                "instagram": "https://instagram.com/house-of-hiranandani",
+                "youtube": "https://youtube.com/house-of-hiranandani"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "eldeco-infrastructure": {
+            "id": "eldeco-infrastructure",
+            "name": "Eldeco Infrastructure",
+            "tagline": "Building Since 1985",
+            "logo": "https://logos-api.apistemic.com/domain:eldeco.in",
+            "establishedYear": 1985,
+            "yearsOfExperience": 39,
+            "description": "Eldeco is a leading developer in North India with expertise in residential and commercial projects.",
+            "statistics": {
+                "projectsCompleted": 72,
+                "projectsOngoing": 22,
+                "projectsUpcoming": 16
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Eldeco Infrastructure Head Office",
+                    "city": "Lucknow",
+                    "state": "Uttar Pradesh",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 522 409 4444",
+                "email": "info@eldeco.in",
+                "website": "www.eldeco.in",
+                "customerCare": "+91 522 409 4444",
+                "supportEmail": "info@eldeco.in"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/eldeco-infrastructure",
+                "twitter": "https://twitter.com/eldeco-infrastructure",
+                "facebook": "https://facebook.com/eldeco-infrastructure",
+                "instagram": "https://instagram.com/eldeco-infrastructure",
+                "youtube": "https://youtube.com/eldeco-infrastructure"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "raheja-universal": {
+            "id": "raheja-universal",
+            "name": "Raheja Universal",
+            "tagline": "Building Excellence Since 1993",
+            "logo": "https://logos-api.apistemic.com/domain:rahejauniversal.com",
+            "establishedYear": 1993,
+            "yearsOfExperience": 31,
+            "description": "Raheja Universal is known for premium residential and commercial projects in Mumbai with focus on luxury.",
+            "statistics": {
+                "projectsCompleted": 42,
+                "projectsOngoing": 16,
+                "projectsUpcoming": 12
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Raheja Universal Head Office",
+                    "city": "Mumbai",
+                    "state": "Maharashtra",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 22 6767 7777",
+                "email": "info@rahejauniversal.com",
+                "website": "www.rahejauniversal.com",
+                "customerCare": "+91 22 6767 7777",
+                "supportEmail": "info@rahejauniversal.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/raheja-universal",
+                "twitter": "https://twitter.com/raheja-universal",
+                "facebook": "https://facebook.com/raheja-universal",
+                "instagram": "https://instagram.com/raheja-universal",
+                "youtube": "https://youtube.com/raheja-universal"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "ajnara-india": {
+            "id": "ajnara-india",
+            "name": "Ajnara India",
+            "tagline": "Building Dreams Since 1991",
+            "logo": "https://logos-api.apistemic.com/domain:ajnara.com",
+            "establishedYear": 1991,
+            "yearsOfExperience": 33,
+            "description": "Ajnara India is a prominent NCR developer known for residential and commercial projects with modern amenities.",
+            "statistics": {
+                "projectsCompleted": 58,
+                "projectsOngoing": 20,
+                "projectsUpcoming": 14
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Ajnara India Head Office",
+                    "city": "Noida",
+                    "state": "Uttar Pradesh",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 120 419 5555",
+                "email": "info@ajnara.com",
+                "website": "www.ajnara.com",
+                "customerCare": "+91 120 419 5555",
+                "supportEmail": "info@ajnara.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/ajnara-india",
+                "twitter": "https://twitter.com/ajnara-india",
+                "facebook": "https://facebook.com/ajnara-india",
+                "instagram": "https://instagram.com/ajnara-india",
+                "youtube": "https://youtube.com/ajnara-india"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "raunak-group": {
+            "id": "raunak-group",
+            "name": "Raunak Group",
+            "tagline": "Building Excellence Since 1978",
+            "logo": "https://logos-api.apistemic.com/domain:raunakgroup.com",
+            "establishedYear": 1978,
+            "yearsOfExperience": 46,
+            "description": "Raunak Group is a Mumbai developer known for affordable and mid-segment housing projects.",
+            "statistics": {
+                "projectsCompleted": 68,
+                "projectsOngoing": 22,
+                "projectsUpcoming": 16
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Raunak Group Head Office",
+                    "city": "Mumbai",
+                    "state": "Maharashtra",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 22 2626 9999",
+                "email": "info@raunakgroup.com",
+                "website": "www.raunakgroup.com",
+                "customerCare": "+91 22 2626 9999",
+                "supportEmail": "info@raunakgroup.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/raunak-group",
+                "twitter": "https://twitter.com/raunak-group",
+                "facebook": "https://facebook.com/raunak-group",
+                "instagram": "https://instagram.com/raunak-group",
+                "youtube": "https://youtube.com/raunak-group"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "sterling-developers": {
+            "id": "sterling-developers",
+            "name": "Sterling Developers",
+            "tagline": "Building Quality Since 1983",
+            "logo": "https://logos-api.apistemic.com/domain:sterlingdevelopers.com",
+            "establishedYear": 1983,
+            "yearsOfExperience": 41,
+            "description": "Sterling Developers is a Bangalore-based developer known for affordable housing and plotted developments.",
+            "statistics": {
+                "projectsCompleted": 52,
+                "projectsOngoing": 18,
+                "projectsUpcoming": 14
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Sterling Developers Head Office",
+                    "city": "Bangalore",
+                    "state": "Karnataka",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 80 2559 7777",
+                "email": "info@sterlingdevelopers.com",
+                "website": "www.sterlingdevelopers.com",
+                "customerCare": "+91 80 2559 7777",
+                "supportEmail": "info@sterlingdevelopers.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/sterling-developers",
+                "twitter": "https://twitter.com/sterling-developers",
+                "facebook": "https://facebook.com/sterling-developers",
+                "instagram": "https://instagram.com/sterling-developers",
+                "youtube": "https://youtube.com/sterling-developers"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "arihant-superstructures": {
+            "id": "arihant-superstructures",
+            "name": "Arihant Superstructures",
+            "tagline": "Building Excellence Since 1987",
+            "logo": "https://logos-api.apistemic.com/domain:arihantsuperstructures.com",
+            "establishedYear": 1987,
+            "yearsOfExperience": 37,
+            "description": "Arihant Superstructures is known for affordable and mid-segment housing projects across India.",
+            "statistics": {
+                "projectsCompleted": 62,
+                "projectsOngoing": 24,
+                "projectsUpcoming": 18
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Arihant Superstructures Head Office",
+                    "city": "Mumbai",
+                    "state": "Maharashtra",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 22 2626 8888",
+                "email": "info@arihantsuperstructures.com",
+                "website": "www.arihantsuperstructures.com",
+                "customerCare": "+91 22 2626 8888",
+                "supportEmail": "info@arihantsuperstructures.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/arihant-superstructures",
+                "twitter": "https://twitter.com/arihant-superstructures",
+                "facebook": "https://facebook.com/arihant-superstructures",
+                "instagram": "https://instagram.com/arihant-superstructures",
+                "youtube": "https://youtube.com/arihant-superstructures"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "migsun-group": {
+            "id": "migsun-group",
+            "name": "Migsun Group",
+            "tagline": "Building Dreams Since 1999",
+            "logo": "https://logos-api.apistemic.com/domain:migsun.com",
+            "establishedYear": 1999,
+            "yearsOfExperience": 25,
+            "description": "Migsun Group is a prominent NCR developer known for residential and commercial projects.",
+            "statistics": {
+                "projectsCompleted": 38,
+                "projectsOngoing": 16,
+                "projectsUpcoming": 12
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Migsun Group Head Office",
+                    "city": "Greater Noida",
+                    "state": "Uttar Pradesh",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 120 411 6666",
+                "email": "info@migsun.com",
+                "website": "www.migsun.com",
+                "customerCare": "+91 120 411 6666",
+                "supportEmail": "info@migsun.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/migsun-group",
+                "twitter": "https://twitter.com/migsun-group",
+                "facebook": "https://facebook.com/migsun-group",
+                "instagram": "https://instagram.com/migsun-group",
+                "youtube": "https://youtube.com/migsun-group"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "nirala-group": {
+            "id": "nirala-group",
+            "name": "Nirala Group",
+            "tagline": "Building Excellence Since 2003",
+            "logo": "https://logos-api.apistemic.com/domain:niralagroup.com",
+            "establishedYear": 2003,
+            "yearsOfExperience": 21,
+            "description": "Nirala Group is known for affordable housing projects in NCR with modern amenities.",
+            "statistics": {
+                "projectsCompleted": 32,
+                "projectsOngoing": 14,
+                "projectsUpcoming": 10
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Nirala Group Head Office",
+                    "city": "Greater Noida",
+                    "state": "Uttar Pradesh",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 120 419 7777",
+                "email": "info@niralagroup.com",
+                "website": "www.niralagroup.com",
+                "customerCare": "+91 120 419 7777",
+                "supportEmail": "info@niralagroup.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/nirala-group",
+                "twitter": "https://twitter.com/nirala-group",
+                "facebook": "https://facebook.com/nirala-group",
+                "instagram": "https://instagram.com/nirala-group",
+                "youtube": "https://youtube.com/nirala-group"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "gulshan-homz": {
+            "id": "gulshan-homz",
+            "name": "Gulshan Homz",
+            "tagline": "Building Dreams Since 2000",
+            "logo": "https://logos-api.apistemic.com/domain:gulshanhomz.com",
+            "establishedYear": 2000,
+            "yearsOfExperience": 24,
+            "description": "Gulshan Homz is a NCR developer known for residential projects with good connectivity and amenities.",
+            "statistics": {
+                "projectsCompleted": 28,
+                "projectsOngoing": 12,
+                "projectsUpcoming": 8
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Gulshan Homz Head Office",
+                    "city": "Noida",
+                    "state": "Uttar Pradesh",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 120 419 8888",
+                "email": "info@gulshanhomz.com",
+                "website": "www.gulshanhomz.com",
+                "customerCare": "+91 120 419 8888",
+                "supportEmail": "info@gulshanhomz.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/gulshan-homz",
+                "twitter": "https://twitter.com/gulshan-homz",
+                "facebook": "https://facebook.com/gulshan-homz",
+                "instagram": "https://instagram.com/gulshan-homz",
+                "youtube": "https://youtube.com/gulshan-homz"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "sikka-group": {
+            "id": "sikka-group",
+            "name": "Sikka Group",
+            "tagline": "Building Excellence Since 2003",
+            "logo": "https://logos-api.apistemic.com/domain:sikkagroup.com",
+            "establishedYear": 2003,
+            "yearsOfExperience": 21,
+            "description": "Sikka Group is known for commercial and residential projects in NCR with focus on quality.",
+            "statistics": {
+                "projectsCompleted": 26,
+                "projectsOngoing": 12,
+                "projectsUpcoming": 8
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Sikka Group Head Office",
+                    "city": "Noida",
+                    "state": "Uttar Pradesh",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 120 419 9999",
+                "email": "info@sikkagroup.com",
+                "website": "www.sikkagroup.com",
+                "customerCare": "+91 120 419 9999",
+                "supportEmail": "info@sikkagroup.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/sikka-group",
+                "twitter": "https://twitter.com/sikka-group",
+                "facebook": "https://facebook.com/sikka-group",
+                "instagram": "https://instagram.com/sikka-group",
+                "youtube": "https://youtube.com/sikka-group"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "fusion-homes": {
+            "id": "fusion-homes",
+            "name": "Fusion Homes",
+            "tagline": "Building Quality Since 2008",
+            "logo": "https://logos-api.apistemic.com/domain:fusionhomes.in",
+            "establishedYear": 2008,
+            "yearsOfExperience": 16,
+            "description": "Fusion Homes specializes in affordable housing projects in Greater Noida with modern facilities.",
+            "statistics": {
+                "projectsCompleted": 22,
+                "projectsOngoing": 10,
+                "projectsUpcoming": 6
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Fusion Homes Head Office",
+                    "city": "Greater Noida",
+                    "state": "Uttar Pradesh",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 120 419 5000",
+                "email": "info@fusionhomes.in",
+                "website": "www.fusionhomes.in",
+                "customerCare": "+91 120 419 5000",
+                "supportEmail": "info@fusionhomes.in"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/fusion-homes",
+                "twitter": "https://twitter.com/fusion-homes",
+                "facebook": "https://facebook.com/fusion-homes",
+                "instagram": "https://instagram.com/fusion-homes",
+                "youtube": "https://youtube.com/fusion-homes"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "amrapali-group": {
+            "id": "amrapali-group",
+            "name": "Amrapali Group",
+            "tagline": "Building Dreams Since 1983",
+            "logo": "https://logos-api.apistemic.com/domain:amrapaligroup.com",
+            "establishedYear": 1983,
+            "yearsOfExperience": 41,
+            "description": "Amrapali Group is a well-known NCR developer with projects across residential and commercial segments.",
+            "statistics": {
+                "projectsCompleted": 78,
+                "projectsOngoing": 18,
+                "projectsUpcoming": 12
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Amrapali Group Head Office",
+                    "city": "Noida",
+                    "state": "Uttar Pradesh",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 120 419 4444",
+                "email": "info@amrapaligroup.com",
+                "website": "www.amrapaligroup.com",
+                "customerCare": "+91 120 419 4444",
+                "supportEmail": "info@amrapaligroup.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/amrapali-group",
+                "twitter": "https://twitter.com/amrapali-group",
+                "facebook": "https://facebook.com/amrapali-group",
+                "instagram": "https://instagram.com/amrapali-group",
+                "youtube": "https://youtube.com/amrapali-group"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "wave-infratech": {
+            "id": "wave-infratech",
+            "name": "Wave Infratech",
+            "tagline": "Building Excellence Since 2003",
+            "logo": "https://logos-api.apistemic.com/domain:waveinfratech.com",
+            "establishedYear": 2003,
+            "yearsOfExperience": 21,
+            "description": "Wave Infratech is known for large-scale commercial and residential projects in NCR.",
+            "statistics": {
+                "projectsCompleted": 42,
+                "projectsOngoing": 16,
+                "projectsUpcoming": 12
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Wave Infratech Head Office",
+                    "city": "Noida",
+                    "state": "Uttar Pradesh",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 120 419 3333",
+                "email": "info@waveinfratch.com",
+                "website": "www.waveinfratech.com",
+                "customerCare": "+91 120 419 3333",
+                "supportEmail": "info@waveinfratch.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/wave-infratech",
+                "twitter": "https://twitter.com/wave-infratech",
+                "facebook": "https://facebook.com/wave-infratech",
+                "instagram": "https://instagram.com/wave-infratech",
+                "youtube": "https://youtube.com/wave-infratech"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "bptp-limited": {
+            "id": "bptp-limited",
+            "name": "BPTP Limited",
+            "tagline": "Building Excellence Since 1999",
+            "logo": "https://logos-api.apistemic.com/domain:bptp.in",
+            "establishedYear": 1999,
+            "yearsOfExperience": 25,
+            "description": "BPTP is a leading developer in NCR known for integrated townships and commercial projects.",
+            "statistics": {
+                "projectsCompleted": 62,
+                "projectsOngoing": 22,
+                "projectsUpcoming": 16
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "BPTP Limited Head Office",
+                    "city": "Gurugram",
+                    "state": "Haryana",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 124 467 8000",
+                "email": "info@bptp.in",
+                "website": "www.bptp.in",
+                "customerCare": "+91 124 467 8000",
+                "supportEmail": "info@bptp.in"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/bptp-limited",
+                "twitter": "https://twitter.com/bptp-limited",
+                "facebook": "https://facebook.com/bptp-limited",
+                "instagram": "https://instagram.com/bptp-limited",
+                "youtube": "https://youtube.com/bptp-limited"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "vipul-limited": {
+            "id": "vipul-limited",
+            "name": "Vipul Limited",
+            "tagline": "Building Quality Since 2000",
+            "logo": "https://logos-api.apistemic.com/domain:vipullimited.com",
+            "establishedYear": 2000,
+            "yearsOfExperience": 24,
+            "description": "Vipul Limited is known for commercial and residential projects in Gurugram with modern architecture.",
+            "statistics": {
+                "projectsCompleted": 38,
+                "projectsOngoing": 14,
+                "projectsUpcoming": 10
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Vipul Limited Head Office",
+                    "city": "Gurugram",
+                    "state": "Haryana",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 124 467 9000",
+                "email": "info@vipullimited.com",
+                "website": "www.vipullimited.com",
+                "customerCare": "+91 124 467 9000",
+                "supportEmail": "info@vipullimited.com"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/vipul-limited",
+                "twitter": "https://twitter.com/vipul-limited",
+                "facebook": "https://facebook.com/vipul-limited",
+                "instagram": "https://instagram.com/vipul-limited",
+                "youtube": "https://youtube.com/vipul-limited"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        },
+        "conscient-infrastructure": {
+            "id": "conscient-infrastructure",
+            "name": "Conscient Infrastructure",
+            "tagline": "Building Excellence Since 2007",
+            "logo": "https://logos-api.apistemic.com/domain:conscient.in",
+            "establishedYear": 2007,
+            "yearsOfExperience": 17,
+            "description": "Conscient Infrastructure focuses on affordable and mid-segment housing in Gurugram with quality construction.",
+            "statistics": {
+                "projectsCompleted": 28,
+                "projectsOngoing": 12,
+                "projectsUpcoming": 8
+            },
+            "projects": [],
+            "contact": {
+                "address": {
+                    "street": "Conscient Infrastructure Head Office",
+                    "city": "Gurugram",
+                    "state": "Haryana",
+                    "pincode": "000000",
+                    "country": "India"
+                },
+                "phone": "+91 124 467 5000",
+                "email": "info@conscient.in",
+                "website": "www.conscient.in",
+                "customerCare": "+91 124 467 5000",
+                "supportEmail": "info@conscient.in"
+            },
+            "socialMedia": {
+                "linkedin": "https://linkedin.com/company/conscient-infrastructure",
+                "twitter": "https://twitter.com/conscient-infrastructure",
+                "facebook": "https://facebook.com/conscient-infrastructure",
+                "instagram": "https://instagram.com/conscient-infrastructure",
+                "youtube": "https://youtube.com/conscient-infrastructure"
+            },
+            "metadata": {
+                "createdAt": "2024-01-15T10:30:00Z",
+                "updatedAt": "2024-12-27T08:45:00Z",
+                "verificationStatus": "verified",
+                "featured": false,
+                "priority": 2
+            }
+        }
+    }
+}
