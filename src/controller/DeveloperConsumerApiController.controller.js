@@ -23,15 +23,15 @@ const getDevelopersByPagination = async (req, res) => {
 
     const result = DeveloperConsumerApiService.getDevelopersByPagination(page, limit);
 
-    return sendSuccessResponse(
-      res,
-      result.data,
-      'Developers fetched successfully',
-      200,
-      {
-        pagination: result.pagination
-      }
-    );
+    return res.status(200).json({
+      status: 200,
+      success: true,
+      message: 'Developers fetched successfully',
+      data: result.data,
+      pagination: result.pagination,
+      warnings: [],
+      error: null
+    });
   } catch (error) {
     console.error('Error fetching developers:', error);
     return sendErrorResponse(
@@ -70,16 +70,16 @@ const searchDevelopersByName = async (req, res) => {
 
     const result = DeveloperConsumerApiService.searchDevelopersByName(searchTerm, page, limit);
 
-    return sendSuccessResponse(
-      res,
-      result.data,
-      `Found ${result.pagination.totalItems} developer(s) matching "${searchTerm}"`,
-      200,
-      {
-        searchTerm: result.searchTerm,
-        pagination: result.pagination
-      }
-    );
+    return res.status(200).json({
+      status: 200,
+      success: true,
+      message: `Found ${result.pagination.totalItems} developer(s) matching "${searchTerm}"`,
+      data: result.data,
+      searchTerm: result.searchTerm,
+      pagination: result.pagination,
+      warnings: [],
+      error: null
+    });
   } catch (error) {
     console.error('Error searching developers:', error);
     return sendErrorResponse(
