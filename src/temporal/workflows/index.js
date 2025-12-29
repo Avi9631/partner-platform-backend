@@ -11,6 +11,8 @@ const { partnerUserOnboarding } = require('./user/partnerOnboarding.workflow');
 const { partnerBusinessOnboarding } = require('./user/partnerBusinessOnboarding.workflow');
 const { developerPublishing } = require('./developer/developerPublishing.workflow');
 const { pgHostelPublishing } = require('./pgHostel/pgHostelPublishing.workflow');
+const { propertyPublishing } = require('./property/propertyPublishing.workflow');
+const { projectPublishing } = require('./project/projectPublishing.workflow');
 
 
 /**
@@ -25,5 +27,7 @@ module.exports = {
     partnerBusinessOnboarding,
     developerPublishing,
     pgHostelPublishing,
+    propertyPublishing,
+    projectPublishing,
 
 };

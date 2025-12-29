@@ -31,6 +31,8 @@ db.ListingDraft = require("./ListingDraft.entity.js")(sequelize, Sequelize);
 db.Listing = require("./Listing.entity.js")(sequelize, Sequelize);
 db.Developer = require("./Developer.entity.js")(sequelize, Sequelize);
 db.PgColiveHostel = require("./PgColiveHostel.entity.js")(sequelize, Sequelize);
+db.Property = require("./Property.entity.js")(sequelize, Sequelize);
+db.Project = require("./Project.entity.js")(sequelize, Sequelize);
  
 // Relationships
 // User has one PartnerBusiness (for BUSINESS account type)
@@ -127,6 +129,54 @@ db.PgColiveHostel.belongsTo(db.ListingDraft, {
 db.ListingDraft.hasOne(db.PgColiveHostel, {
     foreignKey: 'draft_id',
     as: 'publishedPgHostel'
+});
+
+// User has many Property profiles
+db.PlatformUser.hasMany(db.Property, {
+    foreignKey: 'created_by',
+    as: 'properties'
+});
+
+// Property belongs to User (creator)
+db.Property.belongsTo(db.PlatformUser, {
+    foreignKey: 'created_by',
+    as: 'creator'
+});
+
+// Property belongs to ListingDraft (via draft_id)
+db.Property.belongsTo(db.ListingDraft, {
+    foreignKey: 'draft_id',
+    as: 'draft'
+});
+
+// ListingDraft has one Property (published from this draft)
+db.ListingDraft.hasOne(db.Property, {
+    foreignKey: 'draft_id',
+    as: 'publishedProperty'
+});
+
+// Property belongs to Project (optional)
+db.Property.belongsTo(db.Project, {
+    foreignKey: 'project_id',
+    as: 'project'
+});
+
+// Project has many Properties
+db.Project.hasMany(db.Property, {
+    foreignKey: 'project_id',
+    as: 'properties'
+});
+
+// User has many Projects
+db.PlatformUser.hasMany(db.Project, {
+    foreignKey: 'created_by',
+    as: 'projects'
+});
+
+// Project belongs to User (creator)
+db.Project.belongsTo(db.PlatformUser, {
+    foreignKey: 'created_by',
+    as: 'creator'
 });
  
  

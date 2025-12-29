@@ -18,6 +18,12 @@ const developerPublishingActivities = require('./developer/developerPublishing.a
 // PG/Colive/Hostel activities
 const pgHostelPublishingActivities = require('./pgHostel/pgHostelPublishing.activities');
 
+// Property activities
+const propertyPublishingActivities = require('./property/propertyPublishing.activities');
+
+// Project activities
+const projectPublishingActivities = require('./project/projectPublishing.activities');
+
  
 /**
  * Export all activities
@@ -41,5 +47,11 @@ module.exports = {
     
     // PG/Colive/Hostel publishing activities
     ...pgHostelPublishingActivities,
+    
+    // Property publishing activities
+    ...propertyPublishingActivities,
+    
+    // Project publishing activities
+    ...projectPublishingActivities,
  
 };

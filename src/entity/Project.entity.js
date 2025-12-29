@@ -29,11 +29,29 @@ module.exports = (sequelize, Sequelize) => {
         field: "created_by",
         allowNull: false,
         references: {
-          model: 'user',
+          model: 'platform_user',
           key: 'user_id'
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
+      },
+      location: {
+        type: Sequelize.GEOGRAPHY('POINT', 4326),
+        field: "location",
+        allowNull: true,
+        comment: 'PostGIS geography point (SRID 4326) for efficient spatial queries'
+      },
+      lat: {
+        type: Sequelize.DECIMAL(10, 8),
+        field: "lat",
+        allowNull: true,
+        comment: 'Latitude coordinate for easy access'
+      },
+      lng: {
+        type: Sequelize.DECIMAL(11, 8),
+        field: "lng",
+        allowNull: true,
+        comment: 'Longitude coordinate for easy access'
       },
       projectDetails: {
         type: Sequelize.JSONB,
@@ -42,9 +60,12 @@ module.exports = (sequelize, Sequelize) => {
         comment: "Stores project metadata like location, amenities, etc."
       },
       status: {
-        type: Sequelize.ENUM('ACTIVE', 'INACTIVE', 'ARCHIVED'),
+        type: Sequelize.STRING(20),
         field: "status",
-        defaultValue: 'ACTIVE'
+        defaultValue: 'ACTIVE',
+        validate: {
+          isIn: [['ACTIVE', 'INACTIVE', 'ARCHIVED']]
+        }
       },
 
       // Virtual fields for formatted date/time
@@ -90,6 +111,14 @@ module.exports = (sequelize, Sequelize) => {
         },
         {
           fields: ['status']
+        },
+        {
+          fields: ['lat', 'lng']
+        },
+        {
+          name: 'project_location_gist_idx',
+          using: 'GIST',
+          fields: [{ attribute: 'location', raw: 'location' }]
         },
         {
           fields: ['project_created_at']
