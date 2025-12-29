@@ -15,6 +15,7 @@ const developerConsumerApiRoute = require("./src/routes/developer-consumer-api.r
 const pgHostelRoute = require("./src/routes/pgHostel.route.js");
 const workflowRoute = require("./src/routes/workflow.route.js");
 const uploadRoute = require("./src/routes/upload.route.js");
+const otpAuthRoute = require("./src/routes/otpAuth.route.js");
 const logger = require("./src/config/winston.config.js");
 const app = express();
 const port = process.env.PORT || 3000;
@@ -114,6 +115,7 @@ app.use("/api/developer-consumer-api", developerConsumerApiRoute);
 app.use("/api/pg-hostel", pgHostelRoute);
 app.use(workflowRoute);
 app.use("/api/upload", uploadRoute);
+app.use("/api/otp", otpAuthRoute);
 
 const server = app.listen(port, "0.0.0.0", () => {
   console.log(`Example app listening on port ${port}`);
