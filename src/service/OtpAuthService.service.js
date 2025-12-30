@@ -119,6 +119,13 @@ async function verifyOtp(phone, otp) {
     // Find or create user
     let user = await db.PlatformUser.findOne({
       where: { phone: phone },
+      include: [
+        {
+          model: db.PartnerBusiness,
+          as: "business",
+          required: false,
+        },
+      ],
     });
 
     if (!user) {
@@ -127,7 +134,6 @@ async function verifyOtp(phone, otp) {
         phone: phone,
         firstName: "User",
         lastName: phone.slice(-4), // Use last 4 digits as temp last name
-        accountType: "INDIVIDUAL",
         phoneVerifiedAt: new Date(),
         nameInitial: getInitials(`User ${phone.slice(-4)}`),
       });
@@ -139,6 +145,11 @@ async function verifyOtp(phone, otp) {
       });
     }
 
+    // Compute accountType dynamically
+    const accountType = (user.business && user.business.verificationStatus === 'APPROVED') 
+      ? 'BUSINESS' 
+      : 'INDIVIDUAL';
+
     return {
       verified: true,
       user: {
@@ -149,7 +160,7 @@ async function verifyOtp(phone, otp) {
         phone: user.phone,
         nameInitial: user.nameInitial,
         profileImage: user.profileImage,
-        accountType: user.accountType,
+        accountType: accountType,
       },
     };
   } catch (error) {

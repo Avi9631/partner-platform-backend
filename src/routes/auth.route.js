@@ -33,6 +33,8 @@ router.get("/auth/status", async (req, res) => {
     try {
       const user = await authService.findUser(null, decoded.userId);
       
+      // Determine accountType: BUSINESS if verified partner business exists, otherwise INDIVIDUAL
+      const accountType = UserService.getAccountType(user);
 
       res.json({
         authenticated: true,
@@ -43,7 +45,7 @@ router.get("/auth/status", async (req, res) => {
           lastName: user.lastName,
           nameInitial: user.nameInitial,
           phone: user.phone,
-          accountType: user.accountType,
+          accountType: accountType,
           profileImage: user.profileImage,
           profileVideo: user.profileVideo,
           verificationStatus: user.verificationStatus,

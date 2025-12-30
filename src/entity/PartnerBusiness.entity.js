@@ -40,13 +40,13 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.JSONB,
         field: "business_phone",
       },
-      ownerVideo: {
+      businessVerification: {
         type: Sequelize.TEXT,
-        field: "owner_video",
+        field: "business_verification",
         comment: "URL to the owner verification video stored in Supabase/S3"
       },
       verificationStatus: {
-        type: Sequelize.ENUM('PENDING', 'AUTOMATED_REVIEW','MANUAL_REVIEW' ,  'APPROVED', 'REJECTED'),
+        type: Sequelize.ENUM('PENDING', 'AUTOMATED_REVIEW' , 'MANUAL_REVIEW' ,  'APPROVED', 'REJECTED'),
         field: "verification_status",
         defaultValue: 'PENDING'
       },
@@ -61,6 +61,27 @@ module.exports = (sequelize, Sequelize) => {
       verifiedBy: {
         type: Sequelize.INTEGER,
         field: "verified_by",
+      },
+      
+      // Virtual field for business name initials
+      nameInitial: {
+        type: Sequelize.VIRTUAL,
+        get() {
+          if (!this.businessName) return null;
+          
+          const trimmedName = this.businessName.trim();
+          
+          // If no spaces, take first 2 characters
+          if (!trimmedName.includes(" ")) {
+            return trimmedName.slice(0, 2).toUpperCase();
+          }
+          
+          // If has spaces, take first letter of first 2 words
+          const words = trimmedName.split(" ").filter((word) => word.length > 0);
+          const initials = words.map((word) => word.charAt(0).toUpperCase()).join("");
+          
+          return initials.slice(0, 2);
+        },
       },
       
       // Virtual fields for formatted dates

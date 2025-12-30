@@ -17,7 +17,6 @@ const {
     validateBusinessOnboardingData,
     uploadOwnerVideoToSupabase,
     createPartnerBusinessRecord,
-    updateUserAccountType,
     updateBusinessVerificationStatus,
     sendBusinessOnboardingNotification,
 } = proxyActivities({
@@ -37,9 +36,12 @@ const {
  * 1. Validates all business details (name, registration, address, email, phones)
  * 2. Uploads owner verification video to Supabase using S3 protocol
  * 3. Creates business record in partner_business table with video URL
- * 4. Updates user's account type to BUSINESS in platform_user table
- * 5. Updates verification status to PENDING in partner_business table
- * 6. Sends onboarding notification email to business owner
+ * 4. Updates verification status to APPROVED in partner_business table
+ * 5. Sends onboarding notification email to business owner
+ * 
+ * Note: accountType is no longer stored in platform_user. It is derived dynamically:
+ * - BUSINESS: when a verified (APPROVED) partner_business record exists for the user
+ * - INDIVIDUAL: otherwise
  * 
  * @param {Object} workflowInput - Workflow input data
  * @param {number} workflowInput.userId - User ID (business owner)
@@ -134,22 +136,8 @@ async function partnerBusinessOnboarding(workflowInput) {
         
         console.log(`[Business Onboarding] Business record created successfully, ID: ${businessResult.business.businessId}`);
         
-        // Step 4: Update user account type to BUSINESS
-        console.log(`[Business Onboarding] Step 4: Updating user account type to BUSINESS`);
-        
-        const accountTypeResult = await updateUserAccountType({
-            userId,
-            accountType: 'BUSINESS',
-        });
-        
-        if (!accountTypeResult.success) {
-            throw new Error('Failed to update user account type');
-        }
-        
-        console.log(`[Business Onboarding] User account type updated to BUSINESS`);
-        
-        // Step 5: Update business verification status to PENDING
-        console.log(`[Business Onboarding] Step 5: Updating verification status to PENDING`);
+        // Step 4: Update business verification status to APPROVED
+        console.log(`[Business Onboarding] Step 4: Updating verification status to APPROVED`);
         
         const verificationResult = await updateBusinessVerificationStatus({
             userId,
@@ -160,10 +148,10 @@ async function partnerBusinessOnboarding(workflowInput) {
             throw new Error('Failed to update business verification status');
         }
         
-        console.log(`[Business Onboarding] Verification status updated to PENDING`);
+        console.log(`[Business Onboarding] Verification status updated to APPROVED`);
         
-        // Step 6: Send onboarding notification email
-        console.log(`[Business Onboarding] Step 6: Sending notification email`);
+        // Step 5: Send onboarding notification email
+        console.log(`[Business Onboarding] Step 5: Sending notification email`);
         
         await sendBusinessOnboardingNotification({
             userId,

@@ -20,7 +20,6 @@ async function createUser(firstName, lastName, email, number) {
     lastName: lastName,
     email: email,
     phone: number,
-    accountType: "INDIVIDUAL",
     phoneVerifiedAt: null,
     nameInitial: getInitials(firstName + " " + lastName),
   };

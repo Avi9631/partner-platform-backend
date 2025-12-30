@@ -29,18 +29,9 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING(15),
         field: "user_phone"
       }, 
-      accountType: {
-        type: Sequelize.ENUM( 'INDIVIDUAL', 'BUSINESS'),
-        field: "user_account_type",
-        defaultValue: 'INDIVIDUAL'
-      }, 
       lastLoginAt: {
         type: Sequelize.DATE,
         field: "user_last_login_at",
-      }, 
-      phoneVerifiedAt: {
-        type: Sequelize.DATE,
-        field: "user_phone_verified_at",
       }, 
       latitude: {
         type: Sequelize.DECIMAL(10, 8),
@@ -54,16 +45,12 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.TEXT,
         field: "user_address",
       },
-      profileImage: {
-        type: Sequelize.STRING(500),
-        field: "user_profile_image",
-      },
       profileVideo: {
         type: Sequelize.STRING(500),
         field: "user_profile_video",
       },
       verificationStatus: {
-        type: Sequelize.ENUM('PENDING', 'AUTOMATED_REVIEW','MANUAL_REVIEW' ,  'APPROVED', 'REJECTED'),
+        type: Sequelize.ENUM('PENDING', 'AUTOMATED_REVIEW' , 'MANUAL_REVIEW' ,  'APPROVED', 'REJECTED'),
         field: "verification_status",
         defaultValue: null,
       },

@@ -226,51 +226,6 @@ async function createPartnerBusinessRecord(businessInput) {
 }
 
 /**
- * Update Platform User Account Type Activity
- * 
- * Updates the user's account type in the platform_user table.
- * 
- * @param {Object} updateData - Update data
- * @param {number} updateData.userId - User ID
- * @param {string} updateData.accountType - Account type ('INDIVIDUAL' or 'BUSINESS')
- * @returns {Promise<{success: boolean, user: Object}>}
- */
-async function updateUserAccountType(updateData) {
-    const { userId, accountType } = updateData;
-    
-    try {
-        logger.info(`[Update User Account Type] Updating user ${userId} to account type: ${accountType}`);
-        
-        // Validate account type
-        const validAccountTypes = ['INDIVIDUAL', 'BUSINESS'];
-        if (!validAccountTypes.includes(accountType)) {
-            throw new Error(`Invalid account type: ${accountType}. Must be one of: ${validAccountTypes.join(', ')}`);
-        }
-        
-        // Find user
-        const user = await db.PlatformUser.findByPk(userId);
-        
-        if (!user) {
-            throw new Error(`User not found: ${userId}`);
-        }
-        
-        // Update account type
-        await user.update({ accountType });
-        
-        logger.info(`[Update User Account Type] Successfully updated user ${userId} account type to ${accountType}`);
-        
-        return {
-            success: true,
-            user: user.toJSON(),
-        };
-        
-    } catch (error) {
-        logger.error(`[Update User Account Type] Failed for user ${userId}:`, error);
-        throw error;
-    }
-}
-
-/**
  * Update Partner Business Verification Status Activity
  * 
  * Updates the verification status in the partner_business table.
@@ -393,7 +348,6 @@ module.exports = {
     validateBusinessOnboardingData,
     uploadOwnerVideoToSupabase,
     createPartnerBusinessRecord,
-    updateUserAccountType,
     updateBusinessVerificationStatus,
     sendBusinessOnboardingNotification,
 };

@@ -64,7 +64,6 @@ async function updateUser(req, res, next) {
       'firstName', 
       'lastName', 
       'phone', 
-      'accountType',
       'latitude',
       'longitude',
       'address'
@@ -105,13 +104,13 @@ async function updateUser(req, res, next) {
     }
 
     // Validate account type if provided
-    if (updateFields.accountType && !['INDIVIDUAL', 'AGENT', 'BUSINESS'].includes(updateFields.accountType)) {
-      return apiResponse
-        .status(400)
-        .withMessage("Invalid account type")
-        .withError("Account type must be INDIVIDUAL, AGENT, or BUSINESS", "VALIDATION_ERROR", "updateUser")
-        .error();
-    }
+    // if (updateFields.accountType && !['INDIVIDUAL', 'AGENT', 'BUSINESS'].includes(updateFields.accountType)) {
+    //   return apiResponse
+    //     .status(400)
+    //     .withMessage("Invalid account type")
+    //     .withError("Account type must be INDIVIDUAL, AGENT, or BUSINESS", "VALIDATION_ERROR", "updateUser")
+    //     .error();
+    // }
 
     // Validate coordinates if provided
     if (updateFields.latitude) {
@@ -143,13 +142,11 @@ async function updateUser(req, res, next) {
     
     // Include business data in response if BUSINESS account type
     let businessData = null;
-    if (updatedUser.accountType === 'BUSINESS') {
       try {
         businessData = await PartnerBusinessService.getBusinessByUserId(userId);
       } catch (businessError) {
         logger.warn(`Could not fetch business data for user ${userId}:`, businessError);
       }
-    }
 
     apiResponse
       .status(200)
@@ -492,7 +489,7 @@ async function getAllUsers(req, res, next) {
 
     const filters = {};
     if (userStatus) filters.userStatus = userStatus;
-    if (accountType) filters.accountType = accountType;
+    // if (accountType) filters.accountType = accountType;
     if (search) filters.search = search;
 
     const pageNum = parseInt(page) || 1;
@@ -767,13 +764,15 @@ async function updateBusinessProfile(req, res, next) {
     const userId = req.user.userId;
     const updateData = req.body;
 
-    // Validate that user has BUSINESS account type
+    // Validate that user has a verified business (BUSINESS account type)
     const user = await UserService.getUser(userId);
-    if (user.accountType !== 'BUSINESS') {
+    const accountType = UserService.getAccountType(user);
+    
+    if (accountType !== 'BUSINESS') {
       return apiResponse
         .status(403)
         .withMessage("Business profile update is only available for BUSINESS accounts")
-        .withError("User is not a business account", "AUTHORIZATION_ERROR", "updateBusinessProfile")
+        .withError("User does not have a verified business account", "AUTHORIZATION_ERROR", "updateBusinessProfile")
         .error();
     }
 

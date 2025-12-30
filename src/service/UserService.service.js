@@ -300,6 +300,18 @@ async function updateLastLogin(userId) {
   }
 }
 
+/**
+ * Determine account type based on business verification
+ * Account is BUSINESS if a verified partner business exists, otherwise INDIVIDUAL
+ * @param {Object} user - User object with business relationship loaded
+ * @returns {string} Account type ('BUSINESS' or 'INDIVIDUAL')
+ */
+function getAccountType(user) {
+  return (user.business && user.business.verificationStatus === 'APPROVED') 
+    ? 'BUSINESS' 
+    : 'INDIVIDUAL';
+}
+
 module.exports = {
   getUser,
   updateUser,
@@ -309,4 +321,5 @@ module.exports = {
   approveVerification,
   rejectVerification,
   updateLastLogin,
+  getAccountType,
 };

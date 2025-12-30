@@ -128,14 +128,6 @@ async function validateProfileData(profileData) {
             }
         }
         
-        // Validate account type if provided
-        if (profileData.accountType) {
-            const validTypes = ['INDIVIDUAL', 'AGENT', 'BUSINESS'];
-            if (!validTypes.includes(profileData.accountType)) {
-                errors.push(`Invalid account type. Must be one of: ${validTypes.join(', ')}`);
-            }
-        }
-        
         // Check for video buffer
         if (!profileData.videoBuffer) {
             errors.push('Profile verification video is required');
@@ -254,11 +246,6 @@ async function updatePartnerUser(updateData) {
             const firstName = profileData.firstName || user.firstName;
             const lastName = profileData.lastName || user.lastName;
             updateFields.nameInitial = getInitials(`${firstName} ${lastName}`);
-        }
-        
-        // Add account type if provided
-        if (profileData.accountType) {
-            updateFields.accountType = profileData.accountType;
         }
         
         // Update user
