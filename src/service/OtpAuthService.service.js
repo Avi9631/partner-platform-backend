@@ -74,7 +74,7 @@ async function sendOtp(phone) {
  * @param {string} otp - OTP to verify
  * @returns {Promise<{verified: boolean, user?: object, message?: string}>}
  */
-async function verifyOtp(phone, otp) {
+async function verifyOtp(phone, otp, verificationType) {
   try {
     const otpData = otpStore.get(phone);
 
@@ -116,6 +116,7 @@ async function verifyOtp(phone, otp) {
     // OTP verified - clear from store
     otpStore.delete(phone);
 
+    if(verificationType == "ACCOUNT_VERIFICATION"){
     // Find or create user
     let user = await db.PlatformUser.findOne({
       where: { phone: phone },
@@ -144,7 +145,8 @@ async function verifyOtp(phone, otp) {
         phoneVerifiedAt: new Date(),
       });
     }
-
+  }
+  
     // Compute accountType dynamically
     const accountType = (user.business && user.business.verificationStatus === 'APPROVED') 
       ? 'BUSINESS' 

@@ -14,19 +14,7 @@ router.post(
   authenticateToken,
   ProjectController.publishProject
 );
-
-/**
- * @route   GET /api/project/my-projects
- * @desc    Get current user's projects
- * @access  Private (requires authentication)
- * @query   page, limit
- */
-router.get(
-  "/my-projects",
-  authenticateToken,
-  ProjectController.getMyProjects
-);
-
+ 
 /**
  * @route   GET /api/project/list
  * @desc    List projects with filters and pagination

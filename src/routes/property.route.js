@@ -15,17 +15,6 @@ router.post(
 );
 
 /**
- * @route   GET /api/property/my-properties
- * @desc    Get current user's properties
- * @access  Private (requires authentication)
- */
-router.get(
-  "/my-properties",
-  authenticateToken,
-  PropertyController.getMyProperties
-);
-
-/**
  * @route   GET /api/property/list
  * @desc    List properties with filters and pagination
  * @access  Public

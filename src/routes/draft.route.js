@@ -14,9 +14,7 @@ router.post("/createListingDraft", authMiddleware, ListingDraftController.create
 router.patch("/updateListingDraft", authMiddleware, ListingDraftController.updateListingDraft);
 
 router.delete("/deleteListingDraft", authMiddleware, ListingDraftController.deleteListingDraft);
-
-router.post("/submitListingDraft", authMiddleware, ListingDraftController.submitListingDraft);
-
+ 
 router.get("/listingDraft", authMiddleware, ListingDraftController.getUserListingDrafts);
 
 router.get("/listingDraft/:id", authMiddleware, ListingDraftController.getListingDraftById);

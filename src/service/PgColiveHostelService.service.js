@@ -455,6 +455,53 @@ const getUserPgColiveHostels = async (userId) => {
   }
 };
 
+/**
+ * Delete PG/Colive/Hostel
+ * @param {number} pgHostelId - PG/Hostel ID
+ * @param {number} userId - User ID (for authorization)
+ * @returns {Promise<object>} - Result object
+ */
+const deletePgColiveHostel = async (pgHostelId, userId) => {
+  try {
+    // Find the PG/Hostel
+    const pgHostel = await PgColiveHostel.findOne({
+      where: { pgHostelId }
+    });
+
+    if (!pgHostel) {
+      return {
+        success: false,
+        message: 'PG/Hostel not found',
+        statusCode: 404
+      };
+    }
+
+    // Check if user is the owner
+    if (pgHostel.userId !== userId) {
+      return {
+        success: false,
+        message: 'Unauthorized: You are not the owner of this PG/Hostel',
+        statusCode: 403
+      };
+    }
+
+    // Delete the PG/Hostel
+    await pgHostel.destroy();
+
+    return {
+      success: true,
+      message: 'PG/Hostel deleted successfully'
+    };
+  } catch (error) {
+    console.error('Error deleting PG/Hostel:', error);
+    return {
+      success: false,
+      message: 'An error occurred while deleting PG/Hostel',
+      statusCode: 500
+    };
+  }
+};
+
 module.exports = {
   createPgColiveHostel,
   updatePgColiveHostel,
@@ -462,5 +509,6 @@ module.exports = {
   getPgColiveHostelBySlug,
   listPgColiveHostels,
   searchNearbyPgHostels,
-  getUserPgColiveHostels
+  getUserPgColiveHostels,
+  deletePgColiveHostel
 };

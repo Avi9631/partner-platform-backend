@@ -13,18 +13,7 @@ router.post(
   authenticateToken,
   PgColiveHostelController.publishPgColiveHostel
 );
-
-/**
- * @route   GET /api/pg-hostel/my-profiles
- * @desc    Get current user's PG/Hostel profiles
- * @access  Private (requires authentication)
- */
-router.get(
-  "/my-profiles",
-  authenticateToken,
-  PgColiveHostelController.getMyPgHostelProfiles
-);
-
+ 
 /**
  * @route   GET /api/pg-hostel/search-nearby
  * @desc    Search PG/Hostels near a location (lat, lng, radius)
@@ -48,16 +37,6 @@ router.get(
 );
 
 /**
- * @route   GET /api/pg-hostel/slug/:slug
- * @desc    Get PG/Hostel by slug (for public pages)
- * @access  Public
- */
-router.get(
-  "/slug/:slug",
-  PgColiveHostelController.getPgHostelBySlug
-);
-
-/**
  * @route   GET /api/pg-hostel/:pgHostelId
  * @desc    Get PG/Hostel by ID
  * @access  Public
@@ -76,6 +55,17 @@ router.put(
   "/:pgHostelId",
   authenticateToken,
   PgColiveHostelController.updatePgHostel
+);
+
+/**
+ * @route   DELETE /api/pg-hostel/:pgHostelId
+ * @desc    Delete PG/Hostel
+ * @access  Private (requires authentication, must be owner)
+ */
+router.delete(
+  "/:pgHostelId",
+  authenticateToken,
+  PgColiveHostelController.deletePgHostel
 );
 
 module.exports = router;

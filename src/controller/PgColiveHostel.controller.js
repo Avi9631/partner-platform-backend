@@ -394,6 +394,43 @@ const updatePgHostel = async (req, res) => {
   }
 };
 
+/**
+ * Delete PG/Hostel
+ * DELETE /api/pg-hostel/:pgHostelId
+ */
+const deletePgHostel = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const { pgHostelId } = req.params;
+
+    const result = await PgColiveHostelService.deletePgColiveHostel(
+      pgHostelId,
+      userId
+    );
+
+    if (result.success) {
+      return sendSuccessResponse(
+        res,
+        null,
+        'PG/Hostel deleted successfully'
+      );
+    } else {
+      return sendErrorResponse(
+        res,
+        result.message,
+        result.statusCode || 500
+      );
+    }
+  } catch (error) {
+    logger.error('Error deleting PG/Hostel:', error);
+    return sendErrorResponse(
+      res,
+      'An error occurred while deleting PG/Hostel',
+      500
+    );
+  }
+};
+
 module.exports = {
   publishPgColiveHostel,
   getMyPgHostelProfiles,
@@ -401,5 +438,6 @@ module.exports = {
   searchNearbyPgHostels,
   getPgHostelBySlug,
   getPgHostelById,
-  updatePgHostel
+  updatePgHostel,
+  deletePgHostel
 };
