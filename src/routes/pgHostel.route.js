@@ -46,16 +46,6 @@ router.get(
   PgColiveHostelController.getPgHostelById
 );
 
-/**
- * @route   PUT /api/pg-hostel/:pgHostelId
- * @desc    Update PG/Hostel
- * @access  Private (requires authentication, must be owner)
- */
-router.put(
-  "/:pgHostelId",
-  authenticateToken,
-  PgColiveHostelController.updatePgHostel
-);
 
 /**
  * @route   DELETE /api/pg-hostel/:pgHostelId

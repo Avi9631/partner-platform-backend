@@ -14,7 +14,16 @@ const { Op } = require("sequelize");
  */
 const createDeveloper = async (userId, draftId, developerData) => {
   try {
- 
+    // Check if developer already exists for this draft
+    const existingDeveloper = await Developer.findOne({ where: { draftId } });
+    
+    if (existingDeveloper) {
+      return {
+        success: false,
+        message: 'Developer already exists for this draft. Use update instead.',
+        data: existingDeveloper
+      };
+    }
 
     // Create developer record
     const developer = await Developer.create({
@@ -60,13 +69,21 @@ const updateDeveloper = async (developerId, userId, updateData) => {
       };
     }
 
-    // If name is being updated, regenerate slug
-    if (updateData.developerName && updateData.developerName !== developer.developerName) {
-      const baseSlug = createSlug(updateData.developerName);
-      updateData.slug = await ensureUniqueSlug(baseSlug, developerId);
+    // Prepare update payload
+    const updatePayload = {
+      developerName: updateData.developerName,
+      subscribeForDeveloperPage: updateData.subscribeForDeveloperPage !== undefined 
+        ? updateData.subscribeForDeveloperPage 
+        : developer.subscribeForDeveloperPage
+    };
+
+    // Reset to PENDING_REVIEW when republishing
+    if (developer.publishStatus === 'PUBLISHED' || developer.publishStatus === 'REJECTED') {
+      updatePayload.publishStatus = 'PENDING_REVIEW';
+      updatePayload.verificationStatus = 'PENDING';
     }
 
-    await developer.update(updateData);
+    await developer.update(updatePayload);
 
     return {
       success: true,

@@ -15,9 +15,33 @@ const { proxyActivities } = require('@temporalio/workflow');
 // Proxy developer publishing activities with appropriate timeouts
 const {
     validateDeveloperData,
-    createDeveloperRecord,
+    checkDeveloperExists,
+    getUserEmail,
+    sendDeveloperPublishingNotification,
     updateListingDraftStatus,
+    getDeveloperDraftData,
 } = proxyActivities({
+    startToCloseTimeout: '2 minutes',
+    retry: {
+        initialInterval: '1s',
+        maximumInterval: '30s',
+        backoffCoefficient: 2,
+        maximumAttempts: 3,
+    },
+});
+
+// Separate proxies for create and update with different retry policies
+const { createDeveloperRecord } = proxyActivities({
+    startToCloseTimeout: '3 minutes',
+    retry: {
+        initialInterval: '2s',
+        maximumInterval: '1m',
+        backoffCoefficient: 2,
+        maximumAttempts: 5,
+    },
+});
+
+const { updateDeveloperRecord } = proxyActivities({
     startToCloseTimeout: '2 minutes',
     retry: {
         initialInterval: '1s',
@@ -31,63 +55,51 @@ const {
  * Developer Publishing Workflow
  * 
  * Orchestrates the developer profile publishing process:
- * 1. Validates all developer data (name, type, contact info, projects, etc.)
- * 2. Creates developer record in database
+ * 1. Fetches developer data from ListingDraft entity using draftId
+ * 2. Validates all developer data (name, type, contact info, projects, etc.)
+ * 3. Checks if developer already exists for the draft
+ * 4. Creates or updates developer record in database (based on existence)
+ * 5. Updates draft status to PUBLISHED
+ * 6. Sends notification email to user (final step)
  * 
  * @param {Object} workflowInput - Workflow input data
  * @param {number} workflowInput.userId - User ID
  * @param {number} workflowInput.draftId - Draft ID (required, ensures one draft = one publish)
- * @param {Object} workflowInput.developerData - Developer profile data
- * @param {string} workflowInput.developerData.developerName - Developer/Company name (required)
- * @param {string} workflowInput.developerData.developerType - Type: International/National/Regional (optional)
- * @param {string} workflowInput.developerData.description - Description (optional)
- * @param {number} workflowInput.developerData.establishedYear - Year established (optional)
- * @param {string} workflowInput.developerData.registrationNumber - Registration number (optional)
- * @param {string} workflowInput.developerData.primaryContactEmail - Primary contact email (optional)
- * @param {string} workflowInput.developerData.primaryContactPhone - Primary contact phone (optional)
- * @param {Array} workflowInput.developerData.socialLinks - Social media links (optional)
- * @param {number} workflowInput.developerData.totalProjectsCompleted - Total completed projects (optional)
- * @param {number} workflowInput.developerData.totalProjectsOngoing - Total ongoing projects (optional)
- * @param {number} workflowInput.developerData.totalUnitsDelivered - Total units delivered (optional)
- * @param {Array<string>} workflowInput.developerData.projectTypes - Types of projects (optional)
- * @param {Array<string>} workflowInput.developerData.operatingStates - Operating states (optional)
  * @returns {Promise<WorkflowResult>} - Workflow result
  * 
  * @example
  * await startWorkflow('developerPublishing', {
  *   userId: 123,
- *   developerData: {
- *     developerName: 'Godrej Properties',
- *     developerType: 'National Developer',
- *     description: 'Leading real estate developer in India...',
- *     establishedYear: 1990,
- *     registrationNumber: 'REG123456',
- *     primaryContactEmail: 'contact@godrejproperties.com',
- *     primaryContactPhone: '+919876543210',
- *     socialLinks: [
- *       { type: 'website', url: 'https://godrejproperties.com' },
- *       { type: 'linkedin', url: 'https://linkedin.com/company/godrej' }
- *     ],
- *     totalProjectsCompleted: 150,
- *     totalProjectsOngoing: 25,
- *     totalUnitsDelivered: 50000,
- *     projectTypes: ['Residential', 'Commercial', 'Integrated Township'],
- *     operatingStates: ['Maharashtra', 'Karnataka', 'NCR', 'Tamil Nadu']
- *   }
+ *   draftId: 456
  * });
  */
 async function developerPublishing(workflowInput) {
     const { 
         userId,
-        draftId,
-        developerData
+        draftId
     } = workflowInput;
     
     console.log(`[Developer Publishing Workflow] Starting for user ${userId}`);
     
     try {
-        // Step 1: Validate developer data
-        console.log(`[Developer Publishing] Step 1: Validating developer data`);
+        // Step 1: Fetch developer data from ListingDraft
+        console.log(`[Developer Publishing] Step 1: Fetching developer data from draft ${draftId}`);
+        
+        const draftDataResult = await getDeveloperDraftData({ draftId });
+        
+        if (!draftDataResult.success) {
+            console.error(`[Developer Publishing] Failed to fetch draft data:`, draftDataResult.message);
+            return {
+                success: false,
+                message: draftDataResult.message || 'Failed to fetch developer draft data'
+            };
+        }
+        
+        const developerData = draftDataResult.data;
+        console.log(`[Developer Publishing] Developer data fetched successfully`);
+        
+        // Step 2: Validate developer data
+        console.log(`[Developer Publishing] Step 2: Validating developer data`);
         
         const validationResult = await validateDeveloperData({
             userId,
@@ -106,30 +118,71 @@ async function developerPublishing(workflowInput) {
         
         console.log(`[Developer Publishing] Validation successful`);
         
-        // Step 2: Create developer record
-        console.log(`[Developer Publishing] Step 2: Creating developer record`);
+        // Step 3: Check if developer already exists
+        console.log(`[Developer Publishing] Step 3: Checking if developer exists`);
         
-        const createResult = await createDeveloperRecord({
-            userId,
-            draftId,
-            developerData
-        });
+        const checkResult = await checkDeveloperExists({ draftId });
         
-        if (!createResult.success) {
-            console.error(`[Developer Publishing] Failed to create developer record`);
+        if (!checkResult.success) {
+            console.error(`[Developer Publishing] Failed to check developer existence`);
             return {
                 success: false,
-                message: createResult.message || 'Failed to create developer record'
+                message: 'Failed to check developer existence'
             };
         }
         
-        const developer = createResult.data;
-        const developerId = developer.developerId;
+        let developer;
+        let developerId;
+        let action;
         
-        console.log(`[Developer Publishing] Developer record created with ID: ${developerId}`);
+        // Step 4: Create or update based on existence
+        if (checkResult.exists) {
+            console.log(`[Developer Publishing] Step 4: Updating existing developer ${checkResult.data.developerId}`);
+            
+            const updateResult = await updateDeveloperRecord({
+                developerId: checkResult.data.developerId,
+                userId,
+                developerData
+            });
+            
+            if (!updateResult.success) {
+                console.error(`[Developer Publishing] Failed to update developer record`);
+                return {
+                    success: false,
+                    message: updateResult.message || 'Failed to update developer record'
+                };
+            }
+            
+            developer = updateResult.data;
+            developerId = developer.developerId;
+            action = 'updated';
+            
+        } else {
+            console.log(`[Developer Publishing] Step 4: Creating new developer record`);
+            
+            const createResult = await createDeveloperRecord({
+                userId,
+                draftId,
+                developerData
+            });
+            
+            if (!createResult.success) {
+                console.error(`[Developer Publishing] Failed to create developer record`);
+                return {
+                    success: false,
+                    message: createResult.message || 'Failed to create developer record'
+                };
+            }
+            
+            developer = createResult.data;
+            developerId = developer.developerId;
+            action = 'created';
+        }
         
-        // Step 3: Update ListingDraft status to PUBLISHED
-        console.log(`[Developer Publishing] Step 3: Updating ListingDraft status`);
+        console.log(`[Developer Publishing] Developer record ${action} with ID: ${developerId}`);
+        
+        // Step 5: Update ListingDraft status to PUBLISHED
+        console.log(`[Developer Publishing] Step 5: Updating ListingDraft status`);
         
         try {
             await updateListingDraftStatus({ draftId });
@@ -139,18 +192,46 @@ async function developerPublishing(workflowInput) {
             console.error(`[Developer Publishing] Failed to update ListingDraft status:`, updateError);
         }
         
+        // Step 6: Send notification email (final step)
+        console.log(`[Developer Publishing] Step 6: Sending notification email`);
+        
+        try {
+            const emailResult = await getUserEmail({ userId });
+            
+            if (emailResult.success && emailResult.email) {
+                const notificationResult = await sendDeveloperPublishingNotification({
+                    userId,
+                    email: emailResult.email,
+                    developerData,
+                    developerId
+                });
+                
+                if (notificationResult.success) {
+                    console.log(`[Developer Publishing] Notification email sent successfully`);
+                } else {
+                    console.warn(`[Developer Publishing] Failed to send notification: ${notificationResult.message}`);
+                }
+            } else {
+                console.warn(`[Developer Publishing] Could not retrieve user email, skipping notification`);
+            }
+        } catch (notificationError) {
+            // Log but don't fail the workflow
+            console.error(`[Developer Publishing] Error sending notification:`, notificationError);
+        }
+        
         console.log(`[Developer Publishing] Workflow completed successfully`);
         
         // Return success result
         return {
             success: true,
-            message: 'Developer profile created successfully',
+            message: `Developer profile ${action} successfully`,
             data: {
                 developerId,
+                isUpdate: action === 'updated',
                 developer: {
                     developerId: developer.developerId,
                     developerName: developer.developerName,
-                      publishStatus: developer.publishStatus,
+                    publishStatus: developer.publishStatus,
                     verificationStatus: developer.verificationStatus
                 }
             }

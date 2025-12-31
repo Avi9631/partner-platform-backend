@@ -13,6 +13,7 @@ const Developer = db.Developer;
 const PlatformUser = db.PlatformUser;
 const ListingDraft = db.ListingDraft;
 const logger = require("../../../config/winston.config");
+const { getUserEmail } = require("./getUserEmail.activity");
 
 /**
  * Validate developer data before publishing
@@ -38,68 +39,13 @@ async function validateDeveloperData({ userId, draftId, developerData }) {
     if (!developerData.developerName) {
       errors.push('Developer name is required');
     }
+  
 
-    // Validate developer type (optional, but if provided must be valid)
-    const validDeveloperTypes = ['International Developer', 'National Developer', 'Regional Developer'];
-    if (developerData.developerType && !validDeveloperTypes.includes(developerData.developerType)) {
-      errors.push('Invalid developer type');
-    }
-
-    // Validate established year (optional, but if provided must be valid)
-    const currentYear = new Date().getFullYear();
-    if (developerData.establishedYear) {
-      if (developerData.establishedYear < 1900 || developerData.establishedYear > currentYear) {
-        errors.push('Invalid established year');
-      }
-    }
-
-    // Validate email format (optional, but if provided must be valid)
-    if (developerData.primaryContactEmail) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(developerData.primaryContactEmail)) {
-        errors.push('Invalid email format');
-      }
-    }
-
-    // Validate phone format (optional, but if provided must be valid)
-    if (developerData.primaryContactPhone) {
-      const phoneRegex = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/;
-      if (!phoneRegex.test(developerData.primaryContactPhone)) {
-        errors.push('Invalid phone number format');
-      }
-    }
-
-    // Validate arrays (optional, but if provided must be valid)
-    // if (developerData.projectTypes && (!Array.isArray(developerData.projectTypes) || developerData.projectTypes.length === 0)) {
-    //   errors.push('Project types must be a non-empty array if provided');
-    // }
-
-    // if (developerData.operatingStates && (!Array.isArray(developerData.operatingStates) || developerData.operatingStates.length === 0)) {
-    //   errors.push('Operating states must be a non-empty array if provided');
-    // }
-
+   
     // Check if user exists
     const user = await PlatformUser.findByPk(userId);
     if (!user) {
       errors.push('User not found');
-    }
-
-    // Check if this draft has already been published
-    if (draftId) {
-      const existingDeveloper = await Developer.findOne({
-        where: { draftId }
-      });
-      
-      if (existingDeveloper) {
-        errors.push('This draft has already been published. A draft can only be published once.');
-      }
-    }
-
-    if (errors.length > 0) {
-      return {
-        success: false,
-        errors
-      };
     }
 
     return {
@@ -113,7 +59,44 @@ async function validateDeveloperData({ userId, draftId, developerData }) {
 }
 
 /**
- * Create developer record in database
+ * Check if developer exists for a draft
+ * 
+ * @param {Object} params - Activity parameters
+ * @param {number} params.draftId - Draft ID
+ * @returns {Promise<Object>} - Existing developer or null
+ */
+async function checkDeveloperExists({ draftId }) {
+  logger.info(`[Developer Publishing] Checking if developer exists for draft ${draftId}`);
+  
+  try {
+    const existingDeveloper = await Developer.findOne({ 
+      where: { draftId },
+      attributes: ['developerId', 'userId', 'developerName', 'publishStatus', 'verificationStatus']
+    });
+    
+    if (existingDeveloper) {
+      logger.info(`[Developer Publishing] Found existing developer ${existingDeveloper.developerId}`);
+      return {
+        success: true,
+        exists: true,
+        data: existingDeveloper
+      };
+    }
+    
+    logger.info(`[Developer Publishing] No existing developer found for draft ${draftId}`);
+    return {
+      success: true,
+      exists: false,
+      data: null
+    };
+  } catch (error) {
+    logger.error('[Developer Publishing] Error checking developer existence:', error);
+    throw error;
+  }
+}
+
+/**
+ * Create new developer record in database
  * 
  * @param {Object} params - Activity parameters
  * @param {number} params.userId - User ID
@@ -122,7 +105,7 @@ async function validateDeveloperData({ userId, draftId, developerData }) {
  * @returns {Promise<Object>} - Created developer record
  */
 async function createDeveloperRecord({ userId, draftId, developerData }) {
-  logger.info(`[Developer Publishing] Creating developer record for user ${userId}, draft ${draftId}`);
+  logger.info(`[Developer Publishing] Creating new developer record for user ${userId}, draft ${draftId}`);
   
   try {
     const result = await DeveloperService.createDeveloper(userId, draftId, developerData);
@@ -145,142 +128,41 @@ async function createDeveloperRecord({ userId, draftId, developerData }) {
 }
 
 /**
- * Update developer publish status
+ * Update existing developer record in database
  * 
  * @param {Object} params - Activity parameters
- * @param {number} params.developerId - Developer ID
- * @param {string} params.status - New publish status
- * @param {string} params.notes - Optional notes
- * @returns {Promise<Object>} - Update result
+ * @param {number} params.developerId - Developer ID to update
+ * @param {number} params.userId - User ID for authorization
+ * @param {Object} params.developerData - Developer profile data
+ * @returns {Promise<Object>} - Updated developer record
  */
-async function updateDeveloperPublishStatus({ developerId, status, notes }) {
-  logger.info(`[Developer Publishing] Updating publish status for developer ${developerId} to ${status}`);
+async function updateDeveloperRecord({ developerId, userId, developerData }) {
+  logger.info(`[Developer Publishing] Updating developer record ${developerId} for user ${userId}`);
   
   try {
-    const result = await DeveloperService.updatePublishStatus(developerId, status, notes);
-
-    if (!result.success) {
-      throw new Error(result.message);
-    }
-
-    return {
-      success: true,
-      message: `Developer publish status updated to ${status}`
-    };
-  } catch (error) {
-    logger.error('[Developer Publishing] Error updating publish status:', error);
-    throw error;
-  }
-}
-
-/**
- * Update developer verification status
- * 
- * @param {Object} params - Activity parameters
- * @param {number} params.developerId - Developer ID
- * @param {string} params.status - Verification status
- * @param {number} params.verifiedBy - User ID of verifier (system/admin)
- * @param {string} params.notes - Optional verification notes
- * @returns {Promise<Object>} - Update result
- */
-async function updateDeveloperVerificationStatus({ developerId, status, verifiedBy, notes }) {
-  logger.info(`[Developer Publishing] Updating verification status for developer ${developerId} to ${status}`);
-  
-  try {
-    const result = await DeveloperService.updateVerificationStatus(
+    const result = await DeveloperService.updateDeveloper(
       developerId,
-      status,
-      verifiedBy,
-      notes
+      userId,
+      developerData
     );
 
     if (!result.success) {
       throw new Error(result.message);
     }
 
-    return {
-      success: true,
-      message: `Developer verification status updated to ${status}`
-    };
-  } catch (error) {
-    logger.error('[Developer Publishing] Error updating verification status:', error);
-    throw error;
-  }
-}
-
-/**
- * Perform automated verification checks
- * 
- * @param {Object} params - Activity parameters
- * @param {number} params.developerId - Developer ID
- * @param {Object} params.developerData - Developer data to verify
- * @returns {Promise<Object>} - Verification result
- */
-async function performAutomatedVerification({ developerId, developerData }) {
-  logger.info(`[Developer Publishing] Performing automated verification for developer ${developerId}`);
-  
-  try {
-    const checks = {
-      hasValidName: false,
-      hasValidContactInfo: false,
-      hasProjectHistory: false,
-      hasOperatingLocations: false,
-      overallScore: 0
-    };
-
-    // Check 1: Valid name (at least 2 characters)
-    if (developerData.developerName && developerData.developerName.length >= 2) {
-      checks.hasValidName = true;
-      checks.overallScore += 25;
-    }
-
-    // Check 2: Valid contact information
-    if (developerData.primaryContactEmail && developerData.primaryContactPhone) {
-      checks.hasValidContactInfo = true;
-      checks.overallScore += 25;
-    }
-
-    // Check 3: Has project history
-    if (developerData.totalProjectsCompleted > 0 || developerData.totalProjectsOngoing > 0) {
-      checks.hasProjectHistory = true;
-      checks.overallScore += 25;
-    }
-
-    // Check 4: Has operating locations
-    if (developerData.operatingStates && developerData.operatingStates.length > 0) {
-      checks.hasOperatingLocations = true;
-      checks.overallScore += 25;
-    }
-
-    // Determine verification result
-    let verificationStatus = 'PENDING';
-    let requiresManualReview = false;
-
-    if (checks.overallScore >= 75) {
-      verificationStatus = 'AUTOMATED_REVIEW';
-      requiresManualReview = false;
-    } else if (checks.overallScore >= 50) {
-      verificationStatus = 'MANUAL_REVIEW';
-      requiresManualReview = true;
-    } else {
-      verificationStatus = 'PENDING';
-      requiresManualReview = true;
-    }
+    logger.info(`[Developer Publishing] Developer record updated: ${result.data.developerId}`);
 
     return {
       success: true,
-      data: {
-        checks,
-        verificationStatus,
-        requiresManualReview
-      }
+      data: result.data,
+      message: 'Developer record updated successfully'
     };
   } catch (error) {
-    logger.error('[Developer Publishing] Error in automated verification:', error);
+    logger.error('[Developer Publishing] Error updating developer record:', error);
     throw error;
   }
 }
-
+ 
 /**
  * Send developer publishing notification email
  * 
@@ -313,43 +195,7 @@ async function sendDeveloperPublishingNotification({ userId, email, developerDat
   }
 }
 
-/**
- * Log developer publishing event for analytics
- * 
- * @param {Object} params - Activity parameters
- * @param {number} params.userId - User ID
- * @param {number} params.developerId - Developer ID
- * @param {string} params.eventType - Event type
- * @param {Object} params.metadata - Additional metadata
- * @returns {Promise<Object>} - Logging result
- */
-async function logDeveloperEvent({ userId, developerId, eventType, metadata }) {
-  logger.info(`[Developer Publishing] Logging event: ${eventType} for developer ${developerId}`);
-  
-  try {
-    // TODO: Implement actual analytics/event logging
-    logger.info(`[Developer Publishing] Event logged:`, {
-      userId,
-      developerId,
-      eventType,
-      metadata,
-      timestamp: new Date()
-    });
-    
-    return {
-      success: true,
-      message: 'Event logged successfully'
-    };
-  } catch (error) {
-    logger.error('[Developer Publishing] Error logging event:', error);
-    // Don't throw error - logging failure shouldn't fail the workflow
-    return {
-      success: false,
-      message: 'Failed to log event'
-    };
-  }
-}
-
+ 
 /**
  * Update ListingDraft status to PUBLISHED
  * 
@@ -386,11 +232,10 @@ async function updateListingDraftStatus({ draftId }) {
 
 module.exports = {
   validateDeveloperData,
+  checkDeveloperExists,
   createDeveloperRecord,
-  updateDeveloperPublishStatus,
-  updateDeveloperVerificationStatus,
-  performAutomatedVerification,
+  updateDeveloperRecord,
+  getUserEmail,
   sendDeveloperPublishingNotification,
-  logDeveloperEvent,
   updateListingDraftStatus
 };

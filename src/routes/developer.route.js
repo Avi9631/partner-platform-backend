@@ -37,17 +37,6 @@ router.get(
 );
 
 /**
- * @route   PATCH /api/developer/updateDeveloper/:developerId
- * @desc    Update developer profile
- * @access  Private (requires authentication and ownership)
- */
-router.patch(
-  "/updateDeveloper/:developerId",
-  authenticateToken,
-  DeveloperController.updateDeveloper
-);
-
-/**
  * @route   DELETE /api/developer/:developerId
  * @desc    Delete developer profile (soft delete)
  * @access  Private (requires authentication and ownership)

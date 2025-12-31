@@ -15,6 +15,65 @@ const ListingDraft = db.ListingDraft;
 const logger = require("../../../config/winston.config");
 
 /**
+ * Fetch property data from ListingDraft entity
+ * 
+ * @param {Object} params - Activity parameters
+ * @param {number} params.userId - User ID
+ * @param {number} params.draftId - Draft ID
+ * @returns {Promise<Object>} - Result with property data from draft
+ */
+async function fetchListingDraftData({ userId, draftId }) {
+  logger.info(`[Property Publishing] Fetching draft data for draft ${draftId}, user ${userId}`);
+  
+  try {
+    // Fetch the draft
+    const draft = await ListingDraft.findOne({
+      where: {
+        draftId,
+        userId,
+        draftType: 'PROPERTY'
+      }
+    });
+
+    if (!draft) {
+      logger.error(`[Property Publishing] Draft not found or unauthorized - draftId: ${draftId}, userId: ${userId}`);
+      return {
+        success: false,
+        message: 'Draft not found or unauthorized'
+      };
+    }
+
+    // Check if draft has data
+    if (!draft.draftData) {
+      logger.error(`[Property Publishing] Draft ${draftId} has no data`);
+      return {
+        success: false,
+        message: 'Draft has no property data'
+      };
+    }
+
+    // Check draft status
+    if (draft.draftStatus === 'PUBLISHED') {
+      logger.warn(`[Property Publishing] Draft ${draftId} is already published`);
+      // Allow re-publishing for updates
+    }
+
+    logger.info(`[Property Publishing] Draft data fetched successfully for draft ${draftId}`);
+    
+    return {
+      success: true,
+      data: draft.draftData
+    };
+  } catch (error) {
+    logger.error('[Property Publishing] Error fetching draft data:', error);
+    return {
+      success: false,
+      message: error.message || 'Failed to fetch draft data'
+    };
+  }
+}
+
+/**
  * Validate property data before publishing
  * 
  * @param {Object} params - Activity parameters
@@ -302,6 +361,7 @@ async function updateListingDraftStatus({ draftId, status }) {
 }
 
 module.exports = {
+  fetchListingDraftData,
   validatePropertyData,
   createPropertyRecord,
   updatePropertyRecord,

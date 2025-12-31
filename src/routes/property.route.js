@@ -35,16 +35,6 @@ router.get(
   PropertyController.getPropertyById
 );
 
-/**
- * @route   PUT /api/property/:propertyId
- * @desc    Update property
- * @access  Private (requires authentication, must be owner)
- */
-router.put(
-  "/:propertyId",
-  authenticateToken,
-  PropertyController.updateProperty
-);
 
 /**
  * @route   DELETE /api/property/:propertyId

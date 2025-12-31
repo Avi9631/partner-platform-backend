@@ -14,6 +14,7 @@ const { proxyActivities } = require('@temporalio/workflow');
 
 // Proxy PG/Hostel publishing activities with appropriate timeouts
 const {
+    fetchListingDraftData,
     validatePgHostelData,
     createPgHostelRecord,
     updatePgHostelRecord,
@@ -33,58 +34,54 @@ const {
  * PG/Colive/Hostel Publishing Workflow
  * 
  * Orchestrates the PG/Hostel publishing process:
- * 1. Validates all PG/Hostel data (property details, room types, amenities, etc.)
- * 2. Creates PG/Hostel record in database
- * 3. Sends notification to user
+ * 1. Fetches PG/Hostel data from ListingDraft entity
+ * 2. Validates all PG/Hostel data (property details, room types, amenities, etc.)
+ * 3. Creates or updates PG/Hostel record in database
+ * 4. Updates draft status
+ * 5. Sends notification to user
  * 
  * @param {Object} workflowInput - Workflow input data
  * @param {number} workflowInput.userId - User ID
  * @param {number} workflowInput.draftId - Draft ID (required, ensures one draft = one publish)
- * @param {Object} workflowInput.pgHostelData - PG/Hostel data
- * @param {string} workflowInput.pgHostelData.propertyName - Property name (required)
- * @param {string} workflowInput.pgHostelData.genderAllowed - Gender allowed (required)
- * @param {string} workflowInput.pgHostelData.description - Description (optional)
- * @param {boolean} workflowInput.pgHostelData.isBrandManaged - Brand managed flag (optional)
- * @param {string} workflowInput.pgHostelData.brandName - Brand name (optional)
- * @param {string} workflowInput.pgHostelData.yearBuilt - Year built (optional)
- * @param {Object} workflowInput.pgHostelData.coordinates - Coordinates {lat, lng} (optional)
- * @param {string} workflowInput.pgHostelData.city - City (optional)
- * @param {string} workflowInput.pgHostelData.locality - Locality (optional)
- * @param {string} workflowInput.pgHostelData.addressText - Full address (optional)
- * @param {string} workflowInput.pgHostelData.landmark - Landmark (optional)
- * @param {Array} workflowInput.pgHostelData.roomTypes - Room types (required)
- * @param {Array} workflowInput.pgHostelData.commonAmenities - Common amenities (optional)
- * @param {Object} workflowInput.pgHostelData.foodMess - Food/mess details (optional)
- * @param {Array} workflowInput.pgHostelData.rules - Rules (optional)
- * @param {Array} workflowInput.pgHostelData.mediaData - Media data (optional)
  * @returns {Promise<WorkflowResult>} - Workflow result
  * 
  * @example
  * await startWorkflow('pgHostelPublishing', {
  *   userId: 123,
- *   draftId: 456,
- *   pgHostelData: {
- *     propertyName: 'Sunrise PG',
- *     genderAllowed: 'Gents',
- *     description: 'Premium PG accommodation...',
- *     city: 'Bangalore',
- *     roomTypes: [...],
- *     commonAmenities: [...]
- *   }
+ *   draftId: 456
  * });
  */
 async function pgHostelPublishing(workflowInput) {
     const { 
         userId,
-        draftId,
-        pgHostelData
+        draftId
     } = workflowInput;
     
-    console.log(`[PG Hostel Publishing Workflow] Starting for user ${userId}`);
+    console.log(`[PG Hostel Publishing Workflow] Starting for user ${userId}, draft ${draftId}`);
     
     try {
-        // Step 1: Validate PG/Hostel data
-        console.log(`[PG Hostel Publishing] Step 1: Validating PG/Hostel data`);
+        // Step 1: Fetch PG/Hostel data from ListingDraft
+        console.log(`[PG Hostel Publishing] Step 1: Fetching PG/Hostel data from draft ${draftId}`);
+        
+        const fetchResult = await fetchListingDraftData({
+            userId,
+            draftId
+        });
+        
+        if (!fetchResult.success) {
+            console.error(`[PG Hostel Publishing] Failed to fetch draft data:`, fetchResult.message);
+            return {
+                success: false,
+                message: fetchResult.message || 'Failed to fetch draft data',
+                step: 'fetch'
+            };
+        }
+        
+        const pgHostelData = fetchResult.data;
+        console.log(`[PG Hostel Publishing] Draft data fetched successfully`);
+        
+        // Step 2: Validate PG/Hostel data
+        console.log(`[PG Hostel Publishing] Step 2: Validating PG/Hostel data`);
         
         const validationResult = await validatePgHostelData({
             userId,
@@ -107,8 +104,8 @@ async function pgHostelPublishing(workflowInput) {
         const isUpdate = validationResult.isUpdate || false;
         const existingPgHostelId = validationResult.existingPgHostelId;
         
-        // Step 2: Create or Update PG/Hostel record in database
-        console.log(`[PG Hostel Publishing] Step 2: ${isUpdate ? 'Updating' : 'Creating'} PG/Hostel record`);
+        // Step 3: Create or Update PG/Hostel record in database
+        console.log(`[PG Hostel Publishing] Step 3: ${isUpdate ? 'Updating' : 'Creating'} PG/Hostel record`);
         
         let operationResult;
         
@@ -142,9 +139,9 @@ async function pgHostelPublishing(workflowInput) {
         
         const { pgHostelId, slug, propertyName } = operationResult.data;
         
-        // Step 3: Update ListingDraft status to PUBLISHED (only for new creations)
+        // Step 4: Update ListingDraft status to PUBLISHED (only for new creations)
         if (!isUpdate) {
-            console.log(`[PG Hostel Publishing] Step 3: Updating ListingDraft status`);
+            console.log(`[PG Hostel Publishing] Step 4: Updating ListingDraft status`);
             
             try {
                 await updateListingDraftStatus({ draftId });
@@ -157,8 +154,8 @@ async function pgHostelPublishing(workflowInput) {
             console.log(`[PG Hostel Publishing] Skipping ListingDraft update (update operation)`);
         }
         
-        // Step 4: Send notification to user
-        console.log(`[PG Hostel Publishing] Step 4: Sending notification`);
+        // Step 5: Send notification to user
+        console.log(`[PG Hostel Publishing] Step 5: Sending notification`);
         
         try {
             await sendPgHostelPublishingNotification({

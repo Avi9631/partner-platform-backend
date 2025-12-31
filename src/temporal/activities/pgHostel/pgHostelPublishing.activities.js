@@ -15,6 +15,65 @@ const ListingDraft = db.ListingDraft;
 const logger = require("../../../config/winston.config");
 
 /**
+ * Fetch PG/Hostel data from ListingDraft entity
+ * 
+ * @param {Object} params - Activity parameters
+ * @param {number} params.userId - User ID
+ * @param {number} params.draftId - Draft ID
+ * @returns {Promise<Object>} - Result with PG/Hostel data from draft
+ */
+async function fetchListingDraftData({ userId, draftId }) {
+  logger.info(`[PG Hostel Publishing] Fetching draft data for draft ${draftId}, user ${userId}`);
+  
+  try {
+    // Fetch the draft
+    const draft = await ListingDraft.findOne({
+      where: {
+        draftId,
+        userId,
+        draftType: 'PG'
+      }
+    });
+
+    if (!draft) {
+      logger.error(`[PG Hostel Publishing] Draft not found or unauthorized - draftId: ${draftId}, userId: ${userId}`);
+      return {
+        success: false,
+        message: 'Draft not found or unauthorized'
+      };
+    }
+
+    // Check if draft has data
+    if (!draft.draftData) {
+      logger.error(`[PG Hostel Publishing] Draft ${draftId} has no data`);
+      return {
+        success: false,
+        message: 'Draft has no PG/Hostel data'
+      };
+    }
+
+    // Check draft status
+    if (draft.draftStatus === 'PUBLISHED') {
+      logger.warn(`[PG Hostel Publishing] Draft ${draftId} is already published`);
+      // Allow re-publishing for updates
+    }
+
+    logger.info(`[PG Hostel Publishing] Draft data fetched successfully for draft ${draftId}`);
+    
+    return {
+      success: true,
+      data: draft.draftData
+    };
+  } catch (error) {
+    logger.error('[PG Hostel Publishing] Error fetching draft data:', error);
+    return {
+      success: false,
+      message: error.message || 'Failed to fetch draft data'
+    };
+  }
+}
+
+/**
  * Validate PG/Hostel data before publishing
  * 
  * @param {Object} params - Activity parameters
@@ -327,6 +386,7 @@ async function updateListingDraftStatus({ draftId }) {
 }
 
 module.exports = {
+  fetchListingDraftData,
   validatePgHostelData,
   createPgHostelRecord,
   updatePgHostelRecord,

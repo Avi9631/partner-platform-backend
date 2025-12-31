@@ -37,17 +37,6 @@ router.get(
 );
 
 /**
- * @route   PUT /api/project/:projectId
- * @desc    Update project
- * @access  Private (requires authentication)
- */
-router.put(
-  "/:projectId",
-  authenticateToken,
-  ProjectController.updateProject
-);
-
-/**
  * @route   DELETE /api/project/:projectId
  * @desc    Delete/archive project
  * @access  Private (requires authentication)

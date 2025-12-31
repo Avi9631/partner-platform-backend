@@ -14,6 +14,7 @@ const { proxyActivities } = require('@temporalio/workflow');
 
 // Proxy property publishing activities with appropriate timeouts
 const {
+    fetchListingDraftData,
     validatePropertyData,
     createPropertyRecord,
     updatePropertyRecord,
@@ -33,49 +34,53 @@ const {
  * Property Publishing Workflow
  * 
  * Orchestrates the property publishing process:
- * 1. Validates all property data (property details, metadata, etc.)
- * 2. Creates or updates property record in database
- * 3. Updates draft status
- * 4. Sends notification to user
+ * 1. Fetches property data from ListingDraft entity
+ * 2. Validates all property data (property details, metadata, etc.)
+ * 3. Creates or updates property record in database
+ * 4. Updates draft status
+ * 5. Sends notification to user
  * 
  * @param {Object} workflowInput - Workflow input data
  * @param {number} workflowInput.userId - User ID
  * @param {number} workflowInput.draftId - Draft ID (required, ensures one draft = one publish)
- * @param {Object} workflowInput.propertyData - Property data
- * @param {string} workflowInput.propertyData.propertyName - Property name (required)
- * @param {number} workflowInput.propertyData.projectId - Project ID (optional)
- * @param {Object} workflowInput.propertyData.propertyDetails - Property details (optional)
- * @param {string} workflowInput.propertyData.status - Property status (optional, default: ACTIVE)
  * @returns {Promise<WorkflowResult>} - Workflow result
  * 
  * @example
  * await startWorkflow('propertyPublishing', {
  *   userId: 123,
- *   draftId: 456,
- *   propertyData: {
- *     propertyName: 'Luxury Apartment 3BHK',
- *     projectId: 789,
- *     propertyDetails: {
- *       area: '1500 sqft',
- *       bedrooms: 3,
- *       bathrooms: 2
- *     },
- *     status: 'ACTIVE'
- *   }
+ *   draftId: 456
  * });
  */
 async function propertyPublishing(workflowInput) {
     const { 
         userId,
-        draftId,
-        propertyData
+        draftId
     } = workflowInput;
     
-    console.log(`[Property Publishing Workflow] Starting for user ${userId}`);
+    console.log(`[Property Publishing Workflow] Starting for user ${userId}, draft ${draftId}`);
     
     try {
-        // Step 1: Validate property data
-        console.log(`[Property Publishing] Step 1: Validating property data`);
+        // Step 1: Fetch property data from ListingDraft
+        console.log(`[Property Publishing] Step 1: Fetching property data from draft ${draftId}`);
+        
+        const fetchResult = await fetchListingDraftData({
+            userId,
+            draftId
+        });
+        
+        if (!fetchResult.success) {
+            console.error(`[Property Publishing] Failed to fetch draft data:`, fetchResult.message);
+            return {
+                success: false,
+                message: fetchResult.message || 'Failed to fetch draft data',
+            };
+        }
+        
+        const propertyData = fetchResult.data;
+        console.log(`[Property Publishing] Draft data fetched successfully`);
+        
+        // Step 2: Validate property data
+        console.log(`[Property Publishing] Step 2: Validating property data`);
         
         const validationResult = await validatePropertyData({
             userId,
@@ -94,7 +99,7 @@ async function propertyPublishing(workflowInput) {
         
         console.log(`[Property Publishing] Validation successful`);
         
-        // Step 2: Check if this is an update or new property
+        // Step 3: Check if this is an update or new property
         const existingProperty = validationResult.existingProperty;
         const isUpdate = !!existingProperty;
         
@@ -102,7 +107,7 @@ async function propertyPublishing(workflowInput) {
         
         if (isUpdate) {
             // Update existing property
-            console.log(`[Property Publishing] Step 2: Updating existing property ${existingProperty.propertyId}`);
+            console.log(`[Property Publishing] Step 3: Updating existing property ${existingProperty.propertyId}`);
             
             propertyResult = await updatePropertyRecord({
                 propertyId: existingProperty.propertyId,
@@ -111,7 +116,7 @@ async function propertyPublishing(workflowInput) {
             });
         } else {
             // Create new property
-            console.log(`[Property Publishing] Step 2: Creating new property`);
+            console.log(`[Property Publishing] Step 3: Creating new property`);
             
             propertyResult = await createPropertyRecord({
                 userId,
@@ -131,8 +136,8 @@ async function propertyPublishing(workflowInput) {
         const property = propertyResult.data;
         console.log(`[Property Publishing] Property ${isUpdate ? 'updated' : 'created'} successfully: ${property.propertyId}`);
         
-        // Step 3: Update draft status
-        console.log(`[Property Publishing] Step 3: Updating draft status`);
+        // Step 4: Update draft status
+        console.log(`[Property Publishing] Step 4: Updating draft status`);
         
         await updateListingDraftStatus({
             draftId,
@@ -141,8 +146,8 @@ async function propertyPublishing(workflowInput) {
         
         console.log(`[Property Publishing] Draft status updated`);
         
-        // Step 4: Send notification
-        console.log(`[Property Publishing] Step 4: Sending notification`);
+        // Step 5: Send notification
+        console.log(`[Property Publishing] Step 5: Sending notification`);
         
         try {
             await sendPropertyPublishingNotification({

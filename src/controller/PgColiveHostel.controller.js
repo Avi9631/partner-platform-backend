@@ -70,8 +70,7 @@ const publishPgColiveHostel = async (req, res) => {
         workflowId,
         args: [{
           userId,
-          draftId,
-          pgHostelData
+          draftId
         }]
       });
 
