@@ -295,6 +295,8 @@ const listProjects = async (filters = {}, page = 1, limit = 20) => {
   try {
     const where = {};
 
+
+
     // Status filter
     if (filters.status) {
       where.status = filters.status;

@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const db = require("../entity");
 const ListingDraft = db.ListingDraft;
 const Property = db.Property;
@@ -111,6 +112,10 @@ const getUserDrafts = async (userId, draftType) => {
     const whereClause = {
       userId: userId
     };
+
+    whereClause.draftData = {
+      [Op.not]: null
+    }
 
     // Add draftType filter if provided
     if (draftType) {
