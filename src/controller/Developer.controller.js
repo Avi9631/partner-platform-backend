@@ -92,7 +92,7 @@ const publishDeveloper = async (req, res) => {
       logger.error('Temporal workflow error:', temporalError);
       
       // Fallback: Create developer directly without workflow
-      const fallbackResult = await DeveloperService.createDeveloper(userId, developerData);
+      const fallbackResult = await DeveloperService.createDeveloper(userId, draftId, developerData);
       
       if (fallbackResult.success) {
         return sendSuccessResponse(

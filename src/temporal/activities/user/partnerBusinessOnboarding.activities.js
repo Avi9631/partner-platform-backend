@@ -242,7 +242,7 @@ async function updateBusinessVerificationStatus(updateData) {
         logger.info(`[Update Business Verification Status] Updating business for user ${userId} to status: ${verificationStatus}`);
         
         // Validate verification status
-        const validStatuses = [null, 'PENDING', 'APPROVED', 'REJECTED'];
+        const validStatuses = [null, 'PENDING', 'AUTOMATED_REVIEW' , 'MANUAL_REVIEW' ,  'APPROVED', 'REJECTED'];
         if (!validStatuses.includes(verificationStatus)) {
             throw new Error(`Invalid verification status: ${verificationStatus}. Must be one of: ${validStatuses.join(', ')}`);
         }

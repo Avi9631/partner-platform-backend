@@ -71,7 +71,7 @@ async function userOnboardingWorkflow(userData) {
         // Step 4: Update user status to active
         await updateUserStatus({
             userId,
-            status: 'active',
+            status: 'APPROVED',
         });
         
         console.log(`[Onboarding Workflow] User status updated to active`);
@@ -99,7 +99,7 @@ async function userOnboardingWorkflow(userData) {
         // Update user status to indicate onboarding failure
         await updateUserStatus({
             userId,
-            status: 'onboarding_failed',
+            status: 'MANUAL_REVIEW',
         });
         
         throw error;

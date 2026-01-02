@@ -15,7 +15,7 @@ const { Op } = require("sequelize");
 const createDeveloper = async (userId, draftId, developerData) => {
   try {
     // Check if developer already exists for this draft
-    const existingDeveloper = await Developer.findOne({ where: { draftId } });
+    const existingDeveloper = await db.Developer.findOne({ where: { draftId } });
     
     if (existingDeveloper) {
       return {
@@ -26,11 +26,10 @@ const createDeveloper = async (userId, draftId, developerData) => {
     }
 
     // Create developer record
-    const developer = await Developer.create({
+    const developer = await db.Developer.create({
       userId,
       draftId,
       developerName: developerData.developerName,
-      publishStatus: 'PENDING_REVIEW',
       subscribeForDeveloperPage: developerData.subscribeForDeveloperPage || false,
       verificationStatus: 'PENDING'
     });
@@ -55,7 +54,7 @@ const createDeveloper = async (userId, draftId, developerData) => {
  */
 const updateDeveloper = async (developerId, userId, updateData) => {
   try {
-    const developer = await Developer.findOne({
+    const developer = await db.Developer.findOne({
       where: {
         developerId,
         userId
@@ -78,8 +77,7 @@ const updateDeveloper = async (developerId, userId, updateData) => {
     };
 
     // Reset to PENDING_REVIEW when republishing
-    if (developer.publishStatus === 'PUBLISHED' || developer.publishStatus === 'REJECTED') {
-      updatePayload.publishStatus = 'PENDING_REVIEW';
+    if (developer.publishStatus === 'REJECTED') {
       updatePayload.verificationStatus = 'PENDING';
     }
 
@@ -103,10 +101,10 @@ const updateDeveloper = async (developerId, userId, updateData) => {
  */
 const getDeveloperById = async (developerId) => {
   try {
-    const developer = await Developer.findByPk(developerId, {
+    const developer = await db.Developer.findByPk(developerId, {
       include: [
         {
-          model: PlatformUser,
+          model: db.PlatformUser,
           as: 'user',
           attributes: ['userId', 'firstName', 'lastName', 'userEmail', 'profileImage']
         }
@@ -139,7 +137,7 @@ const getDeveloperById = async (developerId) => {
  */
 const getDevelopersByUserId = async (userId) => {
   try {
-    const developers = await Developer.findAll({
+    const developers = await db.Developer.findAll({
       where: { userId },
       order: [['developer_created_at', 'DESC']]
     });
@@ -194,14 +192,14 @@ const listDevelopers = async (filters = {}, page = 1, limit = 20) => {
 
     const offset = (page - 1) * limit;
 
-    const { count, rows } = await Developer.findAndCountAll({
+    const { count, rows } = await db.Developer.findAndCountAll({
       where: whereClause,
       limit,
       offset,
       order: [['developer_created_at', 'DESC']],
       include: [
         {
-          model: PlatformUser,
+          model: db.PlatformUser,
           as: 'user',
           attributes: ['userId', 'firstName', 'lastName', 'profileImage']
         }
@@ -235,7 +233,7 @@ const listDevelopers = async (filters = {}, page = 1, limit = 20) => {
  */
 const updatePublishStatus = async (developerId, status, notes = null) => {
   try {
-    const developer = await Developer.findByPk(developerId);
+    const developer = await db.Developer.findByPk(developerId);
 
     if (!developer) {
       return {
@@ -277,7 +275,7 @@ const updatePublishStatus = async (developerId, status, notes = null) => {
  */
 const updateVerificationStatus = async (developerId, status, verifiedBy, notes = null) => {
   try {
-    const developer = await Developer.findByPk(developerId);
+    const developer = await db.Developer.findByPk(developerId);
 
     if (!developer) {
       return {
@@ -317,7 +315,7 @@ const updateVerificationStatus = async (developerId, status, verifiedBy, notes =
  */
 const deleteDeveloper = async (developerId, userId) => {
   try {
-    const developer = await Developer.findOne({
+    const developer = await db.Developer.findOne({
       where: {
         developerId,
         userId
