@@ -3,13 +3,13 @@
  * 
  * Activities for validating partner profiles and uploading verification videos to Supabase.
  * 
- * @module temporal/activities/user/partnerOnboarding
+ * @module temporal/activities/partnerOnboarding
  */
 
-const logger = require('../../../config/winston.config');
-const { s3, defaultBucket } = require('../../../config/s3.config');
-const db = require('../../../entity/index');
-const PartnerBusinessService = require('../../../service/PartnerBusiness.service');
+const logger = require('../../config/winston.config');
+const { s3, defaultBucket } = require('../../config/s3.config');
+const db = require('../../entity/index');
+const PartnerBusinessService = require('../../service/PartnerBusiness.service');
 const fs = require('fs').promises;
 const path = require('path');
 

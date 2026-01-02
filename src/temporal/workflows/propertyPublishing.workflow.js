@@ -5,7 +5,7 @@
  * This workflow validates property data, creates the record,
  * performs automated verification checks, and sends notifications.
  * 
- * @module temporal/workflows/property/propertyPublishing.workflow
+ * @module temporal/workflows/propertyPublishing.workflow
  */
 
 const { proxyActivities } = require('@temporalio/workflow');

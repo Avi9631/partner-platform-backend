@@ -4,15 +4,15 @@
  * Temporal activities for property publishing and verification workflow.
  * These activities handle validation, database operations, notifications, and status updates.
  * 
- * @module temporal/activities/property/propertyPublishing.activities
+ * @module temporal/activities/propertyPublishing.activities
  */
 
-const PropertyService = require("../../../service/PropertyService.service");
-const db = require("../../../entity");
+const PropertyService = require("../../service/PropertyService.service");
+const db = require("../../entity");
 const Property = db.Property;
 const PlatformUser = db.PlatformUser;
 const ListingDraft = db.ListingDraft;
-const logger = require("../../../config/winston.config");
+const logger = require("../../config/winston.config");
 
 /**
  * Fetch property data from ListingDraft entity

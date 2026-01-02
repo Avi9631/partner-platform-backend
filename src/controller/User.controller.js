@@ -575,7 +575,6 @@ async function updateUserStatus(req, res, next) {
  * Onboard business partner - complete business profile setup for verification
  * @route POST /partnerUser/businessOnboarding
  * @body {businessName, registrationNumber, businessAddress, businessEmail, businessPhones: [{phone: string}]}
- * @file ownerVideo (multipart/form-data)
  * 
  * This endpoint handles business partner onboarding with all required business details.
  * Business profile is submitted for verification.
@@ -586,7 +585,6 @@ async function onboardBusinessPartner(req, res, next) {
   try {
     const userId = req.user.userId;
     const businessData = req.body;
-    const ownerVideo = req.file;
 
     // Validate all required fields for business onboarding
     const missingFields = [];
@@ -594,7 +592,6 @@ async function onboardBusinessPartner(req, res, next) {
     if (!businessData.registrationNumber) missingFields.push("registrationNumber");
     if (!businessData.businessAddress) missingFields.push("businessAddress");
     if (!businessData.businessEmail) missingFields.push("businessEmail");
-    if (!ownerVideo) missingFields.push("ownerVideo");
 
     // Parse businessPhones if it's a JSON string
     if (businessData.businessPhones) {
@@ -671,10 +668,6 @@ async function onboardBusinessPartner(req, res, next) {
               businessEmail: businessData.businessEmail,
               businessPhones: businessData.businessPhones,
             },
-            videoBuffer: ownerVideo.buffer,
-            originalFilename: ownerVideo.originalname,
-            videoMimetype: ownerVideo.mimetype,
-            videoSize: ownerVideo.size,
           },
           workflowId
         );
@@ -728,7 +721,6 @@ async function onboardBusinessPartner(req, res, next) {
         .withMeta({
           userId: userId,
           businessOnboardingSubmitted: true,
-          ownerVideoUploaded: true,
         })
         .success();
     } catch (businessError) {

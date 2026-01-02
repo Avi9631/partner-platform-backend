@@ -8,21 +8,21 @@
  */
 
 // User activities
-const userActivities = require('./user/user.activities');
-const partnerOnboardingActivities = require('./user/partnerOnboarding.activities');
-const partnerBusinessOnboardingActivities = require('./user/partnerBusinessOnboarding.activities');
+const userActivities = require('./user.activities');
+const partnerOnboardingActivities = require('./partnerOnboarding.activities');
+const partnerBusinessOnboardingActivities = require('./partnerBusinessOnboarding.activities');
 
 // Developer activities
-const developerPublishingActivities = require('./developer/developerPublishing.activities');
+const developerPublishingActivities = require('./developerPublishing.activities');
 
 // PG/Colive/Hostel activities
-const pgHostelPublishingActivities = require('./pgHostel/pgHostelPublishing.activities');
+const pgHostelPublishingActivities = require('./pgHostelPublishing.activities');
 
 // Property activities
-const propertyPublishingActivities = require('./property/propertyPublishing.activities');
+const propertyPublishingActivities = require('./propertyPublishing.activities');
 
 // Project activities
-const projectPublishingActivities = require('./project/projectPublishing.activities');
+const projectPublishingActivities = require('./projectPublishing.activities');
 
  
 /**

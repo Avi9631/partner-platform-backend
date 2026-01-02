@@ -4,15 +4,15 @@
  * Temporal activities for developer profile publishing and verification workflow.
  * These activities handle validation, database operations, notifications, and status updates.
  * 
- * @module temporal/activities/developer/developerPublishing.activities
+ * @module temporal/activities/developerPublishing.activities
  */
 
-const DeveloperService = require("../../../service/DeveloperService.service");
-const db = require("../../../entity");
+const DeveloperService = require("../../service/DeveloperService.service");
+const db = require("../../entity");
 const Developer = db.Developer;
 const PlatformUser = db.PlatformUser;
 const ListingDraft = db.ListingDraft;
-const logger = require("../../../config/winston.config");
+const logger = require("../../config/winston.config");
 const { getUserEmail } = require("./getUserEmail.activity");
 
 /**

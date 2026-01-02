@@ -6,7 +6,7 @@
  * @module temporal/activities/user
  */
 
-const logger = require('../../../config/winston.config');
+const logger = require('../../config/winston.config');
 const nodemailer = require('nodemailer');
 
 /** @typedef {import('../../types').EmailData} EmailData */

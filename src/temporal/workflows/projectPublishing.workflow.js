@@ -5,7 +5,7 @@
  * This workflow validates project data, creates the record,
  * performs automated verification checks, and sends notifications.
  * 
- * @module temporal/workflows/project/projectPublishing.workflow
+ * @module temporal/workflows/projectPublishing.workflow
  */
 
 const { proxyActivities } = require('@temporalio/workflow');

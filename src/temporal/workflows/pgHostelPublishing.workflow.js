@@ -5,7 +5,7 @@
  * This workflow validates PG/Hostel data, creates the record,
  * performs automated verification checks, and sends notifications.
  * 
- * @module temporal/workflows/pgHostel/pgHostelPublishing.workflow
+ * @module temporal/workflows/pgHostelPublishing.workflow
  */
 
 const { proxyActivities } = require('@temporalio/workflow');

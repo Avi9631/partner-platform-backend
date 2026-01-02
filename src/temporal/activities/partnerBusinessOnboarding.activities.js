@@ -1,14 +1,14 @@
 /**
  * Partner Business Onboarding Activities
  * 
- * Activities for validating business profiles and uploading owner verification videos to Supabase.
+ * Activities for validating and managing business partner profiles.
  * 
- * @module temporal/activities/user/partnerBusinessOnboarding
+ * @module temporal/activities/partnerBusinessOnboarding
  */
 
-const logger = require('../../../config/winston.config');
-const { s3, defaultBucket } = require('../../../config/s3.config');
-const db = require('../../../entity/index');
+const logger = require('../../config/winston.config');
+const { s3, defaultBucket } = require('../../config/s3.config');
+const db = require('../../entity/index');
 const path = require('path');
 
 /**
@@ -19,12 +19,11 @@ const path = require('path');
  * @param {Object} validationData - Validation data containing business details
  * @param {number} validationData.userId - User ID
  * @param {Object} validationData.businessData - Business data
- * @param {Buffer} validationData.videoBuffer - Owner verification video buffer
  * @returns {Promise<{success: boolean, errors?: string[]}>}
  */
 async function validateBusinessOnboardingData(validationData) {
     try {
-        const { userId, businessData, videoBuffer } = validationData;
+        const { userId, businessData } = validationData;
         
         logger.info(`[Validate Business Onboarding] Starting validation for user ${userId}`);
         
@@ -79,13 +78,6 @@ async function validateBusinessOnboardingData(validationData) {
             }
         }
         
-        // Check for owner verification video buffer
-        if (!videoBuffer) {
-            errors.push('Owner verification video is required');
-        } else if (!Buffer.isBuffer(videoBuffer) && !videoBuffer.data) {
-            errors.push('Invalid video buffer format');
-        }
-        
         if (errors.length > 0) {
             logger.warn(`[Validate Business Onboarding] Validation failed for user ${userId}:`, errors);
             return { success: false, errors };
@@ -100,70 +92,7 @@ async function validateBusinessOnboardingData(validationData) {
     }
 }
 
-/**
- * Upload Owner Video to Supabase Activity
- * 
- * Uploads the owner verification video to Supabase Storage using S3 protocol.
- * 
- * @param {Object} uploadData - Upload data containing video buffer
- * @param {number} uploadData.userId - User ID
- * @param {Buffer} uploadData.videoBuffer - Owner verification video buffer
- * @param {string} uploadData.originalFilename - Original video filename
- * @param {string} uploadData.videoMimetype - Video MIME type
- * @returns {Promise<{success: boolean, videoUrl: string, s3Key: string}>}
- */
-async function uploadOwnerVideoToSupabase(uploadData) {
-    const { userId, videoBuffer, originalFilename, videoMimetype } = uploadData;
-    
-    try {
-        logger.info(`[Upload Owner Video] Starting upload for user ${userId}`);
-        
-        // Validate video buffer
-        if (!videoBuffer) {
-            throw new Error('No video buffer provided');
-        }
-        
-        // Determine file extension
-        const ext = path.extname(originalFilename || '.mp4');
-        const timestamp = Date.now();
-        const s3Key = `business-owners/${userId}/verification-video-${timestamp}${ext}`;
-        
-        // Ensure buffer is a Buffer instance
-        const fileBuffer = Buffer.isBuffer(videoBuffer) 
-            ? videoBuffer 
-            : Buffer.from(videoBuffer);
-        
-        logger.info(`[Upload Owner Video] Buffer size: ${fileBuffer.length} bytes`);
-        
-        // Upload to S3/Supabase
-        const uploadParams = {
-            Bucket: process.env.S3_PARTNER_BUSINESS_BUCKET || defaultBucket,
-            Key: s3Key,
-            Body: fileBuffer,
-            ContentType: videoMimetype || 'video/mp4',
-            ACL: 'private', // Private for security
-        };
-        
-        logger.info(`[Upload Owner Video] Uploading to S3: ${s3Key}`);
-        const uploadResult = await s3.upload(uploadParams).promise();
-        
-        // Construct video URL
-        const videoUrl = uploadResult.Location || `${process.env.S3_ENDPOINT}/${uploadParams.Bucket}/${s3Key}`;
-        
-        logger.info(`[Upload Owner Video] Upload successful for user ${userId}: ${videoUrl}`);
-        
-        return {
-            success: true,
-            videoUrl,
-            s3Key,
-        };
-        
-    } catch (error) {
-        logger.error(`[Upload Owner Video] Failed to upload video for user ${userId}:`, error);
-        throw error;
-    }
-}
-
+ 
 /**
  * Create Partner Business Record Activity
  * 
@@ -172,11 +101,10 @@ async function uploadOwnerVideoToSupabase(uploadData) {
  * @param {Object} businessInput - Business creation data
  * @param {number} businessInput.userId - User ID (business owner)
  * @param {Object} businessInput.businessData - Business data
- * @param {string} businessInput.ownerVideoUrl - Owner verification video URL
  * @returns {Promise<{success: boolean, business: Object}>}
  */
 async function createPartnerBusinessRecord(businessInput) {
-    const { userId, businessData, ownerVideoUrl } = businessInput;
+    const { userId, businessData } = businessInput;
     
     try {
         logger.info(`[Create Business Record] Creating business for user ${userId}`);
@@ -201,7 +129,6 @@ async function createPartnerBusinessRecord(businessInput) {
             businessAddress: businessData.businessAddress,
             businessEmail: businessData.businessEmail,
             businessPhone: businessData.businessPhones, // Store as JSONB array
-            ownerVideo: ownerVideoUrl, // Store owner verification video URL
         };
         
         if (business) {
@@ -346,7 +273,6 @@ async function sendBusinessOnboardingNotification(notificationData) {
 
 module.exports = {
     validateBusinessOnboardingData,
-    uploadOwnerVideoToSupabase,
     createPartnerBusinessRecord,
     updateBusinessVerificationStatus,
     sendBusinessOnboardingNotification,

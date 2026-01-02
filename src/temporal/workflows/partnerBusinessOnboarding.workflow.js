@@ -2,10 +2,9 @@
  * Partner Business Onboarding Workflow
  * 
  * Handles the complete business partner onboarding and verification process.
- * This workflow validates business details, uploads owner verification video to Supabase,
- * creates the business record, and updates verification status.
+ * This workflow validates business details, creates the business record, and updates verification status.
  * 
- * @module temporal/workflows/user/partnerBusinessOnboarding.workflow
+ * @module temporal/workflows/partnerBusinessOnboarding.workflow
  */
 
 const { proxyActivities } = require('@temporalio/workflow');
@@ -15,12 +14,11 @@ const { proxyActivities } = require('@temporalio/workflow');
 // Proxy business onboarding activities with appropriate timeouts
 const {
     validateBusinessOnboardingData,
-    uploadOwnerVideoToSupabase,
     createPartnerBusinessRecord,
     updateBusinessVerificationStatus,
     sendBusinessOnboardingNotification,
 } = proxyActivities({
-    startToCloseTimeout: '5 minutes', // Longer timeout for video upload
+    startToCloseTimeout: '2 minutes',
     retry: {
         initialInterval: '1s',
         maximumInterval: '30s',
@@ -34,10 +32,9 @@ const {
  * 
  * Orchestrates the business partner onboarding process:
  * 1. Validates all business details (name, registration, address, email, phones)
- * 2. Uploads owner verification video to Supabase using S3 protocol
- * 3. Creates business record in partner_business table with video URL
- * 4. Updates verification status to APPROVED in partner_business table
- * 5. Sends onboarding notification email to business owner
+ * 2. Creates business record in partner_business table
+ * 3. Updates verification status to APPROVED in partner_business table
+ * 4. Sends onboarding notification email to business owner
  * 
  * Note: accountType is no longer stored in platform_user. It is derived dynamically:
  * - BUSINESS: when a verified (APPROVED) partner_business record exists for the user
@@ -52,10 +49,6 @@ const {
  * @param {string} workflowInput.businessData.businessAddress - Complete business address
  * @param {string} workflowInput.businessData.businessEmail - Business email address
  * @param {Array<{phone: string}>} workflowInput.businessData.businessPhones - Business phone numbers (array of objects)
- * @param {Buffer} workflowInput.videoBuffer - Owner verification video buffer
- * @param {string} workflowInput.originalFilename - Original video filename
- * @param {string} workflowInput.videoMimetype - Video MIME type
- * @param {number} workflowInput.videoSize - Video file size in bytes
  * @returns {Promise<WorkflowResult>} - Workflow result
  * 
  * @example
@@ -68,22 +61,14 @@ const {
  *     businessAddress: 'FLAT - 601, Block A, Elegant Height, Telco Jamshedpur',
  *     businessEmail: 'business@example.com',
  *     businessPhones: [{phone: '9631045873'}, {phone: '9876543210'}]
- *   },
- *   videoBuffer: Buffer.from(...),
- *   originalFilename: 'owner-verification.mp4',
- *   videoMimetype: 'video/mp4',
- *   videoSize: 1024000
+ *   }
  * });
  */
 async function partnerBusinessOnboarding(workflowInput) {
     const { 
         userId, 
         email, 
-        businessData,
-        videoBuffer, 
-        originalFilename,
-        videoMimetype,
-        videoSize
+        businessData
     } = workflowInput;
     
     console.log(`[Business Onboarding Workflow] Starting for user ${userId}`);
@@ -95,7 +80,6 @@ async function partnerBusinessOnboarding(workflowInput) {
         const validationResult = await validateBusinessOnboardingData({
             userId,
             businessData,
-            videoBuffer,
         });
         
         if (!validationResult.success) {
@@ -105,29 +89,12 @@ async function partnerBusinessOnboarding(workflowInput) {
         
         console.log(`[Business Onboarding] Business validation successful`);
         
-        // Step 2: Upload owner verification video to Supabase using S3 protocol
-        console.log(`[Business Onboarding] Step 2: Uploading owner verification video to Supabase`);
-        
-        const uploadResult = await uploadOwnerVideoToSupabase({
-            userId,
-            videoBuffer,
-            originalFilename,
-            videoMimetype,
-        });
-        
-        if (!uploadResult.success) {
-            throw new Error('Failed to upload owner verification video to Supabase');
-        }
-        
-        console.log(`[Business Onboarding] Video uploaded successfully: ${uploadResult.videoUrl}`);
-        
-        // Step 3: Create business record with video URL
-        console.log(`[Business Onboarding] Step 3: Creating business record`);
+        // Step 2: Create business record
+        console.log(`[Business Onboarding] Step 2: Creating business record`);
         
         const businessResult = await createPartnerBusinessRecord({
             userId,
             businessData,
-            ownerVideoUrl: uploadResult.videoUrl,
         });
         
         if (!businessResult.success) {
@@ -136,8 +103,8 @@ async function partnerBusinessOnboarding(workflowInput) {
         
         console.log(`[Business Onboarding] Business record created successfully, ID: ${businessResult.business.businessId}`);
         
-        // Step 4: Update business verification status to APPROVED
-        console.log(`[Business Onboarding] Step 4: Updating verification status to APPROVED`);
+        // Step 3: Update business verification status to APPROVED
+        console.log(`[Business Onboarding] Step 3: Updating verification status to APPROVED`);
         
         const verificationResult = await updateBusinessVerificationStatus({
             userId,
@@ -150,8 +117,8 @@ async function partnerBusinessOnboarding(workflowInput) {
         
         console.log(`[Business Onboarding] Verification status updated to APPROVED`);
         
-        // Step 5: Send onboarding notification email
-        console.log(`[Business Onboarding] Step 5: Sending notification email`);
+        // Step 4: Send onboarding notification email
+        console.log(`[Business Onboarding] Step 4: Sending notification email`);
         
         await sendBusinessOnboardingNotification({
             userId,
@@ -170,7 +137,6 @@ async function partnerBusinessOnboarding(workflowInput) {
                 businessId: businessResult.business.businessId,
                 businessName: businessData.businessName,
                 verificationStatus: 'PENDING',
-                ownerVideoUrl: uploadResult.videoUrl,
                 business: businessResult.business,
             },
         };

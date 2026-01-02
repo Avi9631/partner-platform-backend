@@ -4,15 +4,15 @@
  * Temporal activities for PG/Colive/Hostel publishing and verification workflow.
  * These activities handle validation, database operations, notifications, and status updates.
  * 
- * @module temporal/activities/pgHostel/pgHostelPublishing.activities
+ * @module temporal/activities/pgHostelPublishing.activities
  */
 
-const PgColiveHostelService = require("../../../service/PgColiveHostelService.service");
-const db = require("../../../entity");
+const PgColiveHostelService = require("../../service/PgColiveHostelService.service");
+const db = require("../../entity");
 const PgColiveHostel = db.PgColiveHostel;
 const PlatformUser = db.PlatformUser;
 const ListingDraft = db.ListingDraft;
-const logger = require("../../../config/winston.config");
+const logger = require("../../config/winston.config");
 
 /**
  * Fetch PG/Hostel data from ListingDraft entity

@@ -4,15 +4,15 @@
  * Temporal activities for project publishing and verification workflow.
  * These activities handle validation, database operations, notifications, and status updates.
  * 
- * @module temporal/activities/project/projectPublishing.activities
+ * @module temporal/activities/projectPublishing.activities
  */
 
-const ProjectService = require("../../../service/ProjectService.service");
-const db = require("../../../entity");
+const ProjectService = require("../../service/ProjectService.service");
+const db = require("../../entity");
 const Project = db.Project;
 const PlatformUser = db.PlatformUser;
 const ListingDraft = db.ListingDraft;
-const logger = require("../../../config/winston.config");
+const logger = require("../../config/winston.config");
 
 /**
  * Validate project data before publishing

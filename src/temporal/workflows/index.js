@@ -7,12 +7,12 @@
  * @module temporal/workflows
  */
 
-const { partnerUserOnboarding } = require('./user/partnerOnboarding.workflow');
-const { partnerBusinessOnboarding } = require('./user/partnerBusinessOnboarding.workflow');
-const { developerPublishing } = require('./developer/developerPublishing.workflow');
-const { pgHostelPublishing } = require('./pgHostel/pgHostelPublishing.workflow');
-const { propertyPublishing } = require('./property/propertyPublishing.workflow');
-const { projectPublishing } = require('./project/projectPublishing.workflow');
+const { partnerUserOnboarding } = require('./partnerOnboarding.workflow');
+const { partnerBusinessOnboarding } = require('./partnerBusinessOnboarding.workflow');
+const { developerPublishing } = require('./developerPublishing.workflow');
+const { pgHostelPublishing } = require('./pgHostelPublishing.workflow');
+const { propertyPublishing } = require('./propertyPublishing.workflow');
+const { projectPublishing } = require('./projectPublishing.workflow');
 
 
 /**

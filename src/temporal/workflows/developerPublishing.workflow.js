@@ -5,7 +5,7 @@
  * This workflow validates developer data, creates the developer record,
  * performs automated verification checks, and sends notifications.
  * 
- * @module temporal/workflows/developer/developerPublishing.workflow
+ * @module temporal/workflows/developerPublishing.workflow
  */
 
 const { proxyActivities } = require('@temporalio/workflow');

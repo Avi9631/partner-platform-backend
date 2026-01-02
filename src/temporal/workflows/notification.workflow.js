@@ -3,11 +3,11 @@
  * 
  * Handles sending notifications to users via multiple channels (email, push, in-app).
  * 
- * @module temporal/workflows/user/notification.workflow
+ * @module temporal/workflows/notification.workflow
  */
 
 const { proxyActivities } = require('@temporalio/workflow');
-const { ACTIVITY_OPTIONS } = require('../../config/constants');
+const { ACTIVITY_OPTIONS } = require('../config/constants');
 
 // Import type definitions for better IDE support
 /** @typedef {import('../../types').NotificationData} NotificationData */

@@ -3,12 +3,12 @@
  * 
  * Helper activity to fetch user email for notifications
  * 
- * @module temporal/activities/developer/getUserEmail
+ * @module temporal/activities/getUserEmail
  */
 
-const db = require("../../../entity");
+const db = require("../../entity");
 const PlatformUser = db.PlatformUser;
-const logger = require("../../../config/winston.config");
+const logger = require("../../config/winston.config");
 
 /**
  * Get user email by user ID

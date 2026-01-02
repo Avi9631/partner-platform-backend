@@ -5,11 +5,11 @@
  * This workflow validates profile details, uploads verification video to Supabase,
  * and updates the user record.
  * 
- * @module temporal/workflows/user/partnerOnboarding.workflow
+ * @module temporal/workflows/partnerOnboarding.workflow
  */
 
 const { proxyActivities } = require('@temporalio/workflow');
-const { ACTIVITY_OPTIONS } = require('../../config/constants');
+const { ACTIVITY_OPTIONS } = require('../config/constants');
 
 /** @typedef {import('../../types').WorkflowResult} WorkflowResult */
 

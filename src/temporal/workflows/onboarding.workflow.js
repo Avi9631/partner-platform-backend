@@ -4,11 +4,11 @@
  * Handles the complete user onboarding process including welcome emails,
  * profile setup, and initial configuration.
  * 
- * @module temporal/workflows/user/onboarding.workflow
+ * @module temporal/workflows/onboarding.workflow
  */
 
 const { proxyActivities } = require('@temporalio/workflow');
-const { ACTIVITY_OPTIONS } = require('../../config/constants');
+const { ACTIVITY_OPTIONS } = require('../config/constants');
 
 /** @typedef {import('../../types').UserData} UserData */
 /** @typedef {import('../../types').WorkflowResult} WorkflowResult */
