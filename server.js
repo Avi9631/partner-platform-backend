@@ -18,6 +18,7 @@ const projectRoute = require("./src/routes/project.route.js");
 const workflowRoute = require("./src/routes/workflow.route.js");
 const uploadRoute = require("./src/routes/upload.route.js");
 const otpAuthRoute = require("./src/routes/otpAuth.route.js");
+const creditRoute = require("./src/routes/credit.route.js");
 const logger = require("./src/config/winston.config.js");
 const app = express();
 const port = process.env.PORT || 3000;
@@ -120,6 +121,7 @@ app.use("/api/project", projectRoute);
 app.use(workflowRoute);
 app.use("/api/upload", uploadRoute);
 app.use("/api/otp", otpAuthRoute);
+app.use("/api/credit", creditRoute);
 
 const server = app.listen(port, "0.0.0.0", () => {
   console.log(`Example app listening on port ${port}`);

@@ -10,6 +10,7 @@ const logger = require('../../config/winston.config');
 const { s3, defaultBucket } = require('../../config/s3.config');
 const db = require('../../entity/index');
 const PartnerBusinessService = require('../../service/PartnerBusiness.service');
+const CreditService = require('../../service/CreditService.service');
 const fs = require('fs').promises;
 const path = require('path');
 
@@ -448,6 +449,37 @@ function getInitials(name) {
     return initials.slice(0, 2);
 }
 
+/**
+ * Add Credits Activity
+ * 
+ * Adds credits to user's wallet
+ * 
+ * @param {Object} params - Activity parameters
+ * @param {number} params.userId - User ID
+ * @param {number} params.amount - Amount of credits to add
+ * @param {string} params.reason - Reason for adding credits
+ * @param {Object} params.metadata - Additional metadata
+ * @returns {Promise<{success: boolean, message?: string}>}
+ */
+async function addCredits({ userId, amount, reason, metadata }) {
+    try {
+        logger.info(`[Add Credits Activity] Adding ${amount} credits to user ${userId}`);
+        
+        const result = await CreditService.addCredits(userId, amount, reason, metadata);
+        
+        if (!result.success) {
+            logger.error(`[Add Credits Activity] Failed to add credits: ${result.message}`);
+            return { success: false, message: result.message };
+        }
+        
+        logger.info(`[Add Credits Activity] Successfully added ${amount} credits to user ${userId}`);
+        return { success: true, transaction: result.transaction };
+    } catch (error) {
+        logger.error(`[Add Credits Activity] Error adding credits to user ${userId}:`, error);
+        return { success: false, message: error.message };
+    }
+}
+
 module.exports = {
     validateProfileData,
     validateBusinessData,
@@ -456,4 +488,5 @@ module.exports = {
     updatePartnerBusiness,
     createPartnerBusiness,
     sendOnboardingNotification,
+    addCredits,
 };

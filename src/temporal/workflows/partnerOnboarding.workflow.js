@@ -21,6 +21,7 @@ const {
     updatePartnerUser,
     // createPartnerBusiness,
     sendOnboardingNotification,
+    addCredits,
 } = proxyActivities({
     startToCloseTimeout: '5 minutes', // Longer timeout for video upload
     retry: {
@@ -176,6 +177,23 @@ async function partnerUserOnboarding(workflowInput) {
         });
         
         console.log(`[Partner Onboarding] Notification sent`);
+        
+        // Step 5: Add welcome bonus credits
+        console.log(`[Partner Onboarding] Step 5: Adding welcome bonus credits`);
+        
+        const creditResult = await addCredits({
+            userId,
+            amount: 200,
+            reason: 'Welcome bonus for completing profile onboarding',
+            metadata: { type: 'ONBOARDING_BONUS', workflowType: 'partnerUserOnboarding' },
+        });
+        
+        if (creditResult.success) {
+            console.log(`[Partner Onboarding] Added 200 credits to user wallet`);
+        } else {
+            console.error(`[Partner Onboarding] Failed to add credits: ${creditResult.message}`);
+            // Don't fail the entire workflow for credit addition failure
+        }
         
         // Return success result
         return {

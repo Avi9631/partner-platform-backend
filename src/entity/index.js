@@ -32,6 +32,7 @@ db.Developer = require("./Developer.entity.js")(sequelize, Sequelize);
 db.PgColiveHostel = require("./PgColiveHostel.entity.js")(sequelize, Sequelize);
 db.Property = require("./Property.entity.js")(sequelize, Sequelize);
 db.Project = require("./Project.entity.js")(sequelize, Sequelize);
+db.CreditTransaction = require("./CreditTransaction.entity.js")(sequelize, Sequelize);
  
 // Relationships
 // User has one PartnerBusiness (for BUSINESS account type)
@@ -161,6 +162,18 @@ db.PlatformUser.hasMany(db.Project, {
 db.Project.belongsTo(db.PlatformUser, {
     foreignKey: 'created_by',
     as: 'creator'
+});
+
+// User has many CreditTransactions
+db.PlatformUser.hasMany(db.CreditTransaction, {
+    foreignKey: 'user_id',
+    as: 'creditTransactions'
+});
+
+// CreditTransaction belongs to User
+db.CreditTransaction.belongsTo(db.PlatformUser, {
+    foreignKey: 'user_id',
+    as: 'user'
 });
  
  
