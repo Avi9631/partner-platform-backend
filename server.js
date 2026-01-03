@@ -18,7 +18,8 @@ const projectRoute = require("./src/routes/project.route.js");
 const workflowRoute = require("./src/routes/workflow.route.js");
 const uploadRoute = require("./src/routes/upload.route.js");
 const otpAuthRoute = require("./src/routes/otpAuth.route.js");
-const creditRoute = require("./src/routes/credit.route.js");
+const walletRoute = require("./src/routes/wallet.route.js");
+const healthRoute = require("./src/routes/health.route.js");
 const logger = require("./src/config/winston.config.js");
 const app = express();
 const port = process.env.PORT || 3000;
@@ -113,6 +114,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'src/uploads')));
 app.use(authRoute);
 app.use(draftRoute);
 app.use(userRoute);
+app.use("/health", healthRoute);
 app.use("/api/developer", developerRoute);
 app.use("/api/developer-consumer-api", developerConsumerApiRoute);
 app.use("/api/pg-hostel", pgHostelRoute);
@@ -121,7 +123,7 @@ app.use("/api/project", projectRoute);
 app.use(workflowRoute);
 app.use("/api/upload", uploadRoute);
 app.use("/api/otp", otpAuthRoute);
-app.use("/api/credit", creditRoute);
+app.use("/api/wallet", walletRoute);
 
 const server = app.listen(port, "0.0.0.0", () => {
   console.log(`Example app listening on port ${port}`);
@@ -139,27 +141,41 @@ const gracefulShutdown = async (signal) => {
       logger.info("HTTP server closed");
     });
 
-    // 2. Stop BullMQ worker (stops processing new jobs but completes current ones)
+    // 2. Close Temporal client connection (if enabled)
+    try {
+      const { resetTemporalClient, isTemporalEnabled } = require("./src/utils/temporalClient");
+      if (isTemporalEnabled()) {
+        console.log("Closing Temporal client connection...");
+        resetTemporalClient();
+        console.log("Temporal client connection closed");
+        logger.info("Temporal client connection closed");
+      }
+    } catch (error) {
+      // Temporal might not be initialized, that's okay
+      logger.warn("Could not close Temporal client:", error.message);
+    }
+
+    // 3. Stop BullMQ worker (stops processing new jobs but completes current ones)
     console.log("Stopping email worker...");
     await emailWorker.stopEmailWorker();
     console.log("Email worker stopped");
     logger.info("Email worker stopped");
 
-    // 3. Close BullMQ queue
+    // 4. Close BullMQ queue
     console.log("Closing email queue...");
     const { closeQueue } = require("./src/queues/emailQueue");
     await closeQueue();
     console.log("Email queue closed");
     logger.info("Email queue closed");
 
-    // 4. Close Redis connection
+    // 5. Close Redis connection
     console.log("Closing Redis connection...");
     const { closeRedisConnection } = require("./src/config/redis.config");
     await closeRedisConnection();
     console.log("Redis connection closed");
     logger.info("Redis connection closed");
 
-    // 5. Close database connections
+    // 6. Close database connections
     console.log("Closing database connections...");
     await db.sequelize.close();
     console.log("Database connections closed");

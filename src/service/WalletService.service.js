@@ -1,18 +1,18 @@
 const db = require("../entity");
-const CreditTransaction = db.CreditTransaction;
+const WalletTransaction = db.WalletTransaction;
 const PlatformUser = db.PlatformUser;
 const { Op } = require("sequelize");
 const logger = require("../config/winston.config");
 
 /**
- * Get user's current credit balance
+ * Get user's current wallet balance
  * @param {number} userId - User ID
  * @returns {Promise<{success: boolean, balance: number, message?: string}>}
  */
-const getCreditBalance = async (userId) => {
+const getWalletBalance = async (userId) => {
   try {
     // Get the latest transaction to find current balance
-    const latestTransaction = await CreditTransaction.findOne({
+    const latestTransaction = await WalletTransaction.findOne({
       where: { userId },
       order: [['transactionId', 'DESC']],
       attributes: ['balanceAfter']
@@ -25,7 +25,7 @@ const getCreditBalance = async (userId) => {
       balance
     };
   } catch (error) {
-    logger.error(`Error fetching credit balance for user ${userId}:`, error);
+    logger.error(`Error fetching wallet balance for user ${userId}:`, error);
     return {
       success: false,
       balance: 0,
@@ -35,14 +35,14 @@ const getCreditBalance = async (userId) => {
 };
 
 /**
- * Add credits to user account
+ * Add funds to user wallet
  * @param {number} userId - User ID
- * @param {number} amount - Number of credits to add
- * @param {string} reason - Reason for adding credits
+ * @param {number} amount - Number of units to add
+ * @param {string} reason - Reason for adding funds
  * @param {object} metadata - Additional metadata (optional)
  * @returns {Promise<{success: boolean, transaction?: object, message?: string}>}
  */
-const addCredits = async (userId, amount, reason, metadata = null) => {
+const addFunds = async (userId, amount, reason, metadata = null) => {
   const transaction = await db.sequelize.transaction();
   
   try {
@@ -66,31 +66,31 @@ const addCredits = async (userId, amount, reason, metadata = null) => {
     }
 
     // Get current balance
-    const currentBalanceResult = await getCreditBalance(userId);
+    const currentBalanceResult = await getWalletBalance(userId);
     const currentBalance = currentBalanceResult.balance;
     const newBalance = currentBalance + amount;
 
     // Create credit transaction
-    const creditTransaction = await CreditTransaction.create({
+    const walletTransaction = await WalletTransaction.create({
       userId,
       transactionType: 'CREDIT',
       amount,
       balanceAfter: newBalance,
-      reason: reason || 'Credits added',
+      reason: reason || 'Funds added',
       metadata
     }, { transaction });
 
     await transaction.commit();
 
-    logger.info(`Added ${amount} credits to user ${userId}. New balance: ${newBalance}`);
+    logger.info(`Added ${amount} funds to user ${userId}. New balance: ${newBalance}`);
 
     return {
       success: true,
-      transaction: creditTransaction.toJSON()
+      transaction: walletTransaction.toJSON()
     };
   } catch (error) {
     await transaction.rollback();
-    logger.error(`Error adding credits to user ${userId}:`, error);
+    logger.error(`Error adding funds to user ${userId}:`, error);
     return {
       success: false,
       message: error.message
@@ -99,14 +99,14 @@ const addCredits = async (userId, amount, reason, metadata = null) => {
 };
 
 /**
- * Deduct credits from user account
+ * Deduct funds from user wallet
  * @param {number} userId - User ID
- * @param {number} amount - Number of credits to deduct
- * @param {string} reason - Reason for deducting credits
+ * @param {number} amount - Number of units to deduct
+ * @param {string} reason - Reason for deducting funds
  * @param {object} metadata - Additional metadata (optional)
  * @returns {Promise<{success: boolean, transaction?: object, message?: string}>}
  */
-const deductCredits = async (userId, amount, reason, metadata = null) => {
+const deductFunds = async (userId, amount, reason, metadata = null) => {
   const transaction = await db.sequelize.transaction();
   
   try {
@@ -130,7 +130,7 @@ const deductCredits = async (userId, amount, reason, metadata = null) => {
     }
 
     // Get current balance
-    const currentBalanceResult = await getCreditBalance(userId);
+    const currentBalanceResult = await getWalletBalance(userId);
     const currentBalance = currentBalanceResult.balance;
 
     // Check if user has sufficient balance
@@ -138,25 +138,25 @@ const deductCredits = async (userId, amount, reason, metadata = null) => {
       await transaction.rollback();
       return {
         success: false,
-        message: `Insufficient credits. Current balance: ${currentBalance}, Required: ${amount}`
+        message: `Insufficient funds. Current balance: ${currentBalance}, Required: ${amount}`
       };
     }
 
     const newBalance = currentBalance - amount;
 
     // Create debit transaction
-    const debitTransaction = await CreditTransaction.create({
+    const debitTransaction = await WalletTransaction.create({
       userId,
       transactionType: 'DEBIT',
       amount,
       balanceAfter: newBalance,
-      reason: reason || 'Credits deducted',
+      reason: reason || 'Funds deducted',
       metadata
     }, { transaction });
 
     await transaction.commit();
 
-    logger.info(`Deducted ${amount} credits from user ${userId}. New balance: ${newBalance}`);
+    logger.info(`Deducted ${amount} funds from user ${userId}. New balance: ${newBalance}`);
 
     return {
       success: true,
@@ -164,7 +164,7 @@ const deductCredits = async (userId, amount, reason, metadata = null) => {
     };
   } catch (error) {
     await transaction.rollback();
-    logger.error(`Error deducting credits from user ${userId}:`, error);
+    logger.error(`Error deducting funds from user ${userId}:`, error);
     return {
       success: false,
       message: error.message
@@ -224,7 +224,7 @@ const getTransactionHistory = async (userId, options = {}) => {
     const offset = (page - 1) * limit;
 
     // Fetch transactions
-    const { count, rows: transactions } = await CreditTransaction.findAndCountAll({
+    const { count, rows: transactions } = await WalletTransaction.findAndCountAll({
       where: whereClause,
       limit: parseInt(limit),
       offset: parseInt(offset),
@@ -238,7 +238,7 @@ const getTransactionHistory = async (userId, options = {}) => {
     });
 
     // Get current balance
-    const balanceResult = await getCreditBalance(userId);
+    const balanceResult = await getWalletBalance(userId);
 
     return {
       success: true,
@@ -263,36 +263,36 @@ const getTransactionHistory = async (userId, options = {}) => {
 };
 
 /**
- * Check if user has sufficient credits
+ * Check if user has sufficient funds
  * @param {number} userId - User ID
- * @param {number} requiredAmount - Required credit amount
- * @returns {Promise<{success: boolean, hasSufficientCredits: boolean, currentBalance: number, message?: string}>}
+ * @param {number} requiredAmount - Required amount
+ * @returns {Promise<{success: boolean, hasSufficientFunds: boolean, currentBalance: number, message?: string}>}
  */
-const checkSufficientCredits = async (userId, requiredAmount) => {
+const checkSufficientFunds = async (userId, requiredAmount) => {
   try {
-    const balanceResult = await getCreditBalance(userId);
+    const balanceResult = await getWalletBalance(userId);
     
     if (!balanceResult.success) {
       return {
         success: false,
-        hasSufficientCredits: false,
+        hasSufficientFunds: false,
         currentBalance: 0,
         message: balanceResult.message
       };
     }
 
-    const hasSufficientCredits = balanceResult.balance >= requiredAmount;
+    const hasSufficientFunds = balanceResult.balance >= requiredAmount;
 
     return {
       success: true,
-      hasSufficientCredits,
+      hasSufficientFunds,
       currentBalance: balanceResult.balance
     };
   } catch (error) {
-    logger.error(`Error checking credits for user ${userId}:`, error);
+    logger.error(`Error checking funds for user ${userId}:`, error);
     return {
       success: false,
-      hasSufficientCredits: false,
+      hasSufficientFunds: false,
       currentBalance: 0,
       message: error.message
     };
@@ -300,11 +300,11 @@ const checkSufficientCredits = async (userId, requiredAmount) => {
 };
 
 /**
- * Get credit statistics for a user
+ * Get wallet statistics for a user
  * @param {number} userId - User ID
  * @returns {Promise<{success: boolean, stats?: object, message?: string}>}
  */
-const getCreditStats = async (userId) => {
+const getWalletStats = async (userId) => {
   try {
     const user = await PlatformUser.findByPk(userId);
     if (!user) {
@@ -314,16 +314,16 @@ const getCreditStats = async (userId) => {
       };
     }
 
-    // Get total credits earned
-    const totalEarned = await CreditTransaction.sum('amount', {
+    // Get total funds earned
+    const totalEarned = await WalletTransaction.sum('amount', {
       where: {
         userId,
         transactionType: 'CREDIT'
       }
     });
 
-    // Get total credits spent
-    const totalSpent = await CreditTransaction.sum('amount', {
+    // Get total funds spent
+    const totalSpent = await WalletTransaction.sum('amount', {
       where: {
         userId,
         transactionType: 'DEBIT'
@@ -331,10 +331,10 @@ const getCreditStats = async (userId) => {
     });
 
     // Get current balance
-    const balanceResult = await getCreditBalance(userId);
+    const balanceResult = await getWalletBalance(userId);
 
     // Get transaction count
-    const transactionCount = await CreditTransaction.count({
+    const transactionCount = await WalletTransaction.count({
       where: { userId }
     });
 
@@ -348,7 +348,7 @@ const getCreditStats = async (userId) => {
       }
     };
   } catch (error) {
-    logger.error(`Error fetching credit stats for user ${userId}:`, error);
+    logger.error(`Error fetching wallet stats for user ${userId}:`, error);
     return {
       success: false,
       message: error.message
@@ -357,10 +357,10 @@ const getCreditStats = async (userId) => {
 };
 
 module.exports = {
-  getCreditBalance,
-  addCredits,
-  deductCredits,
+  getWalletBalance,
+  addFunds,
+  deductFunds,
   getTransactionHistory,
-  checkSufficientCredits,
-  getCreditStats
+  checkSufficientFunds,
+  getWalletStats
 };

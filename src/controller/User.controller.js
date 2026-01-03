@@ -2,7 +2,7 @@ const logger = require("../config/winston.config.js");
 const UserService = require("../service/UserService.service.js");
 const PartnerBusinessService = require("../service/PartnerBusiness.service.js");
 const { ApiResponse } = require("../utils/responseFormatter.js");
-const { startWorkflow } = require("../utils/temporalClient.js");
+const { runWorkflowAsync, runWorkflowDirect, WORKFLOWS } = require("../utils/workflowHelper.js");
 
 /**
  * Get user by userId (from authenticated request)
@@ -306,105 +306,79 @@ async function onboardUser(req, res, next) {
     // Get user email for notification
     const currentUser = await UserService.getUser(userId);
     
-    // Check if Temporal is available
+    // Check if Temporal is enabled
     const temporalEnabled = process.env.TEMPORAL_ENABLED === 'true';
+    const workflowId = `partner-onboarding-${userId}-${Date.now()}`;
+    
+    let wfId, mode;
     
     if (temporalEnabled) {
-      // Start temporal workflow for partner user onboarding
-      const workflowId = `partner-onboarding-${userId}-${Date.now()}`;
-      
-      try {
-        const { workflowId: wfId } = await startWorkflow(
-          'partnerUserOnboarding',
-          {
-            userId,
-            email: currentUser.email,
-            profileData: {
-              firstName: updateFields.firstName,
-              lastName: updateFields.lastName,
-              phone: updateFields.phone,
-              latitude: updateFields.latitude,
-              longitude: updateFields.longitude,
-              address: updateFields.address,
-              // accountType: updateFields.accountType,
-            },
-            // businessData: businessFields,
-            videoBuffer: profileVideo.buffer,
-            originalFilename: profileVideo.originalname,
-            videoMimetype: profileVideo.mimetype,
-            videoSize: profileVideo.size,
+      // Use Temporal workflow
+      const result = await runWorkflowAsync(
+        WORKFLOWS.PARTNER_ONBOARDING,
+        {
+          userId,
+          email: currentUser.email,
+          profileData: {
+            firstName: updateFields.firstName,
+            lastName: updateFields.lastName,
+            phone: updateFields.phone,
+            latitude: updateFields.latitude,
+            longitude: updateFields.longitude,
+            address: updateFields.address,
           },
-          workflowId
-        );
-
-        logger.info(`Partner onboarding workflow started for user ${userId}: ${wfId}`);
-
-        // Return accepted status immediately - workflow processes async
-        return apiResponse
-          .status(202)
-          .withMessage("Onboarding profile submitted for verification. Processing in progress.")
-          .withData({ 
-            workflowId: wfId,
-            status: 'processing',
-            message: 'Your profile is being processed. You will receive an email once verification is approved.'
-          })
-          .withMeta({
-            userId: userId,
-            onboardingSubmitted: true,
-            workflowStarted: true,
-            note: 'profileCompleted will be set to true when admin approves verification'
-          })
-          .success();
-
-      } catch (workflowError) {
-        logger.error(`Failed to start partner onboarding workflow for user ${userId}. Falling back to direct update.`, workflowError);
-        // Fall through to direct update
-      }
+          videoBuffer: profileVideo.buffer,
+          originalFilename: profileVideo.originalname,
+          videoMimetype: profileVideo.mimetype,
+          videoSize: profileVideo.size,
+        },
+        workflowId
+      );
+      wfId = result.workflowId;
+      mode = result.mode;
+    } else {
+      // Use skip-workflow (direct execution)
+      const result = await runWorkflowDirect(
+        WORKFLOWS.PARTNER_ONBOARDING,
+        {
+          userId,
+          email: currentUser.email,
+          profileData: {
+            firstName: updateFields.firstName,
+            lastName: updateFields.lastName,
+            phone: updateFields.phone,
+            latitude: updateFields.latitude,
+            longitude: updateFields.longitude,
+            address: updateFields.address,
+          },
+          videoBuffer: profileVideo.buffer,
+          originalFilename: profileVideo.originalname,
+          videoMimetype: profileVideo.mimetype,
+          videoSize: profileVideo.size,
+        },
+        workflowId
+      );
+      wfId = result.workflowId;
+      mode = 'direct';
     }
-    
-    // Fallback: Direct database update (when Temporal is disabled or fails)
-    logger.info(`Processing onboarding directly for user ${userId} (Temporal: ${temporalEnabled ? 'failed' : 'disabled'})`);
-    
-    // Create business profile if BUSINESS account type
-    // if (businessFields) {
-    //   try {
-    //     await PartnerBusinessService.createOrUpdateBusiness(userId, businessFields);
-    //     logger.info(`Business profile created during onboarding for user ${userId}`);
-    //   } catch (businessError) {
-    //     logger.error(`Failed to create business profile during onboarding for user ${userId}:`, businessError);
-    //     return apiResponse
-    //       .status(500)
-    //       .withMessage("Failed to create business profile")
-    //       .withError(businessError.message, "BUSINESS_PROFILE_ERROR", "onboardUser")
-    //       .error();
-    //   }
-    // }
 
-    // Update user with onboarding data
-    const updatedUser = await UserService.updateUser(userId, updateFields, false);
-    
-    // Include business data in response if BUSINESS account type
-    // let businessData = null;
-    // if (updatedUser.accountType === 'BUSINESS') {
-    //   try {
-    //     businessData = await PartnerBusinessService.getBusinessByUserId(userId);
-    //   } catch (businessError) {
-    //     logger.warn(`Could not fetch business data for user ${userId}:`, businessError);
-    //   }
-    // }
+    logger.info(`Partner onboarding workflow started for user ${userId}: ${wfId} (mode: ${mode})`);
 
-    apiResponse
-      .status(200)
-      .withMessage("Onboarding profile submitted for verification successfully")
+    // Return accepted status immediately - workflow processes async
+    return apiResponse
+      .status(202)
+      .withMessage("Onboarding profile submitted for verification. Processing in progress.")
       .withData({ 
-        user: updatedUser,
-        // business: businessData
+        workflowId: wfId,
+        status: 'processing',
+        message: 'Your profile is being processed. You will receive an email once verification is approved.',
+        executionMode: mode,
+        usingTemporal: temporalEnabled
       })
       .withMeta({
         userId: userId,
         onboardingSubmitted: true,
-        profileVideoUploaded: true,
-        verificationStatus: 'PENDING',
+        workflowStarted: true,
         note: 'profileCompleted will be set to true when admin approves verification'
       })
       .success();
@@ -648,56 +622,71 @@ async function onboardBusinessPartner(req, res, next) {
     // Get user email for notification
     const currentUser = await UserService.getUser(userId);
     
-    // Check if Temporal is available
+    // Check if Temporal is enabled
     const temporalEnabled = process.env.TEMPORAL_ENABLED === 'true';
+    const workflowId = `business-onboarding-${userId}-${Date.now()}`;
+    
+    let wfId, mode;
     
     if (temporalEnabled) {
-      // Start temporal workflow for business partner onboarding
-      const workflowId = `business-onboarding-${userId}-${Date.now()}`;
-      
-      try {
-        const { workflowId: wfId } = await startWorkflow(
-          'partnerBusinessOnboarding',
-          {
-            userId,
-            email: currentUser.email,
-            businessData: {
-              businessName: businessData.businessName,
-              registrationNumber: businessData.registrationNumber,
-              businessAddress: businessData.businessAddress,
-              businessEmail: businessData.businessEmail,
-              businessPhones: businessData.businessPhones,
-            },
+      // Use Temporal workflow
+      const result = await runWorkflowAsync(
+        WORKFLOWS.PARTNER_BUSINESS_ONBOARDING,
+        {
+          userId,
+          email: currentUser.email,
+          businessData: {
+            businessName: businessData.businessName,
+            registrationNumber: businessData.registrationNumber,
+            businessAddress: businessData.businessAddress,
+            businessEmail: businessData.businessEmail,
+            businessPhones: businessData.businessPhones,
           },
-          workflowId
-        );
-
-        logger.info(`Business onboarding workflow started for user ${userId}: ${wfId}`);
-
-        // Return accepted status immediately - workflow processes async
-        return apiResponse
-          .status(202)
-          .withMessage("Business profile submitted for verification. Processing in progress.")
-          .withData({ 
-            workflowId: wfId,
-            status: 'processing',
-            message: 'Your business profile is being processed. You will receive an email once verification is complete.'
-          })
-          .withMeta({
-            userId: userId,
-            businessOnboardingSubmitted: true,
-            workflowStarted: true,
-          })
-          .success();
-
-      } catch (workflowError) {
-        logger.error(`Failed to start business onboarding workflow for user ${userId}. Falling back to direct update.`, workflowError);
-        // Fall through to direct update
-      }
+        },
+        workflowId
+      );
+      wfId = result.workflowId;
+      mode = result.mode;
+    } else {
+      // Use skip-workflow (direct execution)
+      const result = await runWorkflowDirect(
+        WORKFLOWS.PARTNER_BUSINESS_ONBOARDING,
+        {
+          userId,
+          email: currentUser.email,
+          businessData: {
+            businessName: businessData.businessName,
+            registrationNumber: businessData.registrationNumber,
+            businessAddress: businessData.businessAddress,
+            businessEmail: businessData.businessEmail,
+            businessPhones: businessData.businessPhones,
+          },
+        },
+        workflowId
+      );
+      wfId = result.workflowId;
+      mode = 'direct';
     }
-    
-    // Fallback: Direct database update (when Temporal is disabled or fails)
-    logger.info(`Processing business onboarding directly for user ${userId} (Temporal: ${temporalEnabled ? 'failed' : 'disabled'})`);
+
+    logger.info(`Business onboarding workflow started for user ${userId}: ${wfId} (mode: ${mode})`);
+
+    // Return accepted status immediately - workflow processes async
+    return apiResponse
+      .status(202)
+      .withMessage("Business profile submitted for verification. Processing in progress.")
+      .withData({ 
+        workflowId: wfId,
+        status: 'processing',
+        message: 'Your business profile is being processed. You will receive an email once verification is complete.',
+        executionMode: mode,
+        usingTemporal: temporalEnabled
+      })
+      .withMeta({
+        userId: userId,
+        businessOnboardingSubmitted: true,
+        workflowStarted: true,
+      })
+      .success();
     
     // Create business profile using service
     try {

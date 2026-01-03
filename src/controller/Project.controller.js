@@ -1,6 +1,6 @@
 const ProjectService = require("../service/ProjectService.service");
 const { sendErrorResponse, sendSuccessResponse } = require("../utils/responseFormatter");
-const { getTemporalClient } = require("../utils/temporalClient");
+const { runWorkflowAsync, runWorkflowDirect, WORKFLOWS } = require("../utils/workflowHelper");
 const logger = require("../config/winston.config");
 const db = require("../entity");
 const ListingDraft = db.ListingDraft;
@@ -53,52 +53,54 @@ const publishProject = async (req, res) => {
       }
     }
 
-    // Start Temporal workflow for project publishing (non-blocking)
-    try {
-      const temporalClient = await getTemporalClient();
-      const workflowId = `project-publish-${userId}-${Date.now()}`;
+    // Check if Temporal is enabled
+    const temporalEnabled = process.env.TEMPORAL_ENABLED === 'true';
+    const workflowId = `project-publish-${userId}-${Date.now()}`;
 
-      await temporalClient.workflow.start('projectPublishing', {
-        taskQueue: 'partner-platform-queue',
-        workflowId,
-        args: [{
+    let wfId, mode;
+
+    if (temporalEnabled) {
+      // Use Temporal workflow
+      const result = await runWorkflowAsync(
+        WORKFLOWS.PROJECT_PUBLISHING,
+        {
           userId,
           draftId: draftId || null,
           projectData
-        }]
-      });
-
-      logger.info(`Started project publishing workflow: ${workflowId}`);
-
-      // Return immediately without waiting for workflow completion
-      return sendSuccessResponse(
-        res,
-        { 
-          workflowId,
-          message: 'Project publishing workflow started successfully'
         },
-        'Project is being processed',
-        202
+        workflowId
       );
-    } catch (temporalError) {
-      logger.error(`Temporal workflow error: ${temporalError.message}`);
-      
-      // Fallback to direct creation if Temporal is unavailable
-      logger.info('Temporal unavailable, falling back to direct project creation');
-      
-      const result = await ProjectService.createProject(userId, draftId, projectData);
-      
-      if (!result.success) {
-        return sendErrorResponse(res, result.message, result.statusCode);
-      }
-
-      return sendSuccessResponse(
-        res,
-        result.data,
-        result.message,
-        result.statusCode
+      wfId = result.workflowId;
+      mode = result.mode;
+    } else {
+      // Use skip-workflow (direct execution)
+      const result = await runWorkflowDirect(
+        WORKFLOWS.PROJECT_PUBLISHING,
+        {
+          userId,
+          draftId: draftId || null,
+          projectData
+        },
+        workflowId
       );
+      wfId = result.workflowId;
+      mode = 'direct';
     }
+
+    logger.info(`Started project publishing workflow: ${wfId} (mode: ${mode})`);
+
+    // Return immediately without waiting for workflow completion
+    return sendSuccessResponse(
+      res,
+      { 
+        workflowId: wfId,
+        executionMode: mode,
+        usingTemporal: temporalEnabled,
+        message: 'Project publishing workflow started successfully'
+      },
+      'Project is being processed',
+      202
+    );
 
   } catch (error) {
     logger.error(`Error in publishProject controller: ${error.message}`, {

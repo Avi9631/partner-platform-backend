@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-  const CreditTransaction = sequelize.define("credit_transaction", {
+  const WalletTransaction = sequelize.define("wallet_transaction", {
     transactionId: {
       type: Sequelize.INTEGER,
       primaryKey: true,
@@ -21,8 +21,7 @@ module.exports = (sequelize, Sequelize) => {
     transactionType: {
       type: Sequelize.ENUM('CREDIT', 'DEBIT'),
       field: "transaction_type",
-      allowNull: false,
-      comment: "CREDIT for adding credits, DEBIT for removing credits"
+      allowNull: false
     },
     amount: {
       type: Sequelize.INTEGER,
@@ -31,19 +30,19 @@ module.exports = (sequelize, Sequelize) => {
       validate: {
         min: 1
       },
-      comment: "Number of credits added or removed"
+      comment: "Number of units added or removed"
     },
     balanceAfter: {
       type: Sequelize.INTEGER,
       field: "balance_after",
       allowNull: false,
-      comment: "Credit balance after this transaction"
+      comment: "Wallet balance after this transaction"
     },
     reason: {
       type: Sequelize.STRING(500),
       field: "reason",
       allowNull: true,
-      comment: "Reason for credit transaction (e.g., 'Property listing purchase', 'Admin credit adjustment')"
+      comment: "Reason for wallet transaction (e.g., 'Property listing purchase', 'Admin balance adjustment')"
     },
     metadata: {
       type: Sequelize.JSONB,
@@ -62,7 +61,7 @@ module.exports = (sequelize, Sequelize) => {
       defaultValue: Sequelize.NOW,
     },
   }, {
-    tableName: "credit_transaction",
+    tableName: "wallet_transaction",
     timestamps: true,
     createdAt: 'created_at',
     updatedAt: 'updated_at',
@@ -79,5 +78,5 @@ module.exports = (sequelize, Sequelize) => {
     ]
   });
 
-  return CreditTransaction;
+  return WalletTransaction;
 };

@@ -17,28 +17,42 @@ const activities = require('./activities/registry');
  */
 
 /**
+ * Sleep helper for retry delays
+ * @param {number} ms - Milliseconds to sleep
+ */
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+/**
  * Start Temporal Worker
  * 
  * Initializes and starts the Temporal worker with proper configuration.
  * The worker will process tasks from the configured task queue.
+ * Includes retry logic for connection failures.
  * 
  * @returns {Promise<void>}
  */
 async function startWorker() {
-    try {
-        logger.info('='.repeat(60));
-        logger.info('Starting Temporal Worker...');
-        logger.info('='.repeat(60));
-        
-        // Create connection to Temporal Server
-        logger.info(`Connecting to Temporal Server at ${temporalConfig.address}...`);
-        const connection = await NativeConnection.connect({
-            address: temporalConfig.address,
-        });
-        
-        logger.info(`✓ Connected to Temporal Server`);
-        logger.info(`  Namespace: ${temporalConfig.namespace}`);
-        logger.info(`  Task Queue: ${temporalConfig.taskQueue}`);
+    const MAX_RETRY_ATTEMPTS = 5;
+    const RETRY_DELAY_MS = 3000;
+    
+    for (let attempt = 1; attempt <= MAX_RETRY_ATTEMPTS; attempt++) {
+        try {
+            logger.info('='.repeat(60));
+            logger.info(`Starting Temporal Worker (attempt ${attempt}/${MAX_RETRY_ATTEMPTS})...`);
+            logger.info('='.repeat(60));
+            
+            // Create connection to Temporal Server with timeout
+            logger.info(`Connecting to Temporal Server at ${temporalConfig.address}...`);
+            const connection = await NativeConnection.connect({
+                address: temporalConfig.address,
+                connectTimeout: 10000, // 10 second timeout
+            });
+            
+            logger.info(`✓ Connected to Temporal Server`);
+            logger.info(`  Namespace: ${temporalConfig.namespace}`);
+            logger.info(`  Task Queue: ${temporalConfig.taskQueue}`);
         
         // Create and start worker
         const worker = await Worker.create({
@@ -82,19 +96,50 @@ async function startWorker() {
         // Run the worker
         await worker.run();
         
+        // If we reach here, worker stopped normally
+        return;
+        
     } catch (error) {
+        logger.error(`Failed to start Temporal Worker (attempt ${attempt}/${MAX_RETRY_ATTEMPTS}):`, error.message);
+        
+        // Check if this is a connection error
+        const isConnectionError = error.message.includes('ECONNREFUSED') || 
+                                   error.message.includes('ENOTFOUND') ||
+                                   error.message.includes('ETIMEDOUT') ||
+                                   error.code === 'ECONNREFUSED';
+        
+        // Retry on connection errors, but not on configuration errors
+        if (isConnectionError && attempt < MAX_RETRY_ATTEMPTS) {
+            const delayMs = RETRY_DELAY_MS * attempt; // Exponential backoff
+            console.error(`\n✗ Connection failed (attempt ${attempt}/${MAX_RETRY_ATTEMPTS})`);
+            console.error(`  ${error.message}`);
+            console.error(`  Retrying in ${delayMs / 1000} seconds...\n`);
+            await sleep(delayMs);
+            continue; // Retry the loop
+        }
+        
+        // Final failure - log and exit
         logger.error('Failed to start Temporal Worker:', error);
         console.error('\n✗ Failed to start Temporal Worker:');
         console.error(`  ${error.message}\n`);
         
         // Provide helpful error messages
-        if (error.message.includes('ECONNREFUSED')) {
-            console.error('  Temporal Server is not running. Please start it with:');
-            console.error('  temporal server start-dev\n');
+        if (isConnectionError) {
+            console.error('  Temporal Server is not running or not accessible. Please:');
+            console.error('  1. Start Temporal Server: temporal server start-dev');
+            console.error('  2. Check if port 7233 is available');
+            console.error('  3. Verify TEMPORAL_ADDRESS in your environment\n');
         }
         
         process.exit(1);
     }
+  }
+  
+  // If all retries exhausted without success
+  logger.error('Failed to start Temporal Worker after all retry attempts');
+  console.error('\n✗ Could not connect to Temporal Server after multiple attempts');
+  console.error('  Please ensure Temporal is running on port 7233\n');
+  process.exit(1);
 }
 
 // Start worker if run directly

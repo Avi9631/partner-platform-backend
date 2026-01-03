@@ -10,7 +10,7 @@ const logger = require('../../config/winston.config');
 const { s3, defaultBucket } = require('../../config/s3.config');
 const db = require('../../entity/index');
 const PartnerBusinessService = require('../../service/PartnerBusiness.service');
-const CreditService = require('../../service/CreditService.service');
+const WalletService = require('../../service/WalletService.service');
 const fs = require('fs').promises;
 const path = require('path');
 
@@ -465,7 +465,7 @@ async function addCredits({ userId, amount, reason, metadata }) {
     try {
         logger.info(`[Add Credits Activity] Adding ${amount} credits to user ${userId}`);
         
-        const result = await CreditService.addCredits(userId, amount, reason, metadata);
+        const result = await WalletService.addFunds(userId, amount, reason, metadata);
         
         if (!result.success) {
             logger.error(`[Add Credits Activity] Failed to add credits: ${result.message}`);

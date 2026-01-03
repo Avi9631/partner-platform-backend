@@ -1,28 +1,28 @@
-# Credit Management System
+# Wallet Management System
 
-This module provides a complete credit management system for the partner platform, allowing users to track, add, and deduct credits with full transaction history.
+This module provides a complete wallet management system for the partner platform, allowing users to track, add, and deduct funds with full transaction history.
 
 ## Features
 
-- ✅ Add credits to user accounts
-- ✅ Deduct credits from user accounts
-- ✅ Get current credit balance
+- ✅ Add funds to user wallets
+- ✅ Deduct funds from user wallets
+- ✅ Get current wallet balance
 - ✅ Transaction history with pagination
-- ✅ Credit statistics (total earned, spent, etc.)
-- ✅ Check sufficient credits before operations
+- ✅ Wallet statistics (total earned, spent, etc.)
+- ✅ Check sufficient funds before operations
 - ✅ Complete audit trail with metadata support
 
 ## Database Schema
 
-### credit_transaction table
+### wallet_transaction table
 
 | Column | Type | Description |
 |--------|------|-------------|
 | transaction_id | SERIAL | Primary key |
 | user_id | INTEGER | User who owns this transaction (FK to platform_user) |
 | transaction_type | ENUM | 'CREDIT' or 'DEBIT' |
-| amount | INTEGER | Number of credits added or removed |
-| balance_after | INTEGER | Credit balance after this transaction |
+| amount | INTEGER | Number of units added or removed |
+| balance_after | INTEGER | Wallet balance after this transaction |
 | reason | VARCHAR(500) | Reason for transaction |
 | reference_type | VARCHAR(50) | Type of reference (e.g., 'PROPERTY', 'PROJECT') |
 | reference_id | INTEGER | ID of the related entity |
@@ -33,9 +33,9 @@ This module provides a complete credit management system for the partner platfor
 
 ## API Endpoints
 
-### 1. Get Credit Balance
+### 1. Get Wallet Balance
 ```http
-GET /api/credit/balance
+GET /api/wallet/balance
 Authorization: Bearer <token>
 ```
 
@@ -43,7 +43,7 @@ Authorization: Bearer <token>
 ```json
 {
   "success": true,
-  "message": "Credit balance fetched successfully",
+  "message": "Wallet balance fetched successfully",
   "data": {
     "balance": 100
   }
@@ -52,7 +52,7 @@ Authorization: Bearer <token>
 
 ### 2. Get Transaction History
 ```http
-GET /api/credit/transactions?page=1&limit=20&transactionType=CREDIT
+GET /api/wallet/transactions?page=1&limit=20&transactionType=CREDIT
 Authorization: Bearer <token>
 ```
 
@@ -94,9 +94,9 @@ Authorization: Bearer <token>
 }
 ```
 
-### 3. Get Credit Statistics
+### 3. Get Wallet Statistics
 ```http
-GET /api/credit/stats
+GET /api/wallet/stats
 Authorization: Bearer <token>
 ```
 
@@ -104,7 +104,7 @@ Authorization: Bearer <token>
 ```json
 {
   "success": true,
-  "message": "Credit statistics fetched successfully",
+  "message": "Wallet statistics fetched successfully",
   "data": {
     "currentBalance": 150,
     "totalEarned": 200,
@@ -114,9 +114,9 @@ Authorization: Bearer <token>
 }
 ```
 
-### 4. Add Credits (Admin)
+### 4. Add Funds (Admin)
 ```http
-POST /api/credit/add
+POST /api/wallet/add
 Authorization: Bearer <token>
 Content-Type: application/json
 
@@ -135,7 +135,7 @@ Content-Type: application/json
 ```json
 {
   "success": true,
-  "message": "Credits added successfully",
+  "message": "Funds added successfully",
   "data": {
     "transactionId": 1,
     "userId": 123,
@@ -148,9 +148,9 @@ Content-Type: application/json
 }
 ```
 
-### 5. Deduct Credits (Admin)
+### 5. Deduct Funds (Admin)
 ```http
-POST /api/credit/deduct
+POST /api/wallet/deduct
 Authorization: Bearer <token>
 Content-Type: application/json
 
@@ -167,7 +167,7 @@ Content-Type: application/json
 ```json
 {
   "success": true,
-  "message": "Credits deducted successfully",
+  "message": "Funds deducted successfully",
   "data": {
     "transactionId": 2,
     "userId": 123,
@@ -180,9 +180,9 @@ Content-Type: application/json
 }
 ```
 
-### 6. Check Sufficient Credits
+### 6. Check Sufficient Funds
 ```http
-POST /api/credit/check
+POST /api/wallet/check
 Authorization: Bearer <token>
 Content-Type: application/json
 
@@ -195,9 +195,9 @@ Content-Type: application/json
 ```json
 {
   "success": true,
-  "message": "Sufficient credits available",
+  "message": "Sufficient funds available",
   "data": {
-    "hasSufficientCredits": true,
+    "hasSufficientFunds": true,
     "currentBalance": 100,
     "requiredAmount": 50
   }
@@ -206,21 +206,21 @@ Content-Type: application/json
 
 ## Service Methods
 
-The `CreditService` provides the following utility methods:
+The `WalletService` provides the following utility methods:
 
-### getCreditBalance(userId)
-Get the current credit balance for a user.
+### getWalletBalance(userId)
+Get the current wallet balance for a user.
 
 ```javascript
-const result = await CreditService.getCreditBalance(userId);
+const result = await WalletService.getWalletBalance(userId);
 // Returns: { success: boolean, balance: number, message?: string }
 ```
 
-### addCredits(userId, amount, reason, referenceType, referenceId, performedBy, metadata)
-Add credits to a user account.
+### addFunds(userId, amount, reason, referenceType, referenceId, performedBy, metadata)
+Add funds to a user wallet.
 
 ```javascript
-const result = await CreditService.addCredits(
+const result = await WalletService.addFunds(
   userId, 
   100, 
   'Welcome bonus',
@@ -232,11 +232,11 @@ const result = await CreditService.addCredits(
 // Returns: { success: boolean, transaction?: object, message?: string }
 ```
 
-### deductCredits(userId, amount, reason, referenceType, referenceId, performedBy, metadata)
-Deduct credits from a user account (with sufficient balance check).
+### deductFunds(userId, amount, reason, referenceType, referenceId, performedBy, metadata)
+Deduct funds from a user wallet (with sufficient balance check).
 
 ```javascript
-const result = await CreditService.deductCredits(
+const result = await WalletService.deductFunds(
   userId,
   50,
   'Property listing',
@@ -252,7 +252,7 @@ const result = await CreditService.deductCredits(
 Get paginated transaction history with filters.
 
 ```javascript
-const result = await CreditService.getTransactionHistory(userId, {
+const result = await WalletService.getTransactionHistory(userId, {
   page: 1,
   limit: 20,
   transactionType: 'CREDIT',
@@ -262,50 +262,50 @@ const result = await CreditService.getTransactionHistory(userId, {
 // Returns: { success: boolean, data?: object, message?: string }
 ```
 
-### checkSufficientCredits(userId, requiredAmount)
-Check if user has sufficient credits for an operation.
+### checkSufficientFunds(userId, requiredAmount)
+Check if user has sufficient funds for an operation.
 
 ```javascript
-const result = await CreditService.checkSufficientCredits(userId, 50);
-// Returns: { success: boolean, hasSufficientCredits: boolean, currentBalance: number, message?: string }
+const result = await WalletService.checkSufficientFunds(userId, 50);
+// Returns: { success: boolean, hasSufficientFunds: boolean, currentBalance: number, message?: string }
 ```
 
-### getCreditStats(userId)
-Get credit statistics for a user.
+### getWalletStats(userId)
+Get wallet statistics for a user.
 
 ```javascript
-const result = await CreditService.getCreditStats(userId);
+const result = await WalletService.getWalletStats(userId);
 // Returns: { success: boolean, stats?: object, message?: string }
 ```
 
 ## Usage Examples
 
-### Example 1: Property Listing with Credit Deduction
+### Example 1: Property Listing with Wallet Deduction
 
 ```javascript
 const PropertyController = {
   publishProperty: async (req, res) => {
     const userId = req.user.userId;
-    const creditCost = 10; // Cost to publish a property
+    const walletCost = 10; // Cost to publish a property
     
-    // Check if user has sufficient credits
-    const creditCheck = await CreditService.checkSufficientCredits(userId, creditCost);
+    // Check if user has sufficient funds
+    const walletCheck = await WalletService.checkSufficientFunds(userId, walletCost);
     
-    if (!creditCheck.hasSufficientCredits) {
-      return sendErrorResponse(res, 'Insufficient credits to publish property', 400);
+    if (!walletCheck.hasSufficientFunds) {
+      return sendErrorResponse(res, 'Insufficient funds to publish property', 400);
     }
     
-    // Deduct credits
-    const deductResult = await CreditService.deductCredits(
+    // Deduct funds
+    const deductResult = await WalletService.deductFunds(
       userId,
-      creditCost,
+      walletCost,
       'Property listing published',
       'PROPERTY',
       propertyId
     );
     
     if (!deductResult.success) {
-      return sendErrorResponse(res, 'Failed to deduct credits', 500);
+      return sendErrorResponse(res, 'Failed to deduct funds', 500);
     }
     
     // Proceed with property publishing...
@@ -313,11 +313,11 @@ const PropertyController = {
 };
 ```
 
-### Example 2: Admin Credit Management
+### Example 2: Admin Wallet Management
 
 ```javascript
 // Add welcome bonus for new users
-const result = await CreditService.addCredits(
+const result = await WalletService.addFunds(
   newUserId,
   100,
   'Welcome bonus for new user',
@@ -327,8 +327,8 @@ const result = await CreditService.addCredits(
   { campaign: 'WELCOME_2026' }
 );
 
-// Refund credits for cancelled listing
-const refundResult = await CreditService.addCredits(
+// Refund funds for cancelled listing
+const refundResult = await WalletService.addFunds(
   userId,
   10,
   'Refund for cancelled property listing',
@@ -341,10 +341,10 @@ const refundResult = await CreditService.addCredits(
 
 ## Migration
 
-Run the migration to create the `credit_transaction` table:
+Run the migration to create the `wallet_transaction` table:
 
 ```sql
--- See migrations/create-credit-transaction-table.sql
+-- See migrations/create-wallet-transaction-table.sql
 ```
 
 ## Error Handling
@@ -364,15 +364,15 @@ Always check the `success` property before using the returned data.
 ## Security Considerations
 
 1. **Admin Routes**: The `/add` and `/deduct` endpoints should be restricted to admin users only. Consider adding an admin role check middleware.
-2. **Rate Limiting**: Implement rate limiting on credit-related endpoints to prevent abuse.
+2. **Rate Limiting**: Implement rate limiting on wallet-related endpoints to prevent abuse.
 3. **Audit Trail**: All transactions are logged with timestamps and performer information for accountability.
-4. **Balance Validation**: The service automatically checks for sufficient balance before deducting credits.
+4. **Balance Validation**: The service automatically checks for sufficient balance before deducting funds.
 
 ## Future Enhancements
 
-- [ ] Add credit packages and pricing
-- [ ] Implement credit expiration dates
-- [ ] Add bulk credit operations
-- [ ] Create credit transfer between users
+- [ ] Add wallet packages and pricing
+- [ ] Implement fund expiration dates
+- [ ] Add bulk wallet operations
+- [ ] Create fund transfer between users
 - [ ] Add webhook notifications for low balance
 - [ ] Generate transaction receipts/invoices

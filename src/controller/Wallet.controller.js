@@ -1,36 +1,36 @@
-const CreditService = require("../service/CreditService.service");
+const WalletService = require("../service/WalletService.service");
 const { sendErrorResponse, sendSuccessResponse } = require("../utils/responseFormatter");
 const logger = require("../config/winston.config");
 
 /**
- * Get credit balance for authenticated user
- * GET /api/credit/balance
+ * Get wallet balance for authenticated user
+ * GET /api/wallet/balance
  */
-const getCreditBalance = async (req, res) => {
+const getWalletBalance = async (req, res) => {
   try {
     const userId = req.user.userId;
 
-    const result = await CreditService.getCreditBalance(userId);
+    const result = await WalletService.getWalletBalance(userId);
 
     if (!result.success) {
-      return sendErrorResponse(res, result.message || 'Failed to fetch credit balance', 500);
+      return sendErrorResponse(res, result.message || 'Failed to fetch wallet balance', 500);
     }
 
     return sendSuccessResponse(
       res,
       { balance: result.balance },
-      'Credit balance fetched successfully',
+      'Wallet balance fetched successfully',
       200
     );
   } catch (error) {
-    logger.error('Error in getCreditBalance controller:', error);
-    return sendErrorResponse(res, 'Failed to fetch credit balance', 500);
+    logger.error('Error in getWalletBalance controller:', error);
+    return sendErrorResponse(res, 'Failed to fetch wallet balance', 500);
   }
 };
 
 /**
  * Get transaction history with pagination
- * GET /api/credit/transactions
+ * GET /api/wallet/transactions
  * @query page - Page number (default: 1)
  * @query limit - Items per page (default: 20)
  * @query transactionType - Filter by CREDIT or DEBIT
@@ -49,7 +49,7 @@ const getTransactionHistory = async (req, res) => {
       endDate
     } = req.query;
 
-    const result = await CreditService.getTransactionHistory(userId, {
+    const result = await WalletService.getTransactionHistory(userId, {
       page,
       limit,
       transactionType,
@@ -74,40 +74,40 @@ const getTransactionHistory = async (req, res) => {
 };
 
 /**
- * Get credit statistics for authenticated user
- * GET /api/credit/stats
+ * Get wallet statistics for authenticated user
+ * GET /api/wallet/stats
  */
-const getCreditStats = async (req, res) => {
+const getWalletStats = async (req, res) => {
   try {
     const userId = req.user.userId;
 
-    const result = await CreditService.getCreditStats(userId);
+    const result = await WalletService.getWalletStats(userId);
 
     if (!result.success) {
-      return sendErrorResponse(res, result.message || 'Failed to fetch credit statistics', 500);
+      return sendErrorResponse(res, result.message || 'Failed to fetch wallet statistics', 500);
     }
 
     return sendSuccessResponse(
       res,
       result.stats,
-      'Credit statistics fetched successfully',
+      'Wallet statistics fetched successfully',
       200
     );
   } catch (error) {
-    logger.error('Error in getCreditStats controller:', error);
-    return sendErrorResponse(res, 'Failed to fetch credit statistics', 500);
+    logger.error('Error in getWalletStats controller:', error);
+    return sendErrorResponse(res, 'Failed to fetch wallet statistics', 500);
   }
 };
 
 /**
- * Add credits to a user account (Admin only)
- * POST /api/credit/add
+ * Add funds to a user wallet (Admin only)
+ * POST /api/wallet/add
  * @body userId - Target user ID
- * @body amount - Number of credits to add
- * @body reason - Reason for adding credits
+ * @body amount - Number of units to add
+ * @body reason - Reason for adding funds
  * @body metadata - Additional metadata (optional)
  */
-const addCredits = async (req, res) => {
+const addFunds = async (req, res) => {
   try {
     const { userId, amount, reason, metadata } = req.body;
 
@@ -124,7 +124,7 @@ const addCredits = async (req, res) => {
       return sendErrorResponse(res, 'Reason is required', 400);
     }
 
-    const result = await CreditService.addCredits(
+    const result = await WalletService.addFunds(
       userId,
       amount,
       reason,
@@ -132,30 +132,30 @@ const addCredits = async (req, res) => {
     );
 
     if (!result.success) {
-      return sendErrorResponse(res, result.message || 'Failed to add credits', 400);
+      return sendErrorResponse(res, result.message || 'Failed to add funds', 400);
     }
 
     return sendSuccessResponse(
       res,
       result.transaction,
-      'Credits added successfully',
+      'Funds added successfully',
       200
     );
   } catch (error) {
-    logger.error('Error in addCredits controller:', error);
-    return sendErrorResponse(res, 'Failed to add credits', 500);
+    logger.error('Error in addFunds controller:', error);
+    return sendErrorResponse(res, 'Failed to add funds', 500);
   }
 };
 
 /**
- * Deduct credits from a user account (Admin only)
- * POST /api/credit/deduct
+ * Deduct funds from a user wallet (Admin only)
+ * POST /api/wallet/deduct
  * @body userId - Target user ID
- * @body amount - Number of credits to deduct
- * @body reason - Reason for deducting credits
+ * @body amount - Number of units to deduct
+ * @body reason - Reason for deducting funds
  * @body metadata - Additional metadata (optional)
  */
-const deductCredits = async (req, res) => {
+const deductFunds = async (req, res) => {
   try {
     const { userId, amount, reason, metadata } = req.body;
 
@@ -172,7 +172,7 @@ const deductCredits = async (req, res) => {
       return sendErrorResponse(res, 'Reason is required', 400);
     }
 
-    const result = await CreditService.deductCredits(
+    const result = await WalletService.deductFunds(
       userId,
       amount,
       reason,
@@ -180,27 +180,27 @@ const deductCredits = async (req, res) => {
     );
 
     if (!result.success) {
-      return sendErrorResponse(res, result.message || 'Failed to deduct credits', 400);
+      return sendErrorResponse(res, result.message || 'Failed to deduct funds', 400);
     }
 
     return sendSuccessResponse(
       res,
       result.transaction,
-      'Credits deducted successfully',
+      'Funds deducted successfully',
       200
     );
   } catch (error) {
-    logger.error('Error in deductCredits controller:', error);
-    return sendErrorResponse(res, 'Failed to deduct credits', 500);
+    logger.error('Error in deductFunds controller:', error);
+    return sendErrorResponse(res, 'Failed to deduct funds', 500);
   }
 };
 
 /**
- * Check if user has sufficient credits
- * POST /api/credit/check
- * @body amount - Required credit amount
+ * Check if user has sufficient funds
+ * POST /api/wallet/check
+ * @body amount - Required amount
  */
-const checkSufficientCredits = async (req, res) => {
+const checkSufficientFunds = async (req, res) => {
   try {
     const userId = req.user.userId;
     const { amount } = req.body;
@@ -209,33 +209,33 @@ const checkSufficientCredits = async (req, res) => {
       return sendErrorResponse(res, 'Amount must be a positive number', 400);
     }
 
-    const result = await CreditService.checkSufficientCredits(userId, amount);
+    const result = await WalletService.checkSufficientFunds(userId, amount);
 
     if (!result.success) {
-      return sendErrorResponse(res, result.message || 'Failed to check credits', 500);
+      return sendErrorResponse(res, result.message || 'Failed to check funds', 500);
     }
 
     return sendSuccessResponse(
       res,
       {
-        hasSufficientCredits: result.hasSufficientCredits,
+        hasSufficientFunds: result.hasSufficientFunds,
         currentBalance: result.currentBalance,
         requiredAmount: amount
       },
-      result.hasSufficientCredits ? 'Sufficient credits available' : 'Insufficient credits',
+      result.hasSufficientFunds ? 'Sufficient funds available' : 'Insufficient funds',
       200
     );
   } catch (error) {
-    logger.error('Error in checkSufficientCredits controller:', error);
-    return sendErrorResponse(res, 'Failed to check credits', 500);
+    logger.error('Error in checkSufficientFunds controller:', error);
+    return sendErrorResponse(res, 'Failed to check funds', 500);
   }
 };
 
 module.exports = {
-  getCreditBalance,
+  getWalletBalance,
   getTransactionHistory,
-  getCreditStats,
-  addCredits,
-  deductCredits,
-  checkSufficientCredits
+  getWalletStats,
+  addFunds,
+  deductFunds,
+  checkSufficientFunds
 };

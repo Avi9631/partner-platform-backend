@@ -58,15 +58,7 @@ module.exports = (sequelize, Sequelize) => {
         field: "project_details",
         allowNull: true,
         comment: "Stores project metadata like location, amenities, etc."
-      },
-      status: {
-        type: Sequelize.STRING(20),
-        field: "status",
-        defaultValue: 'ACTIVE',
-        validate: {
-          isIn: [['ACTIVE', 'INACTIVE', 'ARCHIVED']]
-        }
-      },
+      }, 
 
       // Virtual fields for formatted date/time
       v_created_date: {
@@ -109,9 +101,7 @@ module.exports = (sequelize, Sequelize) => {
         {
           fields: ['created_by']
         },
-        {
-          fields: ['status']
-        },
+     
         {
           fields: ['lat', 'lng']
         },

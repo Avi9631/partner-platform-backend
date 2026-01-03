@@ -1,6 +1,6 @@
 const PgColiveHostelService = require("../service/PgColiveHostelService.service");
 const { sendErrorResponse, sendSuccessResponse } = require("../utils/responseFormatter");
-const { getTemporalClient } = require("../utils/temporalClient");
+const { runWorkflowAsync, runWorkflowDirect, WORKFLOWS } = require("../utils/workflowHelper");
 const logger = require("../config/winston.config");
 const db = require("../entity");
 const ListingDraft = db.ListingDraft;
@@ -60,64 +60,53 @@ const publishPgColiveHostel = async (req, res) => {
 
     const isUpdate = !!existingPgHostel;
 
-    // Start Temporal workflow for PG/Hostel publishing (non-blocking)
-    try {
-      const temporalClient = await getTemporalClient();
-      const workflowId = `pg-hostel-publish-${userId}-${Date.now()}`;
+    // Check if Temporal is enabled
+    const temporalEnabled = process.env.TEMPORAL_ENABLED === 'true';
+    const workflowId = `pg-hostel-publish-${userId}-${Date.now()}`;
 
-      await temporalClient.workflow.start('pgHostelPublishing', {
-        taskQueue: 'partner-platform-queue',
-        workflowId,
-        args: [{
+    let wfId, mode;
+
+    if (temporalEnabled) {
+      // Use Temporal workflow
+      const result = await runWorkflowAsync(
+        WORKFLOWS.PG_HOSTEL_PUBLISHING,
+        {
           userId,
           draftId
-        }]
-      });
-
-      logger.info(`Started PG/Hostel publishing workflow: ${workflowId}`);
-
-      // Return immediately without waiting for workflow completion
-      return sendSuccessResponse(
-        res,
-        { 
-          workflowId,
-          isUpdate,
-          message: `PG/Hostel ${isUpdate ? 'update' : 'publishing'} workflow started successfully`
         },
-        `PG/Colive/Hostel is being ${isUpdate ? 'updated' : 'processed'}`,
-        202
+        workflowId
       );
-    } catch (temporalError) {
-      logger.error('Temporal workflow error:', temporalError);
-      
-      // Fallback: Create or Update PG/Hostel directly without workflow
-      let fallbackResult;
-      
-      if (isUpdate) {
-        fallbackResult = await PgColiveHostelService.updatePgColiveHostel(
-          existingPgHostel.pgHostelId,
+      wfId = result.workflowId;
+      mode = result.mode;
+    } else {
+      // Use skip-workflow (direct execution)
+      const result = await runWorkflowDirect(
+        WORKFLOWS.PG_HOSTEL_PUBLISHING,
+        {
           userId,
-          pgHostelData
-        );
-      } else {
-        fallbackResult = await PgColiveHostelService.createPgColiveHostel(userId, draftId, pgHostelData);
-      }
-      
-      if (fallbackResult.success) {
-        return sendSuccessResponse(
-          res,
-          fallbackResult.data,
-          `PG/Colive/Hostel ${isUpdate ? 'updated' : 'published'} successfully (direct mode)`,
-          isUpdate ? 200 : 201
-        );
-      } else {
-        return sendErrorResponse(
-          res,
-          fallbackResult.message || `Failed to ${isUpdate ? 'update' : 'publish'} PG/Colive/Hostel`,
-          fallbackResult.statusCode || 500
-        );
-      }
+          draftId
+        },
+        workflowId
+      );
+      wfId = result.workflowId;
+      mode = 'direct';
     }
+
+    logger.info(`Started PG/Hostel publishing workflow: ${wfId} (mode: ${mode})`);
+
+    // Return immediately without waiting for workflow completion
+    return sendSuccessResponse(
+      res,
+      { 
+        workflowId: wfId,
+        isUpdate,
+        executionMode: mode,
+        usingTemporal: temporalEnabled,
+        message: `PG/Hostel ${isUpdate ? 'update' : 'publishing'} workflow started successfully`
+      },
+      `PG/Colive/Hostel is being ${isUpdate ? 'updated' : 'processed'}`,
+      202
+    );
   } catch (error) {
     logger.error('Error publishing PG/Colive/Hostel:', error);
     return sendErrorResponse(

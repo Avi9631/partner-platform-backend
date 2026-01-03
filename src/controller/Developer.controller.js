@@ -1,6 +1,6 @@
 const DeveloperService = require("../service/DeveloperService.service");
 const { sendErrorResponse, sendSuccessResponse } = require("../utils/responseFormatter");
-const { getTemporalClient } = require("../utils/temporalClient");
+const { runWorkflowAsync, runWorkflowDirect, WORKFLOWS } = require("../utils/workflowHelper");
 const logger = require("../config/winston.config");
 const db = require("../entity");
 const ListingDraft = db.ListingDraft;
@@ -61,50 +61,54 @@ const publishDeveloper = async (req, res) => {
       );
     }
 
-    // Start Temporal workflow for developer publishing (non-blocking)
-    try {
-      const temporalClient = await getTemporalClient();
-      const workflowId = `developer-publish-${userId}-${Date.now()}`;
+    // Check if Temporal is enabled
+    const temporalEnabled = process.env.TEMPORAL_ENABLED === 'true';
+    const workflowId = `developer-publish-${userId}-${Date.now()}`;
 
-      await temporalClient.workflow.start('developerPublishing', {
-        taskQueue: 'partner-platform-queue',
-        workflowId,
-        args: [{
+    let wfId, mode;
+
+    if (temporalEnabled) {
+      // Use Temporal workflow
+      const result = await runWorkflowAsync(
+        WORKFLOWS.DEVELOPER_PUBLISHING,
+        {
           userId,
           draftId,
           developerData
-        }]
-      });
-
-      logger.info(`Started developer publishing workflow: ${workflowId}`);
-
-      // Return immediately without waiting for workflow completion
-      return sendSuccessResponse(
-        res,
-        { 
-          workflowId,
-          message: 'Developer publishing workflow started successfully'
         },
-        'Developer profile is being processed',
-        202
+        workflowId
       );
-    } catch (temporalError) {
-      logger.error('Temporal workflow error:', temporalError);
-      
-      // Fallback: Create developer directly without workflow
-      const fallbackResult = await DeveloperService.createDeveloper(userId, draftId, developerData);
-      
-      if (fallbackResult.success) {
-        return sendSuccessResponse(
-          res,
-          fallbackResult.data,
-          'Developer profile created successfully (workflow unavailable)',
-          201
-        );
-      } else {
-        return sendErrorResponse(res, fallbackResult.message, 400);
-      }
+      wfId = result.workflowId;
+      mode = result.mode;
+    } else {
+      // Use skip-workflow (direct execution)
+      const result = await runWorkflowDirect(
+        WORKFLOWS.DEVELOPER_PUBLISHING,
+        {
+          userId,
+          draftId,
+          developerData
+        },
+        workflowId
+      );
+      wfId = result.workflowId;
+      mode = 'direct';
     }
+
+    logger.info(`Started developer publishing workflow: ${wfId} (mode: ${mode})`);
+
+    // Return immediately without waiting for workflow completion
+    return sendSuccessResponse(
+      res,
+      { 
+        workflowId: wfId,
+        executionMode: mode,
+        usingTemporal: temporalEnabled,
+        message: 'Developer publishing workflow started successfully'
+      },
+      'Developer profile is being processed',
+      202
+    );
   } catch (error) {
     logger.error('Error in publishDeveloper:', error);
     return sendErrorResponse(res, 'Failed to publish developer profile', 500);

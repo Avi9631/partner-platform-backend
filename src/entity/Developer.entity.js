@@ -42,12 +42,7 @@ module.exports = (sequelize, Sequelize) => {
         defaultValue: false
       },
    
-      // verification fields
-      verificationStatus: {
-        type: Sequelize.ENUM('PENDING', 'AUTOMATED_REVIEW', 'MANUAL_REVIEW', 'APPROVED', 'REJECTED'),
-        field: "verification_status",
-        defaultValue: 'PENDING'
-      },
+ 
       verificationNotes: {
         type: Sequelize.TEXT,
         field: "verification_notes",
@@ -103,10 +98,7 @@ module.exports = (sequelize, Sequelize) => {
         {
           fields: ['draft_id'],
           unique: true
-        }, 
-        {
-          fields: ['verification_status']
-        }
+        },  
       ]
     });
   

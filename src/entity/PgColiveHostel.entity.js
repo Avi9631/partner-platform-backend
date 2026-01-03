@@ -145,16 +145,6 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: true,
       comment: 'Array of media objects (images, videos)'
     },
-    publishStatus: {
-      type: Sequelize.ENUM('PENDING_REVIEW', 'PUBLISHED', 'REJECTED', 'ARCHIVED'),
-      field: "publish_status",
-      defaultValue: 'PENDING_REVIEW'
-    },
-    verificationStatus: {
-      type: Sequelize.ENUM('PENDING', 'VERIFIED', 'REJECTED'),
-      field: "verification_status",
-      defaultValue: 'PENDING'
-    },
     
     // Virtual fields for formatted date/time
     v_created_date: {
