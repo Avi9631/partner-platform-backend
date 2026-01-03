@@ -8,6 +8,7 @@
  * 
  * @module temporal/workflows/projectPublishing-non.workflow
  */
+const logger = require('../../../config/winston.config');
 
 // Import Project specific activities
 const projectActivities = require('../../activities/projectPublishing.activities');
@@ -28,11 +29,11 @@ async function projectPublishing(workflowInput) {
         projectData
     } = workflowInput;
     
-    console.log(`[Project Publishing Workflow - Direct] Starting for user ${userId}`);
+    logger.info(`[Project Publishing Workflow - Direct] Starting for user ${userId}`);
     
     try {
         // Step 1: Validate project data
-        console.log(`[Project Publishing] Step 1: Validating project data`);
+        logger.info(`[Project Publishing] Step 1: Validating project data`);
         
         const validationResult = await activities.validateProjectData({
             userId,
@@ -41,7 +42,7 @@ async function projectPublishing(workflowInput) {
         });
         
         if (!validationResult.success) {
-            console.error(`[Project Publishing] Validation failed:`, validationResult.errors);
+            logger.error(`[Project Publishing] Validation failed:`, validationResult.errors);
             return {
                 success: false,
                 message: 'Project data validation failed',
@@ -49,10 +50,10 @@ async function projectPublishing(workflowInput) {
             };
         }
         
-        console.log(`[Project Publishing] Validation successful`);
+        logger.info(`[Project Publishing] Validation successful`);
         
         // Step 2: Create or update project record
-        console.log(`[Project Publishing] Step 2: Creating/updating project record`);
+        logger.info(`[Project Publishing] Step 2: Creating/updating project record`);
         
         let projectResult;
         if (projectData.projectId) {
@@ -70,7 +71,7 @@ async function projectPublishing(workflowInput) {
         }
         
         if (!projectResult.success) {
-            console.error(`[Project Publishing] Project creation/update failed:`, projectResult.error);
+            logger.error(`[Project Publishing] Project creation/update failed:`, projectResult.error);
             return {
                 success: false,
                 message: projectResult.error || 'Failed to create/update project',
@@ -78,10 +79,10 @@ async function projectPublishing(workflowInput) {
         }
         
         const projectId = projectResult.projectId;
-        console.log(`[Project Publishing] Project record saved: ID ${projectId}`);
+        logger.info(`[Project Publishing] Project record saved: ID ${projectId}`);
         
         // Step 3: Deduct publishing credits
-        console.log(`[Project Publishing] Step 3: Deducting publishing credits`);
+        logger.info(`[Project Publishing] Step 3: Deducting publishing credits`);
         
         const creditResult = await activities.deductPublishingCredits({
             userId,
@@ -90,18 +91,18 @@ async function projectPublishing(workflowInput) {
         });
         
         if (!creditResult.success) {
-            console.error(`[Project Publishing] Failed to deduct credits:`, creditResult.message);
+            logger.error(`[Project Publishing] Failed to deduct credits:`, creditResult.message);
             return {
                 success: false,
                 message: creditResult.message || 'Failed to deduct publishing credits',
             };
         }
         
-        console.log(`[Project Publishing] Credits deducted successfully. New balance: ${creditResult.transaction.balanceAfter}`);
+        logger.info(`[Project Publishing] Credits deducted successfully. New balance: ${creditResult.transaction.balanceAfter}`);
         
         // Step 4: Update draft status if draft was provided
         if (draftId) {
-            console.log(`[Project Publishing] Step 4: Updating draft status`);
+            logger.info(`[Project Publishing] Step 4: Updating draft status`);
             
             await activities.updateListingDraftStatus({
                 draftId,
@@ -110,11 +111,11 @@ async function projectPublishing(workflowInput) {
                 publishedType: 'PROJECT'
             });
             
-            console.log(`[Project Publishing] Draft status updated`);
+            logger.info(`[Project Publishing] Draft status updated`);
         }
         
         // Step 5: Send notification to user
-        console.log(`[Project Publishing] Step 5: Sending notification`);
+        logger.info(`[Project Publishing] Step 5: Sending notification`);
         
         const isUpdate = !!projectData.projectId;
         
@@ -125,10 +126,10 @@ async function projectPublishing(workflowInput) {
             isUpdate,
         });
         
-        console.log(`[Project Publishing] Notification sent`);
+        logger.info(`[Project Publishing] Notification sent`);
         
         // Step 6: Return success result
-        console.log(`[Project Publishing] Workflow completed successfully`);
+        logger.info(`[Project Publishing] Workflow completed successfully`);
         
         return {
             success: true,
@@ -142,7 +143,7 @@ async function projectPublishing(workflowInput) {
         };
         
     } catch (error) {
-        console.error(`[Project Publishing] Workflow failed:`, error);
+        logger.error(`[Project Publishing] Workflow failed:`, error);
         
         return {
             success: false,

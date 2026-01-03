@@ -53,7 +53,7 @@ async function sendOtp(phone) {
     // TODO: Integrate with SMS service provider (Twilio, AWS SNS, etc.)
     // For development, log OTP to console
     logger.info(`OTP for ${phone}: ${otp} (expires at ${expiresAt})`);
-    console.log(`\n🔐 OTP for ${phone}: ${otp}\n`);
+    logger.info(`\n🔐 OTP for ${phone}: ${otp}\n`);
 
     // In production, send actual SMS:
     // await sendSms(phone, `Your OTP is: ${otp}. Valid for ${OTP_EXPIRY_MINUTES} minutes.`);

@@ -1,5 +1,6 @@
 const DeveloperConsumerApiService = require("../service/DeveloperConsumerApiService.service");
 const { sendErrorResponse, sendSuccessResponse } = require("../utils/responseFormatter");
+const logger = require("../config/winston.config");
 
 /**
  * Get developers with pagination
@@ -33,7 +34,7 @@ const getDevelopersByPagination = async (req, res) => {
       error: null
     });
   } catch (error) {
-    console.error('Error fetching developers:', error);
+    logger.error('Error fetching developers:', error);
     return sendErrorResponse(
       res,
       'Failed to fetch developers',
@@ -81,7 +82,7 @@ const searchDevelopersByName = async (req, res) => {
       error: null
     });
   } catch (error) {
-    console.error('Error searching developers:', error);
+    logger.error('Error searching developers:', error);
     return sendErrorResponse(
       res,
       'Failed to search developers',
@@ -120,7 +121,7 @@ const getDeveloperById = async (req, res) => {
       200
     );
   } catch (error) {
-    console.error('Error fetching developer by ID:', error);
+    logger.error('Error fetching developer by ID:', error);
     return sendErrorResponse(
       res,
       'Failed to fetch developer',
@@ -148,7 +149,7 @@ const getMetadata = async (req, res) => {
       200
     );
   } catch (error) {
-    console.error('Error fetching metadata:', error);
+    logger.error('Error fetching metadata:', error);
     return sendErrorResponse(
       res,
       'Failed to fetch metadata',

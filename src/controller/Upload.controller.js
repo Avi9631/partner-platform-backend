@@ -1,5 +1,6 @@
 const { generatePresignedUrls } = require("../utils/s3Upload");
 const { sendErrorResponse, sendSuccessResponse } = require("../utils/responseFormatter");
+const logger = require("../config/winston.config");
 
 /**
  * Generate multiple presigned URLs for direct S3 upload
@@ -81,7 +82,7 @@ const getPresignedUrls = async (req, res) => {
       200
     );
   } catch (error) {
-    console.error('Error generating presigned URLs:', error);
+    logger.error('Error generating presigned URLs:', error);
     return sendErrorResponse(res, error.message || 'Failed to generate presigned URLs', 500);
   }
 };

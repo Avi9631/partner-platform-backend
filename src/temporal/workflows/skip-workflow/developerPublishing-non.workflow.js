@@ -8,6 +8,7 @@
  * 
  * @module temporal/workflows/developerPublishing-non.workflow
  */
+const logger = require('../../../config/winston.config');
 
 // Import Developer specific activities
 const developerActivities = require('../../activities/developerPublishing.activities');
@@ -27,16 +28,16 @@ async function developerPublishing(workflowInput) {
         draftId
     } = workflowInput;
     
-    console.log(`[Developer Publishing Workflow] Starting for user ${userId}`);
+    logger.info(`[Developer Publishing Workflow] Starting for user ${userId}`);
     
     try {
         // Step 1: Fetch developer data from ListingDraft
-        console.log(`[Developer Publishing] Step 1: Fetching developer data from draft ${draftId}`);
+        logger.info(`[Developer Publishing] Step 1: Fetching developer data from draft ${draftId}`);
         
         const draftDataResult = await activities.getDeveloperDraftData({ draftId });
         
         if (!draftDataResult.success) {
-            console.error(`[Developer Publishing] Failed to fetch draft data:`, draftDataResult.message);
+            logger.error(`[Developer Publishing] Failed to fetch draft data:`, draftDataResult.message);
             return {
                 success: false,
                 message: draftDataResult.message || 'Failed to fetch developer draft data'
@@ -44,10 +45,10 @@ async function developerPublishing(workflowInput) {
         }
         
         const developerData = draftDataResult.data;
-        console.log(`[Developer Publishing] Developer data fetched successfully`);
+        logger.info(`[Developer Publishing] Developer data fetched successfully`);
         
         // Step 2: Validate developer data
-        console.log(`[Developer Publishing] Step 2: Validating developer data`);
+        logger.info(`[Developer Publishing] Step 2: Validating developer data`);
         
         const validationResult = await activities.validateDeveloperData({
             userId,
@@ -56,7 +57,7 @@ async function developerPublishing(workflowInput) {
         });
         
         if (!validationResult.success) {
-            console.error(`[Developer Publishing] Validation failed:`, validationResult.errors);
+            logger.error(`[Developer Publishing] Validation failed:`, validationResult.errors);
             return {
                 success: false,
                 message: 'Validation failed',
@@ -64,15 +65,15 @@ async function developerPublishing(workflowInput) {
             };
         }
         
-        console.log(`[Developer Publishing] Validation successful`);
+        logger.info(`[Developer Publishing] Validation successful`);
         
         // Step 3: Check if developer already exists
-        console.log(`[Developer Publishing] Step 3: Checking if developer exists`);
+        logger.info(`[Developer Publishing] Step 3: Checking if developer exists`);
         
         const checkResult = await activities.checkDeveloperExists({ draftId });
         
         if (!checkResult.success) {
-            console.error(`[Developer Publishing] Failed to check developer existence`);
+            logger.error(`[Developer Publishing] Failed to check developer existence`);
             return {
                 success: false,
                 message: 'Failed to check developer existence'
@@ -85,7 +86,7 @@ async function developerPublishing(workflowInput) {
         
         // Step 4: Create or update based on existence
         if (checkResult.exists) {
-            console.log(`[Developer Publishing] Step 4: Updating existing developer ${checkResult.data.developerId}`);
+            logger.info(`[Developer Publishing] Step 4: Updating existing developer ${checkResult.data.developerId}`);
             
             const updateResult = await activities.updateDeveloperRecord({
                 developerId: checkResult.data.developerId,
@@ -94,7 +95,7 @@ async function developerPublishing(workflowInput) {
             });
             
             if (!updateResult.success) {
-                console.error(`[Developer Publishing] Failed to update developer record`);
+                logger.error(`[Developer Publishing] Failed to update developer record`);
                 return {
                     success: false,
                     message: updateResult.message || 'Failed to update developer record'
@@ -106,7 +107,7 @@ async function developerPublishing(workflowInput) {
             action = 'updated';
             
         } else {
-            console.log(`[Developer Publishing] Step 4: Creating new developer record`);
+            logger.info(`[Developer Publishing] Step 4: Creating new developer record`);
             
             const createResult = await activities.createDeveloperRecord({
                 userId,
@@ -115,7 +116,7 @@ async function developerPublishing(workflowInput) {
             });
             
             if (!createResult.success) {
-                console.error(`[Developer Publishing] Failed to create developer record`);
+                logger.error(`[Developer Publishing] Failed to create developer record`);
                 return {
                     success: false,
                     message: createResult.message || 'Failed to create developer record'
@@ -127,10 +128,10 @@ async function developerPublishing(workflowInput) {
             action = 'created';
         }
         
-        console.log(`[Developer Publishing] Developer record ${action} with ID: ${developerId}`);
+        logger.info(`[Developer Publishing] Developer record ${action} with ID: ${developerId}`);
         
         // Step 5: Deduct publishing credits
-        console.log(`[Developer Publishing] Step 5: Deducting publishing credits`);
+        logger.info(`[Developer Publishing] Step 5: Deducting publishing credits`);
         
         const creditResult = await activities.deductPublishingCredits({
             userId,
@@ -139,28 +140,28 @@ async function developerPublishing(workflowInput) {
         });
         
         if (!creditResult.success) {
-            console.error(`[Developer Publishing] Failed to deduct credits:`, creditResult.message);
+            logger.error(`[Developer Publishing] Failed to deduct credits:`, creditResult.message);
             return {
                 success: false,
                 message: creditResult.message || 'Failed to deduct publishing credits',
             };
         }
         
-        console.log(`[Developer Publishing] Credits deducted successfully. New balance: ${creditResult.transaction.balanceAfter}`);
+        logger.info(`[Developer Publishing] Credits deducted successfully. New balance: ${creditResult.transaction.balanceAfter}`);
         
         // Step 6: Update ListingDraft status to PUBLISHED
-        console.log(`[Developer Publishing] Step 6: Updating ListingDraft status`);
+        logger.info(`[Developer Publishing] Step 6: Updating ListingDraft status`);
         
         try {
             await activities.updateListingDraftStatus({ draftId });
-            console.log(`[Developer Publishing] ListingDraft status updated to PUBLISHED`);
+            logger.info(`[Developer Publishing] ListingDraft status updated to PUBLISHED`);
         } catch (updateError) {
             // Log but don't fail the workflow
-            console.error(`[Developer Publishing] Failed to update ListingDraft status:`, updateError);
+            logger.error(`[Developer Publishing] Failed to update ListingDraft status:`, updateError);
         }
         
         // Step 7: Send notification email (final step)
-        console.log(`[Developer Publishing] Step 7: Sending notification email`);
+        logger.info(`[Developer Publishing] Step 7: Sending notification email`);
         
         try {
             const emailResult = await activities.getUserEmail({ userId });
@@ -174,19 +175,19 @@ async function developerPublishing(workflowInput) {
                 });
                 
                 if (notificationResult.success) {
-                    console.log(`[Developer Publishing] Notification email sent successfully`);
+                    logger.info(`[Developer Publishing] Notification email sent successfully`);
                 } else {
-                    console.warn(`[Developer Publishing] Failed to send notification: ${notificationResult.message}`);
+                    logger.warn(`[Developer Publishing] Failed to send notification: ${notificationResult.message}`);
                 }
             } else {
-                console.warn(`[Developer Publishing] Could not retrieve user email, skipping notification`);
+                logger.warn(`[Developer Publishing] Could not retrieve user email, skipping notification`);
             }
         } catch (notificationError) {
             // Log but don't fail the workflow
-            console.error(`[Developer Publishing] Error sending notification:`, notificationError);
+            logger.error(`[Developer Publishing] Error sending notification:`, notificationError);
         }
         
-        console.log(`[Developer Publishing] Workflow completed successfully`);
+        logger.info(`[Developer Publishing] Workflow completed successfully`);
         
         // Return success result
         return {
@@ -205,7 +206,7 @@ async function developerPublishing(workflowInput) {
         };
         
     } catch (error) {
-        console.error(`[Developer Publishing Workflow] Error:`, error);
+        logger.error(`[Developer Publishing Workflow] Error:`, error);
         
         return {
             success: false,

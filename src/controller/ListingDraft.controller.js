@@ -1,6 +1,7 @@
 const ListingDraftService = require("../service/ListingDraftService.service");
 const { sendErrorResponse, sendSuccessResponse } = require("../utils/responseFormatter");
 const { uploadMultipleToS3 } = require("../utils/s3Upload");
+const logger = require("../config/winston.config");
 
 /**
  * Create a new listing draft
@@ -18,7 +19,7 @@ const createListingDraft = async (req, res) => {
       return sendErrorResponse(res, result.message, 400);
     }
   } catch (error) {
-    console.error('Error in createListingDraft:', error);
+    logger.error('Error in createListingDraft:', error);
     return sendErrorResponse(res, 'Failed to create listing draft', 500);
   }
 };
@@ -49,7 +50,7 @@ const updateListingDraft = async (req, res) => {
       return sendErrorResponse(res, result.message, 404);
     }
   } catch (error) {
-    console.error('Error in updateListingDraft:', error);
+    logger.error('Error in updateListingDraft:', error);
     return sendErrorResponse(res, 'Failed to update listing draft', 500);
   }
 };
@@ -75,7 +76,7 @@ const getListingDraftById = async (req, res) => {
       return sendErrorResponse(res, result.message, 404);
     }
   } catch (error) {
-    console.error('Error in getListingDraftById:', error);
+    logger.error('Error in getListingDraftById:', error);
     return sendErrorResponse(res, 'Failed to fetch listing draft', 500);
   }
 };
@@ -98,7 +99,7 @@ const getUserListingDrafts = async (req, res) => {
       return sendErrorResponse(res, result.message, 400);
     }
   } catch (error) {
-    console.error('Error in getUserListingDrafts:', error);
+    logger.error('Error in getUserListingDrafts:', error);
     return sendErrorResponse(res, 'Failed to fetch listing drafts', 500);
   }
 };
@@ -124,7 +125,7 @@ const deleteListingDraft = async (req, res) => {
       return sendErrorResponse(res, result.message, 404);
     }
   } catch (error) {
-    console.error('Error in deleteListingDraft:', error);
+    logger.error('Error in deleteListingDraft:', error);
     return sendErrorResponse(res, 'Failed to delete listing draft', 500);
   }
 };
@@ -150,7 +151,7 @@ const submitListingDraft = async (req, res) => {
       return sendErrorResponse(res, result.message, 400);
     }
   } catch (error) {
-    console.error('Error in submitListingDraft:', error);
+    logger.error('Error in submitListingDraft:', error);
     return sendErrorResponse(res, 'Failed to submit listing draft', 500);
   }
 };

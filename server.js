@@ -86,18 +86,18 @@ app.use('/uploads', express.static(path.join(__dirname, 'src/uploads')));
   try {
     // Test database connection first
     await db.sequelize.authenticate();
-    console.log("Database connection established successfully");
+    logger.info("Database connection established successfully");
     logger.info("Database connection established successfully");
 
     // Use alter: true for production - this won't drop existing data
     // Now that tables are created, use safer sync method
     await db.sequelize.sync({ alter: true });
     
-    console.log("Database synchronized successfully - all tables verified");
+    logger.info("Database synchronized successfully - all tables verified");
     logger.info("Database synchronized successfully - all tables verified");
 
     // Initialize email worker
-    console.log("Starting email worker...");
+    logger.info("Starting email worker...");
     logger.info("Starting email worker...");
     // Worker auto-starts, just logging here
   } catch (error) {
@@ -123,50 +123,50 @@ app.use("/api/otp", otpAuthRoute);
 app.use("/api/wallet", walletRoute);
 
 const server = app.listen(port, "0.0.0.0", () => {
-  console.log(`Example app listening on port ${port}`);
+  logger.info(`Example app listening on port ${port}`);
 });
 
 // Graceful shutdown handler
 const gracefulShutdown = async (signal) => {
-  console.log(`${signal} signal received: starting graceful shutdown`);
+  logger.info(`${signal} signal received: starting graceful shutdown`);
   logger.info(`${signal} signal received: starting graceful shutdown`);
 
   try {
     // 1. Stop accepting new connections
     server.close(() => {
-      console.log("HTTP server closed");
+      logger.info("HTTP server closed");
       logger.info("HTTP server closed");
     });
 
     
 
     // 3. Stop BullMQ worker (stops processing new jobs but completes current ones)
-    console.log("Stopping email worker...");
+    logger.info("Stopping email worker...");
     await emailWorker.stopEmailWorker();
-    console.log("Email worker stopped");
+    logger.info("Email worker stopped");
     logger.info("Email worker stopped");
 
     // 4. Close BullMQ queue
-    console.log("Closing email queue...");
+    logger.info("Closing email queue...");
     const { closeQueue } = require("./src/queues/emailQueue");
     await closeQueue();
-    console.log("Email queue closed");
+    logger.info("Email queue closed");
     logger.info("Email queue closed");
 
     // 5. Close Redis connection
-    console.log("Closing Redis connection...");
+    logger.info("Closing Redis connection...");
     const { closeRedisConnection } = require("./src/config/redis.config");
     await closeRedisConnection();
-    console.log("Redis connection closed");
+    logger.info("Redis connection closed");
     logger.info("Redis connection closed");
 
     // 6. Close database connections
-    console.log("Closing database connections...");
+    logger.info("Closing database connections...");
     await db.sequelize.close();
-    console.log("Database connections closed");
+    logger.info("Database connections closed");
     logger.info("Database connections closed");
 
-    console.log("Graceful shutdown completed successfully");
+    logger.info("Graceful shutdown completed successfully");
     logger.info("Graceful shutdown completed successfully");
     process.exit(0);
   } catch (error) {

@@ -29,9 +29,9 @@ async function createUser(firstName, lastName, email, number) {
     },
     defaults: user,
   });
-  console.log(data.userId);
+  logger.info(data.userId);
 
-  console.log(data.userId);
+  logger.info(data.userId);
   return data;
 }
 

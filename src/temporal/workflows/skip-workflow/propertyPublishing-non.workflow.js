@@ -8,6 +8,7 @@
  * 
  * @module temporal/workflows/propertyPublishing-non.workflow
  */
+const logger = require('../../../config/winston.config');
 
 // Import Property specific activities
 const propertyActivities = require('../../activities/propertyPublishing.activities');
@@ -27,11 +28,11 @@ async function propertyPublishing(workflowInput) {
         draftId
     } = workflowInput;
     
-    console.log(`[Property Publishing Workflow] Starting for user ${userId}, draft ${draftId}`);
+    logger.info(`[Property Publishing Workflow] Starting for user ${userId}, draft ${draftId}`);
     
     try {
         // Step 1: Fetch property data from ListingDraft
-        console.log(`[Property Publishing] Step 1: Fetching property data from draft ${draftId}`);
+        logger.info(`[Property Publishing] Step 1: Fetching property data from draft ${draftId}`);
         
         const fetchResult = await activities.fetchListingDraftData({
             userId,
@@ -39,7 +40,7 @@ async function propertyPublishing(workflowInput) {
         });
         
         if (!fetchResult.success) {
-            console.error(`[Property Publishing] Failed to fetch draft data:`, fetchResult.message);
+            logger.error(`[Property Publishing] Failed to fetch draft data:`, fetchResult.message);
             return {
                 success: false,
                 message: fetchResult.message || 'Failed to fetch draft data',
@@ -47,10 +48,10 @@ async function propertyPublishing(workflowInput) {
         }
         
         const propertyData = fetchResult.data;
-        console.log(`[Property Publishing] Draft data fetched successfully`);
+        logger.info(`[Property Publishing] Draft data fetched successfully`);
         
         // Step 2: Validate property data
-        console.log(`[Property Publishing] Step 2: Validating property data`);
+        logger.info(`[Property Publishing] Step 2: Validating property data`);
         
         const validationResult = await activities.validatePropertyData({
             userId,
@@ -59,7 +60,7 @@ async function propertyPublishing(workflowInput) {
         });
         
         if (!validationResult.success) {
-            console.error(`[Property Publishing] Validation failed:`, validationResult.errors);
+            logger.error(`[Property Publishing] Validation failed:`, validationResult.errors);
             return {
                 success: false,
                 message: 'Property data validation failed',
@@ -67,7 +68,7 @@ async function propertyPublishing(workflowInput) {
             };
         }
         
-        console.log(`[Property Publishing] Validation successful`);
+        logger.info(`[Property Publishing] Validation successful`);
         
         // Step 3: Check if this is an update or new property
         const existingProperty = validationResult.existingProperty;
@@ -77,7 +78,7 @@ async function propertyPublishing(workflowInput) {
         
         if (isUpdate) {
             // Update existing property
-            console.log(`[Property Publishing] Step 3: Updating existing property ${existingProperty.propertyId}`);
+            logger.info(`[Property Publishing] Step 3: Updating existing property ${existingProperty.propertyId}`);
             
             propertyResult = await activities.updatePropertyRecord({
                 propertyId: existingProperty.propertyId,
@@ -86,7 +87,7 @@ async function propertyPublishing(workflowInput) {
             });
         } else {
             // Create new property
-            console.log(`[Property Publishing] Step 3: Creating new property`);
+            logger.info(`[Property Publishing] Step 3: Creating new property`);
             
             propertyResult = await activities.createPropertyRecord({
                 userId,
@@ -96,7 +97,7 @@ async function propertyPublishing(workflowInput) {
         }
         
         if (!propertyResult.success) {
-            console.error(`[Property Publishing] Failed to ${isUpdate ? 'update' : 'create'} property:`, propertyResult.message);
+            logger.error(`[Property Publishing] Failed to ${isUpdate ? 'update' : 'create'} property:`, propertyResult.message);
             return {
                 success: false,
                 message: propertyResult.message || `Failed to ${isUpdate ? 'update' : 'create'} property`,
@@ -104,10 +105,10 @@ async function propertyPublishing(workflowInput) {
         }
         
         const property = propertyResult.data;
-        console.log(`[Property Publishing] Property ${isUpdate ? 'updated' : 'created'} successfully: ${property.propertyId}`);
+        logger.info(`[Property Publishing] Property ${isUpdate ? 'updated' : 'created'} successfully: ${property.propertyId}`);
         
         // Step 4: Deduct publishing credits
-        console.log(`[Property Publishing] Step 4: Deducting publishing credits`);
+        logger.info(`[Property Publishing] Step 4: Deducting publishing credits`);
         
         const creditResult = await activities.deductPublishingCredits({
             userId,
@@ -116,27 +117,27 @@ async function propertyPublishing(workflowInput) {
         });
         
         if (!creditResult.success) {
-            console.error(`[Property Publishing] Failed to deduct credits:`, creditResult.message);
+            logger.error(`[Property Publishing] Failed to deduct credits:`, creditResult.message);
             return {
                 success: false,
                 message: creditResult.message || 'Failed to deduct publishing credits',
             };
         }
         
-        console.log(`[Property Publishing] Credits deducted successfully. New balance: ${creditResult.transaction.balanceAfter}`);
+        logger.info(`[Property Publishing] Credits deducted successfully. New balance: ${creditResult.transaction.balanceAfter}`);
         
         // Step 5: Update draft status
-        console.log(`[Property Publishing] Step 5: Updating draft status`);
+        logger.info(`[Property Publishing] Step 5: Updating draft status`);
         
         await activities.updateListingDraftStatus({
             draftId,
             status: 'PUBLISHED',
         });
         
-        console.log(`[Property Publishing] Draft status updated`);
+        logger.info(`[Property Publishing] Draft status updated`);
         
         // Step 6: Send notification
-        console.log(`[Property Publishing] Step 6: Sending notification`);
+        logger.info(`[Property Publishing] Step 6: Sending notification`);
         
         try {
             await activities.sendPropertyPublishingNotification({
@@ -145,14 +146,14 @@ async function propertyPublishing(workflowInput) {
                 propertyName: property.propertyName,
                 isUpdate,
             });
-            console.log(`[Property Publishing] Notification sent successfully`);
+            logger.info(`[Property Publishing] Notification sent successfully`);
         } catch (notificationError) {
-            console.error(`[Property Publishing] Failed to send notification:`, notificationError);
+            logger.error(`[Property Publishing] Failed to send notification:`, notificationError);
             // Don't fail the workflow if notification fails
         }
         
         // Return success result
-        console.log(`[Property Publishing] Workflow completed successfully`);
+        logger.info(`[Property Publishing] Workflow completed successfully`);
         return {
             success: true,
             message: `Property ${isUpdate ? 'updated' : 'published'} successfully`,
@@ -164,7 +165,7 @@ async function propertyPublishing(workflowInput) {
         };
         
     } catch (error) {
-        console.error(`[Property Publishing] Workflow error:`, error);
+        logger.error(`[Property Publishing] Workflow error:`, error);
         return {
             success: false,
             message: error.message || 'Property publishing workflow failed',

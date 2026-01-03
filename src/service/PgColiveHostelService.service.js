@@ -1,4 +1,5 @@
 const db = require("../entity");
+const logger = require("../config/winston.config");
 const PgColiveHostel = db.PgColiveHostel;
 const PlatformUser = db.PlatformUser;
 const { Op } = require("sequelize");
@@ -103,7 +104,7 @@ const createPgColiveHostel = async (userId, draftId, pgHostelData) => {
       data: pgHostel
     };
   } catch (error) {
-    console.error('Error creating PG/Colive/Hostel:', error);
+    logger.error('Error creating PG/Colive/Hostel:', error);
     throw error;
   }
 };
@@ -160,7 +161,7 @@ const updatePgColiveHostel = async (pgHostelId, userId, updateData) => {
       data: pgHostel
     };
   } catch (error) {
-    console.error('Error updating PG/Hostel:', error);
+    logger.error('Error updating PG/Hostel:', error);
     throw error;
   }
 };
@@ -195,7 +196,7 @@ const getPgColiveHostelById = async (pgHostelId) => {
       data: pgHostel
     };
   } catch (error) {
-    console.error('Error fetching PG/Hostel:', error);
+    logger.error('Error fetching PG/Hostel:', error);
     throw error;
   }
 };
@@ -231,7 +232,7 @@ const getPgColiveHostelBySlug = async (slug) => {
       data: pgHostel
     };
   } catch (error) {
-    console.error('Error fetching PG/Hostel by slug:', error);
+    logger.error('Error fetching PG/Hostel by slug:', error);
     throw error;
   }
 };
@@ -321,7 +322,7 @@ const listPgColiveHostels = async (filters = {}) => {
       }
     };
   } catch (error) {
-    console.error('Error listing PG/Hostels:', error);
+    logger.error('Error listing PG/Hostels:', error);
     throw error;
   }
 };
@@ -428,7 +429,7 @@ const searchNearbyPgHostels = async (latitude, longitude, radiusKm, filters = {}
       }
     };
   } catch (error) {
-    console.error('Error searching nearby PG/Hostels:', error);
+    logger.error('Error searching nearby PG/Hostels:', error);
     throw error;
   }
 };
@@ -450,7 +451,7 @@ const getUserPgColiveHostels = async (userId) => {
       data: pgHostels
     };
   } catch (error) {
-    console.error('Error fetching user PG/Hostels:', error);
+    logger.error('Error fetching user PG/Hostels:', error);
     throw error;
   }
 };
@@ -493,7 +494,7 @@ const deletePgColiveHostel = async (pgHostelId, userId) => {
       message: 'PG/Hostel deleted successfully'
     };
   } catch (error) {
-    console.error('Error deleting PG/Hostel:', error);
+    logger.error('Error deleting PG/Hostel:', error);
     return {
       success: false,
       message: 'An error occurred while deleting PG/Hostel',

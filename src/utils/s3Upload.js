@@ -1,5 +1,6 @@
 const { s3, defaultBucket } = require("../config/s3.config");
 const path = require("path");
+const logger = require("../config/winston.config");
 
 // Lazy load uuid to handle ES Module
 let uuidv4;
@@ -57,7 +58,7 @@ async function uploadToS3({ fileBuffer, fileName, mimetype, folder, userId, buck
       key: s3Key,
     };
   } catch (error) {
-    console.error("Error uploading file to S3:", error);
+    logger.error("Error uploading file to S3:", error);
     throw error;
   }
 }
@@ -96,7 +97,7 @@ async function uploadMultipleToS3({ files, folder, userId, bucketName }) {
     const uploadedFiles = await Promise.all(uploadPromises);
     return uploadedFiles;
   } catch (error) {
-    console.error("Error uploading multiple files to S3:", error);
+    logger.error("Error uploading multiple files to S3:", error);
     throw error;
   }
 }
@@ -117,7 +118,7 @@ async function deleteFromS3(key, bucketName) {
     await s3.deleteObject(deleteParams).promise();
     return true;
   } catch (error) {
-    console.error("Error deleting file from S3:", error);
+    logger.error("Error deleting file from S3:", error);
     throw error;
   }
 }
@@ -187,7 +188,7 @@ async function generatePresignedUrls({ folder, count, contentType, userId, bucke
 
     return presignedUrls;
   } catch (error) {
-    console.error("Error generating presigned URLs:", error);
+    logger.error("Error generating presigned URLs:", error);
     throw error;
   }
 }

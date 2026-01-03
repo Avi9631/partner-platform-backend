@@ -82,7 +82,7 @@ router.get("/auth/google", (req, res, next) => {
   // })
   const redirect = req.query.redirectUri || `${frontendUrl}/`;
 
-  console.log("Redirect URL :: " + redirect);
+  logger.info("Redirect URL :: " + redirect);
 
   res.cookie("postAuthRedirect", redirect, {
     httpOnly: true,
@@ -106,7 +106,7 @@ router.get(
   async (req, res) => {
     try {
       const user = req.user;
-      console.log(user);
+      logger.info(user);
       const email = user.emails?.[0]?.value;
       let userDataFromDB ;
       try{
@@ -136,7 +136,7 @@ router.get(
       // Update last login timestamp
       await UserService.updateLastLogin(userId);
 
-      console.log("Redirect URL :: " + req.cookies?.postAuthRedirect);
+      logger.info("Redirect URL :: " + req.cookies?.postAuthRedirect);
 
       const redirectUrl = req.cookies?.postAuthRedirect || `${frontendUrl}/`;
 
@@ -172,7 +172,7 @@ router.get(
 
       res.redirect(redirectUrl);
     } catch (err) {
-      console.error("Authentication Error:", err);
+      logger.error("Authentication Error:", err);
       res.redirect(`${frontendUrl}/signin`);
     }
   }
@@ -187,7 +187,7 @@ router.get(
     // })
     const redirect = req.query.redirectUri || `${frontendUrl}/`;
 
-    console.log("Redirect URL :: " + redirect);
+    logger.info("Redirect URL :: " + redirect);
 
     res.cookie("postAuthRedirect", redirect, {
       httpOnly: true,
@@ -240,7 +240,7 @@ router.get(
       // Update last login timestamp
       await UserService.updateLastLogin(userId);
 
-      console.log("Redirect URL :: " + req.cookies?.postAuthRedirect);
+      logger.info("Redirect URL :: " + req.cookies?.postAuthRedirect);
 
       const redirectUrl = req.cookies?.postAuthRedirect || `${frontendUrl}/`;
 
@@ -276,7 +276,7 @@ router.get(
 
       res.redirect(redirectUrl);
     } catch (err) {
-      console.error("Authentication Error:", err);
+      logger.error("Authentication Error:", err);
       res.redirect(`${frontendUrl}/signin`);
     }
   }

@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const logger = require('../config/winston.config');
 
 /**
  * Service for fetching developer data from JSON file
@@ -20,7 +21,7 @@ class DeveloperConsumerApiService {
       const jsonData = JSON.parse(rawData);
       this.developerData = jsonData;
     } catch (error) {
-      console.error('Error loading developer data:', error);
+      logger.error('Error loading developer data:', error);
       throw new Error('Failed to load developer data');
     }
   }

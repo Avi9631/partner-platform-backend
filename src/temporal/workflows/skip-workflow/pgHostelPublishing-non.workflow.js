@@ -8,6 +8,7 @@
  * 
  * @module temporal/workflows/pgHostelPublishing-non.workflow
  */
+const logger = require('../../../config/winston.config');
 
 // Import PG/Hostel specific activities
 const pgHostelActivities = require('../../activities/pgHostelPublishing.activities');
@@ -27,11 +28,11 @@ async function pgHostelPublishing(workflowInput) {
         draftId
     } = workflowInput;
     
-    console.log(`[PG Hostel Publishing Workflow] Starting for user ${userId}, draft ${draftId}`);
+    logger.info(`[PG Hostel Publishing Workflow] Starting for user ${userId}, draft ${draftId}`);
     
     try {
         // Step 1: Fetch PG/Hostel data from ListingDraft
-        console.log(`[PG Hostel Publishing] Step 1: Fetching PG/Hostel data from draft ${draftId}`);
+        logger.info(`[PG Hostel Publishing] Step 1: Fetching PG/Hostel data from draft ${draftId}`);
         
         const fetchResult = await activities.fetchListingDraftData({
             userId,
@@ -39,7 +40,7 @@ async function pgHostelPublishing(workflowInput) {
         });
         
         if (!fetchResult.success) {
-            console.error(`[PG Hostel Publishing] Failed to fetch draft data:`, fetchResult.message);
+            logger.error(`[PG Hostel Publishing] Failed to fetch draft data:`, fetchResult.message);
             return {
                 success: false,
                 message: fetchResult.message || 'Failed to fetch draft data',
@@ -48,10 +49,10 @@ async function pgHostelPublishing(workflowInput) {
         }
         
         const pgHostelData = fetchResult.data;
-        console.log(`[PG Hostel Publishing] Draft data fetched successfully`);
+        logger.info(`[PG Hostel Publishing] Draft data fetched successfully`);
         
         // Step 2: Validate PG/Hostel data
-        console.log(`[PG Hostel Publishing] Step 2: Validating PG/Hostel data`);
+        logger.info(`[PG Hostel Publishing] Step 2: Validating PG/Hostel data`);
         
         const validationResult = await activities.validatePgHostelData({
             userId,
@@ -60,7 +61,7 @@ async function pgHostelPublishing(workflowInput) {
         });
         
         if (!validationResult.success) {
-            console.error(`[PG Hostel Publishing] Validation failed:`, validationResult.errors);
+            logger.error(`[PG Hostel Publishing] Validation failed:`, validationResult.errors);
             return {
                 success: false,
                 message: 'PG/Hostel data validation failed',
@@ -69,13 +70,13 @@ async function pgHostelPublishing(workflowInput) {
             };
         }
         
-        console.log(`[PG Hostel Publishing] Validation passed`);
+        logger.info(`[PG Hostel Publishing] Validation passed`);
         
         const isUpdate = validationResult.isUpdate || false;
         const existingPgHostelId = validationResult.existingPgHostelId;
         
         // Step 3: Create or Update PG/Hostel record in database
-        console.log(`[PG Hostel Publishing] Step 3: ${isUpdate ? 'Updating' : 'Creating'} PG/Hostel record`);
+        logger.info(`[PG Hostel Publishing] Step 3: ${isUpdate ? 'Updating' : 'Creating'} PG/Hostel record`);
         
         let operationResult;
         
@@ -96,7 +97,7 @@ async function pgHostelPublishing(workflowInput) {
         }
         
         if (!operationResult.success) {
-            console.error(`[PG Hostel Publishing] Record ${isUpdate ? 'update' : 'creation'} failed:`, operationResult);
+            logger.error(`[PG Hostel Publishing] Record ${isUpdate ? 'update' : 'creation'} failed:`, operationResult);
             return {
                 success: false,
                 message: `Failed to ${isUpdate ? 'update' : 'create'} PG/Hostel record`,
@@ -105,12 +106,12 @@ async function pgHostelPublishing(workflowInput) {
             };
         }
         
-        console.log(`[PG Hostel Publishing] Record ${isUpdate ? 'updated' : 'created'}: ${operationResult.data.pgHostelId}`);
+        logger.info(`[PG Hostel Publishing] Record ${isUpdate ? 'updated' : 'created'}: ${operationResult.data.pgHostelId}`);
         
         const { pgHostelId, slug, propertyName } = operationResult.data;
         
         // Step 4: Deduct publishing credits
-        console.log(`[PG Hostel Publishing] Step 4: Deducting publishing credits`);
+        logger.info(`[PG Hostel Publishing] Step 4: Deducting publishing credits`);
         
         const creditResult = await activities.deductPublishingCredits({
             userId,
@@ -119,32 +120,32 @@ async function pgHostelPublishing(workflowInput) {
         });
         
         if (!creditResult.success) {
-            console.error(`[PG Hostel Publishing] Failed to deduct credits:`, creditResult.message);
+            logger.error(`[PG Hostel Publishing] Failed to deduct credits:`, creditResult.message);
             return {
                 success: false,
                 message: creditResult.message || 'Failed to deduct publishing credits',
             };
         }
         
-        console.log(`[PG Hostel Publishing] Credits deducted successfully. New balance: ${creditResult.transaction.balanceAfter}`);
+        logger.info(`[PG Hostel Publishing] Credits deducted successfully. New balance: ${creditResult.transaction.balanceAfter}`);
         
         // Step 5: Update ListingDraft status to PUBLISHED (only for new creations)
         if (!isUpdate) {
-            console.log(`[PG Hostel Publishing] Step 5: Updating ListingDraft status`);
+            logger.info(`[PG Hostel Publishing] Step 5: Updating ListingDraft status`);
             
             try {
                 await activities.updateListingDraftStatus({ draftId });
-                console.log(`[PG Hostel Publishing] ListingDraft status updated to PUBLISHED`);
+                logger.info(`[PG Hostel Publishing] ListingDraft status updated to PUBLISHED`);
             } catch (updateError) {
                 // Log but don't fail the workflow
-                console.error(`[PG Hostel Publishing] Failed to update ListingDraft status:`, updateError);
+                logger.error(`[PG Hostel Publishing] Failed to update ListingDraft status:`, updateError);
             }
         } else {
-            console.log(`[PG Hostel Publishing] Skipping ListingDraft update (update operation)`);
+            logger.info(`[PG Hostel Publishing] Skipping ListingDraft update (update operation)`);
         }
         
         // Step 6: Send notification to user
-        console.log(`[PG Hostel Publishing] Step 6: Sending notification`);
+        logger.info(`[PG Hostel Publishing] Step 6: Sending notification`);
         
         try {
             await activities.sendPgHostelPublishingNotification({
@@ -154,10 +155,10 @@ async function pgHostelPublishing(workflowInput) {
             });
         } catch (notificationError) {
             // Log but don't fail the workflow
-            console.error(`[PG Hostel Publishing] Notification failed:`, notificationError);
+            logger.error(`[PG Hostel Publishing] Notification failed:`, notificationError);
         }
         
-        console.log(`[PG Hostel Publishing] Workflow completed successfully`);
+        logger.info(`[PG Hostel Publishing] Workflow completed successfully`);
         
         // Return success result
         return {
@@ -174,7 +175,7 @@ async function pgHostelPublishing(workflowInput) {
         };
         
     } catch (error) {
-        console.error(`[PG Hostel Publishing] Workflow error:`, error);
+        logger.error(`[PG Hostel Publishing] Workflow error:`, error);
         
         // Try to send failure notification
         try {
@@ -184,7 +185,7 @@ async function pgHostelPublishing(workflowInput) {
                 status: 'failed'
             });
         } catch (notificationError) {
-            console.error(`[PG Hostel Publishing] Failed to send failure notification:`, notificationError);
+            logger.error(`[PG Hostel Publishing] Failed to send failure notification:`, notificationError);
         }
         
         return {

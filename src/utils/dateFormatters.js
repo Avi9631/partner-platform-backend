@@ -1,6 +1,7 @@
 /**
  * Utility functions for formatting dates and times
  */
+const logger = require("../config/winston.config");
 
 /**
  * Format a date string into dd-MMM-YYYY format
@@ -18,7 +19,7 @@ exports.formatDate = (date) => {
     const year = d.getFullYear();
     return `${day}-${month}-${year}`;
   } catch (error) {
-    console.error('Error formatting date:', error);
+    logger.error('Error formatting date:', error);
     return null;
   }
 };
@@ -36,7 +37,7 @@ exports.formatTime = (date) => {
     
     return d.toTimeString().split(" ")[0];
   } catch (error) {
-    console.error('Error formatting time:', error);
+    logger.error('Error formatting time:', error);
     return null;
   }
 };
@@ -67,7 +68,7 @@ exports.daysDifference = (date1, date2 = new Date()) => {
     const diffTime = Math.abs(d2 - d1);
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   } catch (error) {
-    console.error('Error calculating date difference:', error);
+    logger.error('Error calculating date difference:', error);
     return null;
   }
 };

@@ -8,6 +8,7 @@
  * 
  * @module temporal/workflows/partnerBusinessOnboarding-non.workflow
  */
+const logger = require('../../../config/winston.config');
 
 // Import Partner Business Onboarding specific activities
 const partnerBusinessOnboardingActivities = require('../../activities/partnerBusinessOnboarding.activities');
@@ -28,11 +29,11 @@ async function partnerBusinessOnboarding(workflowInput) {
         businessData
     } = workflowInput;
     
-    console.log(`[Business Onboarding Workflow] Starting for user ${userId}`);
+    logger.info(`[Business Onboarding Workflow] Starting for user ${userId}`);
     
     try {
         // Step 1: Validate business data
-        console.log(`[Business Onboarding] Step 1: Validating business data`);
+        logger.info(`[Business Onboarding] Step 1: Validating business data`);
         
         const validationResult = await activities.validateBusinessOnboardingData({
             userId,
@@ -40,14 +41,14 @@ async function partnerBusinessOnboarding(workflowInput) {
         });
         
         if (!validationResult.success) {
-            console.error(`[Business Onboarding] Validation failed:`, validationResult.errors);
+            logger.error(`[Business Onboarding] Validation failed:`, validationResult.errors);
             throw new Error(`Business validation failed: ${validationResult.errors.join(', ')}`);
         }
         
-        console.log(`[Business Onboarding] Business validation successful`);
+        logger.info(`[Business Onboarding] Business validation successful`);
         
         // Step 2: Create business record
-        console.log(`[Business Onboarding] Step 2: Creating business record`);
+        logger.info(`[Business Onboarding] Step 2: Creating business record`);
         
         const businessResult = await activities.createPartnerBusinessRecord({
             userId,
@@ -58,10 +59,10 @@ async function partnerBusinessOnboarding(workflowInput) {
             throw new Error('Failed to create business record');
         }
         
-        console.log(`[Business Onboarding] Business record created successfully, ID: ${businessResult.business.businessId}`);
+        logger.info(`[Business Onboarding] Business record created successfully, ID: ${businessResult.business.businessId}`);
         
         // Step 3: Update business verification status to APPROVED
-        console.log(`[Business Onboarding] Step 3: Updating verification status to APPROVED`);
+        logger.info(`[Business Onboarding] Step 3: Updating verification status to APPROVED`);
         
         const verificationResult = await activities.updateBusinessVerificationStatus({
             userId,
@@ -72,10 +73,10 @@ async function partnerBusinessOnboarding(workflowInput) {
             throw new Error('Failed to update business verification status');
         }
         
-        console.log(`[Business Onboarding] Verification status updated to APPROVED`);
+        logger.info(`[Business Onboarding] Verification status updated to APPROVED`);
         
         // Step 4: Send onboarding notification email
-        console.log(`[Business Onboarding] Step 4: Sending notification email`);
+        logger.info(`[Business Onboarding] Step 4: Sending notification email`);
         
         await activities.sendBusinessOnboardingNotification({
             userId,
@@ -83,10 +84,10 @@ async function partnerBusinessOnboarding(workflowInput) {
             businessName: businessData.businessName,
         });
         
-        console.log(`[Business Onboarding] Notification sent`);
+        logger.info(`[Business Onboarding] Notification sent`);
         
         // Step 5: Add welcome bonus credits
-        console.log(`[Business Onboarding] Step 5: Adding welcome bonus credits`);
+        logger.info(`[Business Onboarding] Step 5: Adding welcome bonus credits`);
         
         const creditResult = await activities.addCredits({
             userId,
@@ -96,9 +97,9 @@ async function partnerBusinessOnboarding(workflowInput) {
         });
         
         if (creditResult.success) {
-            console.log(`[Business Onboarding] Added 200 credits to user wallet`);
+            logger.info(`[Business Onboarding] Added 200 credits to user wallet`);
         } else {
-            console.error(`[Business Onboarding] Failed to add credits: ${creditResult.message}`);
+            logger.error(`[Business Onboarding] Failed to add credits: ${creditResult.message}`);
             // Don't fail the entire workflow for credit addition failure
         }
         
@@ -116,7 +117,7 @@ async function partnerBusinessOnboarding(workflowInput) {
         };
         
     } catch (error) {
-        console.error(`[Business Onboarding Workflow] Failed for user ${userId}:`, error);
+        logger.error(`[Business Onboarding Workflow] Failed for user ${userId}:`, error);
         
         // Return failure result
         return {

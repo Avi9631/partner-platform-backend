@@ -1,5 +1,6 @@
 const { Op } = require("sequelize");
 const db = require("../entity");
+const logger = require("../config/winston.config");
 const ListingDraft = db.ListingDraft;
 const Property = db.Property;
 const Project = db.Project;
@@ -25,7 +26,7 @@ const createDraft = async (userId, draftType) => {
       message: 'Draft created successfully'
     };
   } catch (error) {
-    console.error('Error creating draft:', error);
+    logger.error('Error creating draft:', error);
     throw error;
   }
 };
@@ -64,7 +65,7 @@ const updateDraft = async (draftId, userId, draftData, draftType) => {
       message: 'Draft updated successfully'
     };
   } catch (error) {
-    console.error('Error updating draft:', error);
+    logger.error('Error updating draft:', error);
     throw error;
   }
 };
@@ -96,7 +97,7 @@ const getDraftById = async (draftId, userId) => {
       data: draft
     };
   } catch (error) {
-    console.error('Error fetching draft:', error);
+    logger.error('Error fetching draft:', error);
     throw error;
   }
 };
@@ -133,7 +134,7 @@ const getUserDrafts = async (userId, draftType) => {
       count: drafts.length
     };
   } catch (error) {
-    console.error('Error fetching user drafts:', error);
+    logger.error('Error fetching user drafts:', error);
     throw error;
   }
 };
@@ -167,7 +168,7 @@ const deleteDraft = async (draftId, userId) => {
       message: 'Draft deleted successfully'
     };
   } catch (error) {
-    console.error('Error deleting draft:', error);
+    logger.error('Error deleting draft:', error);
     throw error;
   }
 };
@@ -293,7 +294,7 @@ const submitDraft = async (draftId, userId) => {
     };
   } catch (error) {
     await transaction.rollback();
-    console.error('Error submitting draft:', error);
+    logger.error('Error submitting draft:', error);
     throw error;
   }
 };

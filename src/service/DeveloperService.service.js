@@ -2,6 +2,7 @@ const db = require("../entity");
 const Developer = db.Developer;
 const PlatformUser = db.PlatformUser;
 const { Op } = require("sequelize");
+const logger = require("../config/winston.config");
 
  
 
@@ -40,7 +41,7 @@ const createDeveloper = async (userId, draftId, developerData) => {
       data: developer
     };
   } catch (error) {
-    console.error('Error creating developer:', error);
+    logger.error('Error creating developer:', error);
     throw error;
   }
 };
@@ -89,7 +90,7 @@ const updateDeveloper = async (developerId, userId, updateData) => {
       data: developer
     };
   } catch (error) {
-    console.error('Error updating developer:', error);
+    logger.error('Error updating developer:', error);
     throw error;
   }
 };
@@ -123,7 +124,7 @@ const getDeveloperById = async (developerId) => {
       data: developer
     };
   } catch (error) {
-    console.error('Error getting developer:', error);
+    logger.error('Error getting developer:', error);
     throw error;
   }
 };
@@ -148,7 +149,7 @@ const getDevelopersByUserId = async (userId) => {
       count: developers.length
     };
   } catch (error) {
-    console.error('Error getting developers by user ID:', error);
+    logger.error('Error getting developers by user ID:', error);
     throw error;
   }
 };
@@ -219,7 +220,7 @@ const listDevelopers = async (filters = {}, page = 1, limit = 20) => {
       }
     };
   } catch (error) {
-    console.error('Error listing developers:', error);
+    logger.error('Error listing developers:', error);
     throw error;
   }
 };
@@ -260,7 +261,7 @@ const updatePublishStatus = async (developerId, status, notes = null) => {
       data: developer
     };
   } catch (error) {
-    console.error('Error updating publish status:', error);
+    logger.error('Error updating publish status:', error);
     throw error;
   }
 };
@@ -302,7 +303,7 @@ const updateVerificationStatus = async (developerId, status, verifiedBy, notes =
       data: developer
     };
   } catch (error) {
-    console.error('Error updating verification status:', error);
+    logger.error('Error updating verification status:', error);
     throw error;
   }
 };
@@ -336,7 +337,7 @@ const deleteDeveloper = async (developerId, userId) => {
       message: 'Developer profile deleted successfully'
     };
   } catch (error) {
-    console.error('Error deleting developer:', error);
+    logger.error('Error deleting developer:', error);
     throw error;
   }
 };

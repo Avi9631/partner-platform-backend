@@ -8,6 +8,7 @@
  * 
  * @module temporal/workflows/partnerOnboarding-non.workflow
  */
+const logger = require('../../../config/winston.config');
 
 // Import Partner Onboarding specific activities
 const partnerOnboardingActivities = require('../../activities/partnerOnboarding.activities');
@@ -51,11 +52,11 @@ async function partnerUserOnboarding(workflowInput) {
         videoSize
     } = workflowInput;
     
-    console.log(`[Partner Onboarding Workflow - Direct] Starting for user ${userId}`);
+    logger.info(`[Partner Onboarding Workflow - Direct] Starting for user ${userId}`);
     
     try {
         // Step 1: Validate profile data
-        console.log(`[Partner Onboarding] Step 1: Validating profile data`);
+        logger.info(`[Partner Onboarding] Step 1: Validating profile data`);
         
         const validationResult = await activities.validateProfileData({
             userId,
@@ -64,14 +65,14 @@ async function partnerUserOnboarding(workflowInput) {
         });
         
         if (!validationResult.success) {
-            console.error(`[Partner Onboarding] Validation failed:`, validationResult.errors);
+            logger.error(`[Partner Onboarding] Validation failed:`, validationResult.errors);
             throw new Error(`Profile validation failed: ${validationResult.errors.join(', ')}`);
         }
         
-        console.log(`[Partner Onboarding] Profile validation successful`);
+        logger.info(`[Partner Onboarding] Profile validation successful`);
         
         // Step 2: Upload video to Supabase using S3 protocol
-        console.log(`[Partner Onboarding] Step 2: Uploading verification video to Supabase`);
+        logger.info(`[Partner Onboarding] Step 2: Uploading verification video to Supabase`);
         
         const uploadResult = await activities.uploadVideoToSupabase({
             videoBuffer,
@@ -83,14 +84,14 @@ async function partnerUserOnboarding(workflowInput) {
         });
         
         if (!uploadResult.success) {
-            console.error(`[Partner Onboarding] Video upload failed:`, uploadResult.error);
+            logger.error(`[Partner Onboarding] Video upload failed:`, uploadResult.error);
             throw new Error(`Video upload failed: ${uploadResult.error}`);
         }
         
-        console.log(`[Partner Onboarding] Video uploaded successfully: ${uploadResult.videoUrl}`);
+        logger.info(`[Partner Onboarding] Video uploaded successfully: ${uploadResult.videoUrl}`);
         
         // Step 3: Update partner user with profile data and video URL
-        console.log(`[Partner Onboarding] Step 3: Updating user profile with video URL`);
+        logger.info(`[Partner Onboarding] Step 3: Updating user profile with video URL`);
         
         const updateResult = await activities.updatePartnerUser({
             userId,
@@ -100,14 +101,14 @@ async function partnerUserOnboarding(workflowInput) {
         });
         
         if (!updateResult.success) {
-            console.error(`[Partner Onboarding] User update failed:`, updateResult.error);
+            logger.error(`[Partner Onboarding] User update failed:`, updateResult.error);
             throw new Error(`User update failed: ${updateResult.error}`);
         }
         
-        console.log(`[Partner Onboarding] User profile updated successfully`);
+        logger.info(`[Partner Onboarding] User profile updated successfully`);
         
         // Step 4: Send onboarding notification email
-        console.log(`[Partner Onboarding] Step 4: Sending notification email`);
+        logger.info(`[Partner Onboarding] Step 4: Sending notification email`);
         
         await activities.sendOnboardingNotification({
             userId,
@@ -115,10 +116,10 @@ async function partnerUserOnboarding(workflowInput) {
             name: `${profileData.firstName} ${profileData.lastName}`,
         });
         
-        console.log(`[Partner Onboarding] Notification sent`);
+        logger.info(`[Partner Onboarding] Notification sent`);
         
         // Step 5: Add welcome bonus credits
-        console.log(`[Partner Onboarding] Step 5: Adding welcome bonus credits`);
+        logger.info(`[Partner Onboarding] Step 5: Adding welcome bonus credits`);
         
         const creditResult = await activities.addCredits({
             userId,
@@ -128,13 +129,13 @@ async function partnerUserOnboarding(workflowInput) {
         });
         
         if (creditResult.success) {
-            console.log(`[Partner Onboarding] Added 200 credits to user wallet`);
+            logger.info(`[Partner Onboarding] Added 200 credits to user wallet`);
         } else {
-            console.error(`[Partner Onboarding] Failed to add credits: ${creditResult.message}`);
+            logger.error(`[Partner Onboarding] Failed to add credits: ${creditResult.message}`);
             // Don't fail the entire workflow for credit addition failure
         }
         
-        console.log(`[Partner Onboarding Workflow] Completed successfully for user ${userId}`);
+        logger.info(`[Partner Onboarding Workflow] Completed successfully for user ${userId}`);
         
         // Return success result
         return {
@@ -150,7 +151,7 @@ async function partnerUserOnboarding(workflowInput) {
         };
         
     } catch (error) {
-        console.error(`[Partner Onboarding Workflow] Failed for user ${userId}:`, error);
+        logger.error(`[Partner Onboarding Workflow] Failed for user ${userId}:`, error);
         
         // Return failure result
         return {
