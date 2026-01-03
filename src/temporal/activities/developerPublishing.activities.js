@@ -8,6 +8,7 @@
  */
 
 const DeveloperService = require("../../service/DeveloperService.service");
+const WalletService = require("../../service/WalletService.service");
 const db = require("../../entity");
 const Developer = db.Developer;
 const PlatformUser = db.PlatformUser;
@@ -230,6 +231,62 @@ async function updateListingDraftStatus({ draftId }) {
   }
 }
 
+/**
+ * Deduct credits for developer publishing
+ * 
+ * @param {Object} params - Activity parameters
+ * @param {number} params.userId - User ID
+ * @param {number} params.developerId - Developer ID
+ * @param {number} [params.amount=10] - Amount of credits to deduct (default: 10)
+ * @returns {Promise<Object>} - Result of credit deduction
+ */
+async function deductPublishingCredits({ userId, developerId, amount = 10 }) {
+  logger.info(`[Developer Publishing] Deducting ${amount} credits from user ${userId} for developer ${developerId}`);
+  
+  try {
+    // Check if user has sufficient funds
+    const fundCheck = await WalletService.checkSufficientFunds(userId, amount);
+    
+    if (!fundCheck.success || !fundCheck.hasSufficientFunds) {
+      logger.error(`[Developer Publishing] Insufficient credits for user ${userId}. Required: ${amount}, Available: ${fundCheck.currentBalance || 0}`);
+      return {
+        success: false,
+        message: `Insufficient credits. Required: ${amount}, Available: ${fundCheck.currentBalance || 0}`
+      };
+    }
+
+    // Deduct funds
+    const deductResult = await WalletService.deductFunds(
+      userId,
+      amount,
+      'Developer listing published',
+      { developerId, type: 'DEVELOPER_PUBLISH' }
+    );
+
+    if (!deductResult.success) {
+      logger.error(`[Developer Publishing] Failed to deduct credits:`, deductResult.message);
+      return {
+        success: false,
+        message: deductResult.message || 'Failed to deduct credits'
+      };
+    }
+
+    logger.info(`[Developer Publishing] Successfully deducted ${amount} credits from user ${userId}. New balance: ${deductResult.transaction.balanceAfter}`);
+    
+    return {
+      success: true,
+      message: `Successfully deducted ${amount} credits`,
+      transaction: deductResult.transaction
+    };
+  } catch (error) {
+    logger.error('[Developer Publishing] Error deducting credits:', error);
+    return {
+      success: false,
+      message: error.message || 'Failed to deduct credits'
+    };
+  }
+}
+
 module.exports = {
   validateDeveloperData,
   checkDeveloperExists,
@@ -237,5 +294,6 @@ module.exports = {
   updateDeveloperRecord,
   getUserEmail,
   sendDeveloperPublishingNotification,
-  updateListingDraftStatus
+  updateListingDraftStatus,
+  deductPublishingCredits
 };

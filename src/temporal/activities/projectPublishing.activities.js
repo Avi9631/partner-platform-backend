@@ -8,6 +8,7 @@
  */
 
 const ProjectService = require("../../service/ProjectService.service");
+const WalletService = require("../../service/WalletService.service");
 const db = require("../../entity");
 const Project = db.Project;
 const PlatformUser = db.PlatformUser;
@@ -296,10 +297,67 @@ async function updateListingDraftStatus({ draftId, status, publishedId, publishe
   }
 }
 
+/**
+ * Deduct credits for project publishing
+ * 
+ * @param {Object} params - Activity parameters
+ * @param {number} params.userId - User ID
+ * @param {number} params.projectId - Project ID
+ * @param {number} [params.amount=10] - Amount of credits to deduct (default: 10)
+ * @returns {Promise<Object>} - Result of credit deduction
+ */
+async function deductPublishingCredits({ userId, projectId, amount = 10 }) {
+  logger.info(`[Project Publishing] Deducting ${amount} credits from user ${userId} for project ${projectId}`);
+  
+  try {
+    // Check if user has sufficient funds
+    const fundCheck = await WalletService.checkSufficientFunds(userId, amount);
+    
+    if (!fundCheck.success || !fundCheck.hasSufficientFunds) {
+      logger.error(`[Project Publishing] Insufficient credits for user ${userId}. Required: ${amount}, Available: ${fundCheck.currentBalance || 0}`);
+      return {
+        success: false,
+        message: `Insufficient credits. Required: ${amount}, Available: ${fundCheck.currentBalance || 0}`
+      };
+    }
+
+    // Deduct funds
+    const deductResult = await WalletService.deductFunds(
+      userId,
+      amount,
+      'Project listing published',
+      { projectId, type: 'PROJECT_PUBLISH' }
+    );
+
+    if (!deductResult.success) {
+      logger.error(`[Project Publishing] Failed to deduct credits:`, deductResult.message);
+      return {
+        success: false,
+        message: deductResult.message || 'Failed to deduct credits'
+      };
+    }
+
+    logger.info(`[Project Publishing] Successfully deducted ${amount} credits from user ${userId}. New balance: ${deductResult.transaction.balanceAfter}`);
+    
+    return {
+      success: true,
+      message: `Successfully deducted ${amount} credits`,
+      transaction: deductResult.transaction
+    };
+  } catch (error) {
+    logger.error('[Project Publishing] Error deducting credits:', error);
+    return {
+      success: false,
+      message: error.message || 'Failed to deduct credits'
+    };
+  }
+}
+
 module.exports = {
   validateProjectData,
   createProjectRecord,
   updateProjectRecord,
   sendProjectPublishingNotification,
   updateListingDraftStatus,
+  deductPublishingCredits,
 };

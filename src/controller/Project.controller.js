@@ -1,6 +1,6 @@
 const ProjectService = require("../service/ProjectService.service");
 const { sendErrorResponse, sendSuccessResponse } = require("../utils/responseFormatter");
-const { runWorkflowAsync, runWorkflowDirect, WORKFLOWS } = require("../utils/workflowHelper");
+const { runWorkflowAsync, runWorkflowDirect, WORKFLOWS } = require("../temporal/utils/workflowHelper");
 const logger = require("../config/winston.config");
 const db = require("../entity");
 const ListingDraft = db.ListingDraft;
@@ -53,49 +53,27 @@ const publishProject = async (req, res) => {
       }
     }
 
-    // Check if Temporal is enabled
-    const temporalEnabled = process.env.TEMPORAL_ENABLED === 'true';
+    // Use skip-workflow (direct execution)
     const workflowId = `project-publish-${userId}-${Date.now()}`;
+    
+    const result = await runWorkflowDirect(
+      WORKFLOWS.PROJECT_PUBLISHING,
+      {
+        userId,
+        draftId: draftId || null,
+        projectData
+      },
+      workflowId
+    );
 
-    let wfId, mode;
-
-    if (temporalEnabled) {
-      // Use Temporal workflow
-      const result = await runWorkflowAsync(
-        WORKFLOWS.PROJECT_PUBLISHING,
-        {
-          userId,
-          draftId: draftId || null,
-          projectData
-        },
-        workflowId
-      );
-      wfId = result.workflowId;
-      mode = result.mode;
-    } else {
-      // Use skip-workflow (direct execution)
-      const result = await runWorkflowDirect(
-        WORKFLOWS.PROJECT_PUBLISHING,
-        {
-          userId,
-          draftId: draftId || null,
-          projectData
-        },
-        workflowId
-      );
-      wfId = result.workflowId;
-      mode = 'direct';
-    }
-
-    logger.info(`Started project publishing workflow: ${wfId} (mode: ${mode})`);
+    logger.info(`Started project publishing workflow: ${result.workflowId} (mode: direct)`);
 
     // Return immediately without waiting for workflow completion
     return sendSuccessResponse(
       res,
       { 
-        workflowId: wfId,
-        executionMode: mode,
-        usingTemporal: temporalEnabled,
+        workflowId: result.workflowId,
+        executionMode: 'direct',
         message: 'Project publishing workflow started successfully'
       },
       'Project is being processed',

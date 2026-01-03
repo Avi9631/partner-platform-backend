@@ -109,9 +109,28 @@ async function pgHostelPublishing(workflowInput) {
         
         const { pgHostelId, slug, propertyName } = operationResult.data;
         
-        // Step 4: Update ListingDraft status to PUBLISHED (only for new creations)
+        // Step 4: Deduct publishing credits
+        console.log(`[PG Hostel Publishing] Step 4: Deducting publishing credits`);
+        
+        const creditResult = await activities.deductPublishingCredits({
+            userId,
+            pgHostelId,
+            amount: 10
+        });
+        
+        if (!creditResult.success) {
+            console.error(`[PG Hostel Publishing] Failed to deduct credits:`, creditResult.message);
+            return {
+                success: false,
+                message: creditResult.message || 'Failed to deduct publishing credits',
+            };
+        }
+        
+        console.log(`[PG Hostel Publishing] Credits deducted successfully. New balance: ${creditResult.transaction.balanceAfter}`);
+        
+        // Step 5: Update ListingDraft status to PUBLISHED (only for new creations)
         if (!isUpdate) {
-            console.log(`[PG Hostel Publishing] Step 4: Updating ListingDraft status`);
+            console.log(`[PG Hostel Publishing] Step 5: Updating ListingDraft status`);
             
             try {
                 await activities.updateListingDraftStatus({ draftId });
@@ -124,8 +143,8 @@ async function pgHostelPublishing(workflowInput) {
             console.log(`[PG Hostel Publishing] Skipping ListingDraft update (update operation)`);
         }
         
-        // Step 5: Send notification to user
-        console.log(`[PG Hostel Publishing] Step 5: Sending notification`);
+        // Step 6: Send notification to user
+        console.log(`[PG Hostel Publishing] Step 6: Sending notification`);
         
         try {
             await activities.sendPgHostelPublishingNotification({

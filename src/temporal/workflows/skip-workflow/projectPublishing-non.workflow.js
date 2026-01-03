@@ -80,9 +80,28 @@ async function projectPublishing(workflowInput) {
         const projectId = projectResult.projectId;
         console.log(`[Project Publishing] Project record saved: ID ${projectId}`);
         
-        // Step 3: Update draft status if draft was provided
+        // Step 3: Deduct publishing credits
+        console.log(`[Project Publishing] Step 3: Deducting publishing credits`);
+        
+        const creditResult = await activities.deductPublishingCredits({
+            userId,
+            projectId: projectResult.data.projectId,
+            amount: 10
+        });
+        
+        if (!creditResult.success) {
+            console.error(`[Project Publishing] Failed to deduct credits:`, creditResult.message);
+            return {
+                success: false,
+                message: creditResult.message || 'Failed to deduct publishing credits',
+            };
+        }
+        
+        console.log(`[Project Publishing] Credits deducted successfully. New balance: ${creditResult.transaction.balanceAfter}`);
+        
+        // Step 4: Update draft status if draft was provided
         if (draftId) {
-            console.log(`[Project Publishing] Step 3: Updating draft status`);
+            console.log(`[Project Publishing] Step 4: Updating draft status`);
             
             await activities.updateListingDraftStatus({
                 draftId,
@@ -94,8 +113,10 @@ async function projectPublishing(workflowInput) {
             console.log(`[Project Publishing] Draft status updated`);
         }
         
-        // Step 4: Send notification to user
-        console.log(`[Project Publishing] Step 4: Sending notification`);
+        // Step 5: Send notification to user
+        console.log(`[Project Publishing] Step 5: Sending notification`);
+        
+        const isUpdate = !!projectData.projectId;
         
         await activities.sendProjectPublishingNotification({
             userId,
@@ -106,7 +127,7 @@ async function projectPublishing(workflowInput) {
         
         console.log(`[Project Publishing] Notification sent`);
         
-        // Step 5: Return success result
+        // Step 6: Return success result
         console.log(`[Project Publishing] Workflow completed successfully`);
         
         return {

@@ -8,6 +8,7 @@
  */
 
 const PropertyService = require("../../service/PropertyService.service");
+const WalletService = require("../../service/WalletService.service");
 const db = require("../../entity");
 const Property = db.Property;
 const PlatformUser = db.PlatformUser;
@@ -360,6 +361,62 @@ async function updateListingDraftStatus({ draftId, status }) {
   }
 }
 
+/**
+ * Deduct credits for property publishing
+ * 
+ * @param {Object} params - Activity parameters
+ * @param {number} params.userId - User ID
+ * @param {number} params.propertyId - Property ID
+ * @param {number} [params.amount=10] - Amount of credits to deduct (default: 10)
+ * @returns {Promise<Object>} - Result of credit deduction
+ */
+async function deductPublishingCredits({ userId, propertyId, amount = 10 }) {
+  logger.info(`[Property Publishing] Deducting ${amount} credits from user ${userId} for property ${propertyId}`);
+  
+  try {
+    // Check if user has sufficient funds
+    const fundCheck = await WalletService.checkSufficientFunds(userId, amount);
+    
+    if (!fundCheck.success || !fundCheck.hasSufficientFunds) {
+      logger.error(`[Property Publishing] Insufficient credits for user ${userId}. Required: ${amount}, Available: ${fundCheck.currentBalance || 0}`);
+      return {
+        success: false,
+        message: `Insufficient credits. Required: ${amount}, Available: ${fundCheck.currentBalance || 0}`
+      };
+    }
+
+    // Deduct funds
+    const deductResult = await WalletService.deductFunds(
+      userId,
+      amount,
+      'Property listing published',
+      { propertyId, type: 'PROPERTY_PUBLISH' }
+    );
+
+    if (!deductResult.success) {
+      logger.error(`[Property Publishing] Failed to deduct credits:`, deductResult.message);
+      return {
+        success: false,
+        message: deductResult.message || 'Failed to deduct credits'
+      };
+    }
+
+    logger.info(`[Property Publishing] Successfully deducted ${amount} credits from user ${userId}. New balance: ${deductResult.transaction.balanceAfter}`);
+    
+    return {
+      success: true,
+      message: `Successfully deducted ${amount} credits`,
+      transaction: deductResult.transaction
+    };
+  } catch (error) {
+    logger.error('[Property Publishing] Error deducting credits:', error);
+    return {
+      success: false,
+      message: error.message || 'Failed to deduct credits'
+    };
+  }
+}
+
 module.exports = {
   fetchListingDraftData,
   validatePropertyData,
@@ -367,4 +424,5 @@ module.exports = {
   updatePropertyRecord,
   sendPropertyPublishingNotification,
   updateListingDraftStatus,
+  deductPublishingCredits,
 };

@@ -129,8 +129,27 @@ async function developerPublishing(workflowInput) {
         
         console.log(`[Developer Publishing] Developer record ${action} with ID: ${developerId}`);
         
-        // Step 5: Update ListingDraft status to PUBLISHED
-        console.log(`[Developer Publishing] Step 5: Updating ListingDraft status`);
+        // Step 5: Deduct publishing credits
+        console.log(`[Developer Publishing] Step 5: Deducting publishing credits`);
+        
+        const creditResult = await activities.deductPublishingCredits({
+            userId,
+            developerId,
+            amount: 10
+        });
+        
+        if (!creditResult.success) {
+            console.error(`[Developer Publishing] Failed to deduct credits:`, creditResult.message);
+            return {
+                success: false,
+                message: creditResult.message || 'Failed to deduct publishing credits',
+            };
+        }
+        
+        console.log(`[Developer Publishing] Credits deducted successfully. New balance: ${creditResult.transaction.balanceAfter}`);
+        
+        // Step 6: Update ListingDraft status to PUBLISHED
+        console.log(`[Developer Publishing] Step 6: Updating ListingDraft status`);
         
         try {
             await activities.updateListingDraftStatus({ draftId });
@@ -140,8 +159,8 @@ async function developerPublishing(workflowInput) {
             console.error(`[Developer Publishing] Failed to update ListingDraft status:`, updateError);
         }
         
-        // Step 6: Send notification email (final step)
-        console.log(`[Developer Publishing] Step 6: Sending notification email`);
+        // Step 7: Send notification email (final step)
+        console.log(`[Developer Publishing] Step 7: Sending notification email`);
         
         try {
             const emailResult = await activities.getUserEmail({ userId });

@@ -8,6 +8,7 @@
     "dev": "nodemon server.js",
     "start": "pm2 start server.js",
     "test:queue": "node test-email-queue.js",
+    "test:tracing": "node src/test-tracing.js",
     "worker": "node src/temporal/worker.js",
     "worker:dev": "nodemon src/temporal/worker.js"
   },
@@ -17,6 +18,12 @@
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
     "@libsql/client": "^0.15.10",
+    "@opentelemetry/api": "^1.9.0",
+    "@opentelemetry/auto-instrumentations-node": "^0.67.3",
+    "@opentelemetry/instrumentation-winston": "^0.53.0",
+    "@opentelemetry/resources": "^2.2.0",
+    "@opentelemetry/sdk-node": "^0.208.0",
+    "@opentelemetry/semantic-conventions": "^1.38.0",
     "@supabase/supabase-js": "^2.76.0",
     "@temporalio/activity": "^1.13.1",
     "@temporalio/client": "^1.13.1",

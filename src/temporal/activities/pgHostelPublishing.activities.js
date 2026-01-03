@@ -8,6 +8,7 @@
  */
 
 const PgColiveHostelService = require("../../service/PgColiveHostelService.service");
+const WalletService = require("../../service/WalletService.service");
 const db = require("../../entity");
 const PgColiveHostel = db.PgColiveHostel;
 const PlatformUser = db.PlatformUser;
@@ -385,6 +386,62 @@ async function updateListingDraftStatus({ draftId }) {
   }
 }
 
+/**
+ * Deduct credits for PG/Hostel publishing
+ * 
+ * @param {Object} params - Activity parameters
+ * @param {number} params.userId - User ID
+ * @param {number} params.pgHostelId - PG/Hostel ID
+ * @param {number} [params.amount=10] - Amount of credits to deduct (default: 10)
+ * @returns {Promise<Object>} - Result of credit deduction
+ */
+async function deductPublishingCredits({ userId, pgHostelId, amount = 10 }) {
+  logger.info(`[PG Hostel Publishing] Deducting ${amount} credits from user ${userId} for PG/Hostel ${pgHostelId}`);
+  
+  try {
+    // Check if user has sufficient funds
+    const fundCheck = await WalletService.checkSufficientFunds(userId, amount);
+    
+    if (!fundCheck.success || !fundCheck.hasSufficientFunds) {
+      logger.error(`[PG Hostel Publishing] Insufficient credits for user ${userId}. Required: ${amount}, Available: ${fundCheck.currentBalance || 0}`);
+      return {
+        success: false,
+        message: `Insufficient credits. Required: ${amount}, Available: ${fundCheck.currentBalance || 0}`
+      };
+    }
+
+    // Deduct funds
+    const deductResult = await WalletService.deductFunds(
+      userId,
+      amount,
+      'PG/Hostel listing published',
+      { pgHostelId, type: 'PG_HOSTEL_PUBLISH' }
+    );
+
+    if (!deductResult.success) {
+      logger.error(`[PG Hostel Publishing] Failed to deduct credits:`, deductResult.message);
+      return {
+        success: false,
+        message: deductResult.message || 'Failed to deduct credits'
+      };
+    }
+
+    logger.info(`[PG Hostel Publishing] Successfully deducted ${amount} credits from user ${userId}. New balance: ${deductResult.transaction.balanceAfter}`);
+    
+    return {
+      success: true,
+      message: `Successfully deducted ${amount} credits`,
+      transaction: deductResult.transaction
+    };
+  } catch (error) {
+    logger.error('[PG Hostel Publishing] Error deducting credits:', error);
+    return {
+      success: false,
+      message: error.message || 'Failed to deduct credits'
+    };
+  }
+}
+
 module.exports = {
   fetchListingDraftData,
   validatePgHostelData,
@@ -392,5 +449,6 @@ module.exports = {
   updatePgHostelRecord,
   sendPgHostelPublishingNotification,
   updatePgHostelVerificationStatus,
-  updateListingDraftStatus
+  updateListingDraftStatus,
+  deductPublishingCredits
 };

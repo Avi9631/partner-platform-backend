@@ -1,6 +1,6 @@
 const PropertyService = require("../service/PropertyService.service");
 const { sendErrorResponse, sendSuccessResponse } = require("../utils/responseFormatter");
-const { runWorkflowAsync, runWorkflowDirect, WORKFLOWS } = require("../utils/workflowHelper");
+const { runWorkflowAsync, runWorkflowDirect, WORKFLOWS } = require("../temporal/utils/workflowHelper");
 const logger = require("../config/winston.config");
 const db = require("../entity");
 const ListingDraft = db.ListingDraft;
@@ -49,48 +49,27 @@ const publishProperty = async (req, res) => {
 
     const isUpdate = !!existingProperty;
 
-    // Check if Temporal is enabled
-    const temporalEnabled = process.env.TEMPORAL_ENABLED === 'true';
+    // Use skip-workflow (direct execution)
     const workflowId = `property-publish-${userId}-${Date.now()}`;
+    
+    const result = await runWorkflowDirect(
+      WORKFLOWS.PROPERTY_PUBLISHING,
+      {
+        userId,
+        draftId
+      },
+      workflowId
+    );
 
-    let wfId, mode;
-
-    if (temporalEnabled) {
-      // Use Temporal workflow
-      const result = await runWorkflowAsync(
-        WORKFLOWS.PROPERTY_PUBLISHING,
-        {
-          userId,
-          draftId
-        },
-        workflowId
-      );
-      wfId = result.workflowId;
-      mode = result.mode;
-    } else {
-      // Use skip-workflow (direct execution)
-      const result = await runWorkflowDirect(
-        WORKFLOWS.PROPERTY_PUBLISHING,
-        {
-          userId,
-          draftId
-        },
-        workflowId
-      );
-      wfId = result.workflowId;
-      mode = 'direct';
-    }
-
-    logger.info(`Started property publishing workflow: ${wfId} (mode: ${mode})`);
+    logger.info(`Started property publishing workflow: ${result.workflowId} (mode: direct)`);
 
     // Return immediately without waiting for workflow completion
     return sendSuccessResponse(
       res,
       { 
-        workflowId: wfId,
+        workflowId: result.workflowId,
         isUpdate,
-        executionMode: mode,
-        usingTemporal: temporalEnabled,
+        executionMode: 'direct',
         message: `Property ${isUpdate ? 'update' : 'publishing'} workflow started successfully`
       },
       `Property is being ${isUpdate ? 'updated' : 'processed'}`,

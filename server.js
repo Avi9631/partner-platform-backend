@@ -3,6 +3,7 @@ require("dotenv").config();
 const dns = require("dns");
 dns.setDefaultResultOrder("ipv4first");
 
+
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const express = require("express");
@@ -15,11 +16,9 @@ const developerConsumerApiRoute = require("./src/routes/developer-consumer-api.r
 const pgHostelRoute = require("./src/routes/pgHostel.route.js");
 const propertyRoute = require("./src/routes/property.route.js");
 const projectRoute = require("./src/routes/project.route.js");
-const workflowRoute = require("./src/routes/workflow.route.js");
-const uploadRoute = require("./src/routes/upload.route.js");
+ const uploadRoute = require("./src/routes/upload.route.js");
 const otpAuthRoute = require("./src/routes/otpAuth.route.js");
 const walletRoute = require("./src/routes/wallet.route.js");
-const healthRoute = require("./src/routes/health.route.js");
 const logger = require("./src/config/winston.config.js");
 const app = express();
 const port = process.env.PORT || 3000;
@@ -114,14 +113,12 @@ app.use('/uploads', express.static(path.join(__dirname, 'src/uploads')));
 app.use(authRoute);
 app.use(draftRoute);
 app.use(userRoute);
-app.use("/health", healthRoute);
-app.use("/api/developer", developerRoute);
+ app.use("/api/developer", developerRoute);
 app.use("/api/developer-consumer-api", developerConsumerApiRoute);
 app.use("/api/pg-hostel", pgHostelRoute);
 app.use("/api/property", propertyRoute);
 app.use("/api/project", projectRoute);
-app.use(workflowRoute);
-app.use("/api/upload", uploadRoute);
+ app.use("/api/upload", uploadRoute);
 app.use("/api/otp", otpAuthRoute);
 app.use("/api/wallet", walletRoute);
 
@@ -141,19 +138,7 @@ const gracefulShutdown = async (signal) => {
       logger.info("HTTP server closed");
     });
 
-    // 2. Close Temporal client connection (if enabled)
-    try {
-      const { resetTemporalClient, isTemporalEnabled } = require("./src/utils/temporalClient");
-      if (isTemporalEnabled()) {
-        console.log("Closing Temporal client connection...");
-        resetTemporalClient();
-        console.log("Temporal client connection closed");
-        logger.info("Temporal client connection closed");
-      }
-    } catch (error) {
-      // Temporal might not be initialized, that's okay
-      logger.warn("Could not close Temporal client:", error.message);
-    }
+    
 
     // 3. Stop BullMQ worker (stops processing new jobs but completes current ones)
     console.log("Stopping email worker...");

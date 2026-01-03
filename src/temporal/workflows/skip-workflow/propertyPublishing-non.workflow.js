@@ -106,8 +106,27 @@ async function propertyPublishing(workflowInput) {
         const property = propertyResult.data;
         console.log(`[Property Publishing] Property ${isUpdate ? 'updated' : 'created'} successfully: ${property.propertyId}`);
         
-        // Step 4: Update draft status
-        console.log(`[Property Publishing] Step 4: Updating draft status`);
+        // Step 4: Deduct publishing credits
+        console.log(`[Property Publishing] Step 4: Deducting publishing credits`);
+        
+        const creditResult = await activities.deductPublishingCredits({
+            userId,
+            propertyId: property.propertyId,
+            amount: 10
+        });
+        
+        if (!creditResult.success) {
+            console.error(`[Property Publishing] Failed to deduct credits:`, creditResult.message);
+            return {
+                success: false,
+                message: creditResult.message || 'Failed to deduct publishing credits',
+            };
+        }
+        
+        console.log(`[Property Publishing] Credits deducted successfully. New balance: ${creditResult.transaction.balanceAfter}`);
+        
+        // Step 5: Update draft status
+        console.log(`[Property Publishing] Step 5: Updating draft status`);
         
         await activities.updateListingDraftStatus({
             draftId,
@@ -116,8 +135,8 @@ async function propertyPublishing(workflowInput) {
         
         console.log(`[Property Publishing] Draft status updated`);
         
-        // Step 5: Send notification
-        console.log(`[Property Publishing] Step 5: Sending notification`);
+        // Step 6: Send notification
+        console.log(`[Property Publishing] Step 6: Sending notification`);
         
         try {
             await activities.sendPropertyPublishingNotification({
