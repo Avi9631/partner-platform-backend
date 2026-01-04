@@ -1,8 +1,13 @@
+// ============================================================================
+// CRITICAL: OpenTelemetry tracing MUST be initialized FIRST
+// This must come before any other imports to properly instrument all modules
+// ============================================================================
+require('./src/config/tracing');
+
 require("dotenv").config();
 
 const dns = require("dns");
 dns.setDefaultResultOrder("ipv4first");
-
 
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
@@ -78,6 +83,9 @@ app.use(cookieParser());
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
+// OpenTelemetry auto-instrumentation handles trace context automatically
+// No need for custom trace ID middleware
+
 // Serve static files for uploaded images
 app.use('/uploads', express.static(path.join(__dirname, 'src/uploads')));
 
@@ -138,7 +146,11 @@ const gracefulShutdown = async (signal) => {
       logger.info("HTTP server closed");
     });
 
-    
+    // 2. Shutdown OpenTelemetry SDK (flush remaining traces)
+    logger.info("Shutting down OpenTelemetry SDK...");
+    const { shutdown: shutdownTracing } = require('./src/config/tracing');
+    await shutdownTracing();
+    logger.info("OpenTelemetry SDK shut down");
 
     // 3. Stop BullMQ worker (stops processing new jobs but completes current ones)
     logger.info("Stopping email worker...");
