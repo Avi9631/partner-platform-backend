@@ -8,7 +8,7 @@
  */
 
 const ProjectService = require("../../service/ProjectService.service");
-const WalletService = require("../../service/WalletService.service");
+const { debitFromWallet, getWalletBalance } = require("./wallet.activities");
 const db = require("../../entity");
 const Project = db.Project;
 const PlatformUser = db.PlatformUser;
@@ -311,23 +311,23 @@ async function deductPublishingCredits({ userId, projectId, amount = 10 }) {
   
   try {
     // Check if user has sufficient funds
-    const fundCheck = await WalletService.checkSufficientFunds(userId, amount);
+    const balanceResult = await getWalletBalance({ userId });
     
-    if (!fundCheck.success || !fundCheck.hasSufficientFunds) {
-      logger.error(`[Project Publishing] Insufficient credits for user ${userId}. Required: ${amount}, Available: ${fundCheck.currentBalance || 0}`);
+    if (!balanceResult.success || balanceResult.balance < amount) {
+      logger.error(`[Project Publishing] Insufficient credits for user ${userId}. Required: ${amount}, Available: ${balanceResult.balance || 0}`);
       return {
         success: false,
-        message: `Insufficient credits. Required: ${amount}, Available: ${fundCheck.currentBalance || 0}`
+        message: `Insufficient credits. Required: ${amount}, Available: ${balanceResult.balance || 0}`
       };
     }
 
-    // Deduct funds
-    const deductResult = await WalletService.deductFunds(
+    // Deduct funds using wallet activity
+    const deductResult = await debitFromWallet({
       userId,
       amount,
-      'Project listing published',
-      { projectId, type: 'PROJECT_PUBLISH' }
-    );
+      reason: 'Project listing published',
+      metadata: { projectId, type: 'PROJECT_PUBLISH' }
+    });
 
     if (!deductResult.success) {
       logger.error(`[Project Publishing] Failed to deduct credits:`, deductResult.message);
@@ -337,7 +337,7 @@ async function deductPublishingCredits({ userId, projectId, amount = 10 }) {
       };
     }
 
-    logger.info(`[Project Publishing] Successfully deducted ${amount} credits from user ${userId}. New balance: ${deductResult.transaction.balanceAfter}`);
+    logger.info(`[Project Publishing] Successfully deducted ${amount} credits from user ${userId}. New balance: ${deductResult.newBalance}`);
     
     return {
       success: true,

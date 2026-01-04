@@ -8,7 +8,7 @@
  */
 
 const PropertyService = require("../../service/PropertyService.service");
-const WalletService = require("../../service/WalletService.service");
+const { debitFromWallet, getWalletBalance } = require("./wallet.activities");
 const db = require("../../entity");
 const Property = db.Property;
 const PlatformUser = db.PlatformUser;
@@ -375,23 +375,23 @@ async function deductPublishingCredits({ userId, propertyId, amount = 10 }) {
   
   try {
     // Check if user has sufficient funds
-    const fundCheck = await WalletService.checkSufficientFunds(userId, amount);
+    const balanceResult = await getWalletBalance({ userId });
     
-    if (!fundCheck.success || !fundCheck.hasSufficientFunds) {
-      logger.error(`[Property Publishing] Insufficient credits for user ${userId}. Required: ${amount}, Available: ${fundCheck.currentBalance || 0}`);
+    if (!balanceResult.success || balanceResult.balance < amount) {
+      logger.error(`[Property Publishing] Insufficient credits for user ${userId}. Required: ${amount}, Available: ${balanceResult.balance || 0}`);
       return {
         success: false,
-        message: `Insufficient credits. Required: ${amount}, Available: ${fundCheck.currentBalance || 0}`
+        message: `Insufficient credits. Required: ${amount}, Available: ${balanceResult.balance || 0}`
       };
     }
 
-    // Deduct funds
-    const deductResult = await WalletService.deductFunds(
+    // Deduct funds using wallet activity
+    const deductResult = await debitFromWallet({
       userId,
       amount,
-      'Property listing published',
-      { propertyId, type: 'PROPERTY_PUBLISH' }
-    );
+      reason: 'Property listing published',
+      metadata: { propertyId, type: 'PROPERTY_PUBLISH' }
+    });
 
     if (!deductResult.success) {
       logger.error(`[Property Publishing] Failed to deduct credits:`, deductResult.message);
@@ -401,7 +401,7 @@ async function deductPublishingCredits({ userId, propertyId, amount = 10 }) {
       };
     }
 
-    logger.info(`[Property Publishing] Successfully deducted ${amount} credits from user ${userId}. New balance: ${deductResult.transaction.balanceAfter}`);
+    logger.info(`[Property Publishing] Successfully deducted ${amount} credits from user ${userId}. New balance: ${deductResult.newBalance}`);
     
     return {
       success: true,

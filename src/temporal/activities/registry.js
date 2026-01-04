@@ -12,6 +12,9 @@ const userActivities = require('./user.activities');
 const partnerOnboardingActivities = require('./partnerOnboarding.activities');
 const partnerBusinessOnboardingActivities = require('./partnerBusinessOnboarding.activities');
 
+// Wallet activities
+const walletActivities = require('./wallet.activities');
+
 // Developer activities
 const developerPublishingActivities = require('./developerPublishing.activities');
 
@@ -41,6 +44,9 @@ module.exports = {
     
     // Partner business onboarding activities
     ...partnerBusinessOnboardingActivities,
+    
+    // Wallet activities
+    ...walletActivities,
     
     // Developer publishing activities
     ...developerPublishingActivities,
