@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const PropertyController = require("../controller/Property.controller.js");
-const authenticateToken = require("../middleware/authMiddleware");
+const { authenticateToken } = require("../middleware/authMiddleware");
 
 /**
  * @route   POST /api/property/publishProperty

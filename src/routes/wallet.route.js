@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const WalletController = require("../controller/Wallet.controller.js");
-const authenticateToken = require("../middleware/authMiddleware");
+const { authenticateToken } = require("../middleware/authMiddleware");
 
 /**
  * @route   GET /api/wallet/balance

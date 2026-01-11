@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const DeveloperController = require("../controller/Developer.controller.js");
-const authenticateToken = require("../middleware/authMiddleware");
+const { authenticateToken } = require("../middleware/authMiddleware");
 
 /**
  * @route   POST /api/developer/publishDeveloper

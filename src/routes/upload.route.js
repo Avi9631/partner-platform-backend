@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const authMiddleware = require("../middleware/authMiddleware");
+const { authenticateToken } = require("../middleware/authMiddleware");
 const UploadController = require("../controller/Upload.controller");
 
 // Health check
@@ -20,6 +20,6 @@ router.get("/ping", function (req, res) {
  *   expiresIn: number (optional) - Expiration in seconds (default: 300)
  * }
  */
-router.post("/presigned-urls", authMiddleware, UploadController.getPresignedUrls);
+router.post("/presigned-urls", authenticateToken, UploadController.getPresignedUrls);
 
 module.exports = router;

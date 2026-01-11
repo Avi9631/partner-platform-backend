@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const PgColiveHostelController = require("../controller/PgColiveHostel.controller.js");
-const authenticateToken = require("../middleware/authMiddleware");
+const { authenticateToken } = require("../middleware/authMiddleware");
 
 /**
  * @route   POST /api/pg-hostel/publishPgColiveHostel

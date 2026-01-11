@@ -36,7 +36,34 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
+/**
+ * Optional authentication middleware - doesn't require token but attaches user if present
+ */
+const optionalAuthenticateToken = (req, res, next) => {
+  const token = req.cookies?.accessToken;
+  
+  if (!token) {
+    // No token provided, continue without user
+    return next();
+  }
+
+  jwt.verify(token, accessTokenSecret, (err, user) => {
+    if (err) {
+      // Token invalid or expired, continue without user
+      logger.warn("Optional auth - token verification failed:", err.message);
+      return next();
+    }
+
+    if (_.get(user, "userId") && _.get(user, "userEmail")) {
+      req.user = user; // Attach user information to the request
+      logger.info("Optional auth - authenticated user:", user);
+    }
+    
+    next();
+  });
+};
 
 
 
-module.exports = authenticateToken;
+
+module.exports = { authenticateToken, optionalAuthenticateToken };

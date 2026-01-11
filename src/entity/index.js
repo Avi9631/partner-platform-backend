@@ -33,6 +33,8 @@ db.PgColiveHostel = require("./PgColiveHostel.entity.js")(sequelize, Sequelize);
 db.Property = require("./Property.entity.js")(sequelize, Sequelize);
 db.Project = require("./Project.entity.js")(sequelize, Sequelize);
 db.WalletTransaction = require("./WalletTransaction.entity.js")(sequelize, Sequelize);
+db.ListingAnalytics = require("./ListingAnalytics.entity.js")(sequelize, Sequelize);
+db.ListingLead = require("./ListingLead.entity.js")(sequelize, Sequelize);
  
 // Relationships
 // User has one PartnerBusiness (for BUSINESS account type)
@@ -175,6 +177,36 @@ db.WalletTransaction.belongsTo(db.PlatformUser, {
     foreignKey: 'user_id',
     as: 'user'
 });
+
+// ListingAnalytics belongs to User (viewer)
+db.ListingAnalytics.belongsTo(db.PlatformUser, {
+    foreignKey: 'viewer_id',
+    as: 'viewer'
+});
+
+// User has many ListingAnalytics
+db.PlatformUser.hasMany(db.ListingAnalytics, {
+    foreignKey: 'viewer_id',
+    as: 'listingAnalytics'
+});
+
+// Note: ListingAnalytics uses polymorphic association for Property, Project, PgColiveHostel, and Developer
+// The relationship is determined by listing_type and listing_id fields
+
+// ListingLead belongs to User (partner/owner)
+db.ListingLead.belongsTo(db.PlatformUser, {
+    foreignKey: 'partner_id',
+    as: 'partner'
+});
+
+// User has many ListingLeads
+db.PlatformUser.hasMany(db.ListingLead, {
+    foreignKey: 'partner_id',
+    as: 'listingLeads'
+});
+
+// Note: ListingLead also uses polymorphic association for Property, Project, PgColiveHostel, and Developer
+// The relationship is determined by listing_type and listing_id fields
  
  
  

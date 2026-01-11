@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const ProjectController = require("../controller/Project.controller.js");
-const authenticateToken = require("../middleware/authMiddleware");
+const { authenticateToken } = require("../middleware/authMiddleware");
 
 /**
  * @route   POST /api/project/publishProject
