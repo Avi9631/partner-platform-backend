@@ -448,11 +448,133 @@ const deleteProject = async (projectId, userId) => {
   }
 };
 
+/**
+ * Search projects near a location using PostGIS
+ * @param {number} latitude - Latitude coordinate
+ * @param {number} longitude - Longitude coordinate
+ * @param {number} radiusKm - Search radius in kilometers
+ * @param {object} filters - Additional filter criteria
+ * @returns {Promise<object>} - Result object
+ */
+const searchNearbyProjects = async (latitude, longitude, radiusKm, filters = {}) => {
+  try {
+    const {
+      status,
+      city,
+      search,
+      page = 1,
+      limit = 20
+    } = filters;
+
+    const whereClause = {};
+
+    // Apply additional filters
+    if (status) {
+      whereClause.status = status;
+    }
+
+    // Search filter (project name)
+    if (search) {
+      whereClause.projectName = {
+        [Op.iLike]: `%${search}%`
+      };
+    }
+
+    // City filter from projectDetails JSONB
+    let havingClause = null;
+    if (city) {
+      havingClause = db.sequelize.literal(
+        `project_details->>'city' ILIKE '%${city}%'`
+      );
+    }
+
+    // Convert radius from km to meters for PostGIS
+    const radiusMeters = radiusKm * 1000;
+
+    // Pagination
+    const offset = (page - 1) * limit;
+
+    // Build base where conditions as array
+    const whereConditions = [];
+    
+    // Add spatial query using raw SQL for PostGIS
+    whereConditions.push(
+      db.sequelize.literal(
+        `ST_DWithin(
+          location::geography,
+          ST_SetSRID(ST_MakePoint(${longitude}, ${latitude}), 4326)::geography,
+          ${radiusMeters}
+        )`
+      )
+    );
+
+    // Add city filter if provided
+    if (havingClause) {
+      whereConditions.push(havingClause);
+    }
+
+    // Use PostGIS ST_DWithin for efficient spatial query
+    const { rows, count } = await Project.findAndCountAll({
+      where: {
+        ...whereClause,
+        [Op.and]: whereConditions
+      },
+      attributes: {
+        include: [
+          // Calculate distance in kilometers and include it in results
+          [
+            db.sequelize.literal(
+              `ROUND(CAST(ST_Distance(location::geography, ST_SetSRID(ST_MakePoint(${longitude}, ${latitude}), 4326)::geography) / 1000 AS numeric), 2)`
+            ),
+            'distance_km'
+          ]
+        ]
+      },
+      include: [
+        {
+          model: PlatformUser,
+          as: 'creator',
+          attributes: ['userId', 'firstName', 'lastName', 'email', 'phone']
+        }
+      ],
+      limit: parseInt(limit),
+      offset: parseInt(offset),
+      // Order by distance (nearest first)
+      order: db.sequelize.literal(
+        `ST_Distance(location::geography, ST_SetSRID(ST_MakePoint(${longitude}, ${latitude}), 4326)::geography) ASC`
+      ),
+      subQuery: false
+    });
+
+    return {
+      success: true,
+      data: {
+        projects: rows,
+        searchCenter: {
+          lat: latitude,
+          lng: longitude,
+          radiusKm
+        },
+        pagination: {
+          total: count,
+          page: parseInt(page),
+          limit: parseInt(limit),
+          totalPages: Math.ceil(count / limit)
+        }
+      }
+    };
+  } catch (error) {
+    logger.error('Error searching nearby projects:', error);
+    throw error;
+  }
+};
+
 module.exports = {
   createProject,
   updateProject,
   getProjectById,
   listProjects,
   getMyProjects,
-  deleteProject
+  deleteProject,
+  searchNearbyProjects
 };

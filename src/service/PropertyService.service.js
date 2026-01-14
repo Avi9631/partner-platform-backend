@@ -285,7 +285,6 @@ const getPropertyById = async (propertyId) => {
         {
           model: PlatformUser,
           as: 'creator',
-          attributes: ['userId', 'name', 'email']
         }
       ]
     });
@@ -422,8 +421,7 @@ const listProperties = async (filters) => {
         {
           model: PlatformUser,
           as: 'creator',
-          attributes: ['userId', 'name', 'email']
-        }
+         }
       ]
     });
 
@@ -495,11 +493,154 @@ const deleteProperty = async (propertyId, userId) => {
   }
 };
 
+/**
+ * Search properties near a location using PostGIS
+ * @param {number} latitude - Latitude coordinate
+ * @param {number} longitude - Longitude coordinate
+ * @param {number} radiusKm - Search radius in kilometers
+ * @param {object} filters - Additional filter criteria
+ * @returns {Promise<object>} - Result object
+ */
+const searchNearbyProperties = async (latitude, longitude, radiusKm, filters = {}) => {
+  try {
+    const {
+      status,
+      projectId,
+      city,
+      locality,
+      propertyType,
+      listingType,
+      bedrooms,
+      minPrice,
+      maxPrice,
+      page = 1,
+      limit = 20
+    } = filters;
+
+    const whereClause = {};
+
+    // Apply additional filters
+    if (status) {
+      whereClause.status = status;
+    }
+
+    if (projectId) {
+      whereClause.projectId = projectId;
+    }
+
+    if (city) {
+      whereClause.city = city;
+    }
+
+    if (locality) {
+      whereClause.locality = locality;
+    }
+
+    if (propertyType) {
+      whereClause.propertyType = propertyType;
+    }
+
+    if (listingType) {
+      whereClause.listingType = listingType;
+    }
+
+    if (bedrooms) {
+      whereClause.bedrooms = bedrooms;
+    }
+
+    // Price range filter
+    if (minPrice || maxPrice) {
+      whereClause.price = {};
+      if (minPrice) {
+        whereClause.price[Op.gte] = parseFloat(minPrice);
+      }
+      if (maxPrice) {
+        whereClause.price[Op.lte] = parseFloat(maxPrice);
+      }
+    }
+
+    // Convert radius from km to meters for PostGIS
+    const radiusMeters = radiusKm * 1000;
+
+    // Pagination
+    const offset = (page - 1) * limit;
+
+    // Build base where conditions as array
+    const whereConditions = [];
+    
+    // Add spatial query using raw SQL for PostGIS
+    whereConditions.push(
+      db.sequelize.literal(
+        `ST_DWithin(
+          location::geography,
+          ST_SetSRID(ST_MakePoint(${longitude}, ${latitude}), 4326)::geography,
+          ${radiusMeters}
+        )`
+      )
+    );
+
+    // Use PostGIS ST_DWithin for efficient spatial query
+    const { rows, count } = await Property.findAndCountAll({
+      where: {
+        ...whereClause,
+        [Op.and]: whereConditions
+      },
+      attributes: {
+        include: [
+          // Calculate distance in kilometers and include it in results
+          [
+            db.sequelize.literal(
+              `ROUND(CAST(ST_Distance(location::geography, ST_SetSRID(ST_MakePoint(${longitude}, ${latitude}), 4326)::geography) / 1000 AS numeric), 2)`
+            ),
+            'distance_km'
+          ]
+        ]
+      },
+      include: [
+        {
+          model: PlatformUser,
+          as: 'creator',
+          attributes: ['userId', 'firstName', 'lastName', 'email', 'phone']
+        }
+      ],
+      limit: parseInt(limit),
+      offset: parseInt(offset),
+      // Order by distance (nearest first)
+      order: db.sequelize.literal(
+        `ST_Distance(location::geography, ST_SetSRID(ST_MakePoint(${longitude}, ${latitude}), 4326)::geography) ASC`
+      ),
+      subQuery: false
+    });
+
+    return {
+      success: true,
+      data: {
+        properties: rows,
+        searchCenter: {
+          lat: latitude,
+          lng: longitude,
+          radiusKm
+        },
+        pagination: {
+          total: count,
+          page: parseInt(page),
+          limit: parseInt(limit),
+          totalPages: Math.ceil(count / limit)
+        }
+      }
+    };
+  } catch (error) {
+    logger.error('Error searching nearby properties:', error);
+    throw error;
+  }
+};
+
 module.exports = {
   createProperty,
   updateProperty,
   getPropertyById,
   getUserProperties,
   listProperties,
-  deleteProperty
+  deleteProperty,
+  searchNearbyProperties
 };

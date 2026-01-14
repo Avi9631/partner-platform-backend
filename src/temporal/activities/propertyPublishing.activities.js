@@ -9,6 +9,7 @@
 
 const PropertyService = require("../../service/PropertyService.service");
 const { debitFromWallet, getWalletBalance } = require("./wallet.activities");
+const { transformDraftToPropertyData, validateTransformedData } = require("../../utils/draftDataTransformer");
 const db = require("../../entity");
 const Property = db.Property;
 const PlatformUser = db.PlatformUser;
@@ -16,12 +17,12 @@ const ListingDraft = db.ListingDraft;
 const logger = require("../../config/winston.config");
 
 /**
- * Fetch property data from ListingDraft entity
+ * Fetch property data from ListingDraft entity and transform it
  * 
  * @param {Object} params - Activity parameters
  * @param {number} params.userId - User ID
  * @param {number} params.draftId - Draft ID
- * @returns {Promise<Object>} - Result with property data from draft
+ * @returns {Promise<Object>} - Result with transformed property data
  */
 async function fetchListingDraftData({ userId, draftId }) {
   logger.info(`[Property Publishing] Fetching draft data for draft ${draftId}, user ${userId}`);
@@ -45,8 +46,8 @@ async function fetchListingDraftData({ userId, draftId }) {
     }
 
     // Check if draft has data
-    if (!draft.draftData) {
-      logger.error(`[Property Publishing] Draft ${draftId} has no data`);
+    if (!draft.draftData || typeof draft.draftData !== 'object') {
+      logger.error(`[Property Publishing] Draft ${draftId} has no valid data`);
       return {
         success: false,
         message: 'Draft has no property data'
@@ -55,15 +56,38 @@ async function fetchListingDraftData({ userId, draftId }) {
 
     // Check draft status
     if (draft.draftStatus === 'PUBLISHED') {
-      logger.warn(`[Property Publishing] Draft ${draftId} is already published`);
-      // Allow re-publishing for updates
+      logger.warn(`[Property Publishing] Draft ${draftId} is already published - allowing re-publish for updates`);
     }
 
     logger.info(`[Property Publishing] Draft data fetched successfully for draft ${draftId}`);
     
+    // Transform the nested draft data to flat property data
+    let transformedData;
+    try {
+      transformedData = transformDraftToPropertyData(draft.draftData);
+      logger.info(`[Property Publishing] Draft data transformed successfully`);
+    } catch (transformError) {
+      logger.error(`[Property Publishing] Transformation error:`, transformError);
+      return {
+        success: false,
+        message: `Failed to transform draft data: ${transformError.message}`
+      };
+    }
+
+    // Validate transformed data
+    const validation = validateTransformedData(transformedData);
+    if (!validation.valid) {
+      logger.error(`[Property Publishing] Transformed data validation failed:`, validation.errors);
+      return {
+        success: false,
+        message: 'Transformed data validation failed',
+        errors: validation.errors
+      };
+    }
+    
     return {
       success: true,
-      data: draft.draftData
+      data: transformedData
     };
   } catch (error) {
     logger.error('[Property Publishing] Error fetching draft data:', error);

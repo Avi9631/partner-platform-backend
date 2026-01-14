@@ -261,11 +261,97 @@ const deleteProject = async (req, res) => {
   }
 };
 
+/**
+ * Search projects near a location
+ * GET /api/project/search-nearby
+ */
+const searchNearbyProjects = async (req, res) => {
+  try {
+    const { lat, lng, radius } = req.query;
+
+    // Validate required parameters
+    if (!lat || !lng || !radius) {
+      return sendErrorResponse(
+        res,
+        'Latitude, longitude, and radius are required',
+        400
+      );
+    }
+
+    // Validate numeric values
+    const latitude = parseFloat(lat);
+    const longitude = parseFloat(lng);
+    const radiusKm = parseFloat(radius);
+
+    if (isNaN(latitude) || isNaN(longitude) || isNaN(radiusKm)) {
+      return sendErrorResponse(
+        res,
+        'Invalid latitude, longitude, or radius value',
+        400
+      );
+    }
+
+    // Validate coordinate ranges
+    if (latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) {
+      return sendErrorResponse(
+        res,
+        'Invalid coordinate values. Latitude must be between -90 and 90, longitude between -180 and 180',
+        400
+      );
+    }
+
+    if (radiusKm <= 0 || radiusKm > 100) {
+      return sendErrorResponse(
+        res,
+        'Radius must be between 0 and 100 km',
+        400
+      );
+    }
+
+    const filters = {
+      status: req.query.status,
+      city: req.query.city,
+      search: req.query.search,
+      page: req.query.page || 1,
+      limit: req.query.limit || 20
+    };
+
+    const result = await ProjectService.searchNearbyProjects(
+      latitude,
+      longitude,
+      radiusKm,
+      filters
+    );
+
+    if (result.success) {
+      return sendSuccessResponse(
+        res,
+        result.data,
+        'Nearby projects fetched successfully'
+      );
+    } else {
+      return sendErrorResponse(
+        res,
+        result.message,
+        result.statusCode || 500
+      );
+    }
+  } catch (error) {
+    logger.error('Error searching nearby projects:', error);
+    return sendErrorResponse(
+      res,
+      'An error occurred while searching nearby projects',
+      500
+    );
+  }
+};
+
 module.exports = {
   publishProject,
   getMyProjects,
   listProjects,
   getProjectById,
   updateProject,
-  deleteProject
+  deleteProject,
+  searchNearbyProjects
 };

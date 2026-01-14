@@ -15,6 +15,17 @@ router.post(
 );
 
 /**
+ * @route   GET /api/property/search-nearby
+ * @desc    Search properties near a location (lat, lng, radius)
+ * @access  Public
+ * @query   lat, lng, radius (in km), status, projectId, city, locality, propertyType, listingType, bedrooms, minPrice, maxPrice, page, limit
+ */
+router.get(
+  "/search-nearby",
+  PropertyController.searchNearbyProperties
+);
+
+/**
  * @route   GET /api/property/list
  * @desc    List properties with filters and pagination
  * @access  Public

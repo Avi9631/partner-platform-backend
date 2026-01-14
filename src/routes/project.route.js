@@ -14,6 +14,17 @@ router.post(
   authenticateToken,
   ProjectController.publishProject
 );
+
+/**
+ * @route   GET /api/project/search-nearby
+ * @desc    Search projects near a location (lat, lng, radius)
+ * @access  Public
+ * @query   lat, lng, radius (in km), status, city, search, page, limit
+ */
+router.get(
+  "/search-nearby",
+  ProjectController.searchNearbyProjects
+);
  
 /**
  * @route   GET /api/project/list
