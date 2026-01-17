@@ -46,12 +46,12 @@ async function propertyPublishing(workflowInput) {
                 message: fetchResult.message || 'Failed to fetch draft data',
             };
         }
-        
+   
         const propertyData = fetchResult.data;
-        logger.info(`[Property Publishing] Draft data fetched successfully`);
+        logger.info(`[Property Publishing] Draft data transformed successfully`);
         
-        // Step 2: Validate property data
-        logger.info(`[Property Publishing] Step 2: Validating property data`);
+        // Step 3: Validate property data
+        logger.info(`[Property Publishing] Step 3: Validating property data`);
         
         const validationResult = await activities.validatePropertyData({
             userId,
@@ -70,7 +70,7 @@ async function propertyPublishing(workflowInput) {
         
         logger.info(`[Property Publishing] Validation successful`);
         
-        // Step 3: Check if this is an update or new property
+        // Step 4: Check if this is an update or new property
         const existingProperty = validationResult.existingProperty;
         const isUpdate = !!existingProperty;
         
@@ -78,7 +78,7 @@ async function propertyPublishing(workflowInput) {
         
         if (isUpdate) {
             // Update existing property
-            logger.info(`[Property Publishing] Step 3: Updating existing property ${existingProperty.propertyId}`);
+            logger.info(`[Property Publishing] Step 4: Updating existing property ${existingProperty.propertyId}`);
             
             propertyResult = await activities.updatePropertyRecord({
                 propertyId: existingProperty.propertyId,
@@ -87,7 +87,7 @@ async function propertyPublishing(workflowInput) {
             });
         } else {
             // Create new property
-            logger.info(`[Property Publishing] Step 3: Creating new property`);
+            logger.info(`[Property Publishing] Step 4: Creating new property`);
             
             propertyResult = await activities.createPropertyRecord({
                 userId,
@@ -107,8 +107,8 @@ async function propertyPublishing(workflowInput) {
         const property = propertyResult.data;
         logger.info(`[Property Publishing] Property ${isUpdate ? 'updated' : 'created'} successfully: ${property.propertyId}`);
         
-        // Step 4: Deduct publishing credits
-        logger.info(`[Property Publishing] Step 4: Deducting publishing credits`);
+        // Step 5: Deduct publishing credits
+        logger.info(`[Property Publishing] Step 5: Deducting publishing credits`);
         
         const creditResult = await activities.deductPublishingCredits({
             userId,
@@ -126,8 +126,8 @@ async function propertyPublishing(workflowInput) {
         
         logger.info(`[Property Publishing] Credits deducted successfully. New balance: ${creditResult.transaction.balanceAfter}`);
         
-        // Step 5: Update draft status
-        logger.info(`[Property Publishing] Step 5: Updating draft status`);
+        // Step 6: Update draft status
+        logger.info(`[Property Publishing] Step 6: Updating draft status`);
         
         await activities.updateListingDraftStatus({
             draftId,
@@ -136,8 +136,8 @@ async function propertyPublishing(workflowInput) {
         
         logger.info(`[Property Publishing] Draft status updated`);
         
-        // Step 6: Send notification
-        logger.info(`[Property Publishing] Step 6: Sending notification`);
+        // Step 7: Send notification
+        logger.info(`[Property Publishing] Step 7: Sending notification`);
         
         try {
             await activities.sendPropertyPublishingNotification({

@@ -9,8 +9,7 @@
 
 const PropertyService = require("../../service/PropertyService.service");
 const { debitFromWallet, getWalletBalance } = require("./wallet.activities");
-const { transformDraftToPropertyData, validateTransformedData } = require("../../utils/draftDataTransformer");
-const db = require("../../entity");
+ const db = require("../../entity");
 const Property = db.Property;
 const PlatformUser = db.PlatformUser;
 const ListingDraft = db.ListingDraft;
@@ -60,40 +59,165 @@ async function fetchListingDraftData({ userId, draftId }) {
     }
 
     logger.info(`[Property Publishing] Draft data fetched successfully for draft ${draftId}`);
-    
-    // Transform the nested draft data to flat property data
-    let transformedData;
-    try {
-      transformedData = transformDraftToPropertyData(draft.draftData);
-      logger.info(`[Property Publishing] Draft data transformed successfully`);
-    } catch (transformError) {
-      logger.error(`[Property Publishing] Transformation error:`, transformError);
-      return {
-        success: false,
-        message: `Failed to transform draft data: ${transformError.message}`
-      };
-    }
-
-    // Validate transformed data
-    const validation = validateTransformedData(transformedData);
-    if (!validation.valid) {
-      logger.error(`[Property Publishing] Transformed data validation failed:`, validation.errors);
-      return {
-        success: false,
-        message: 'Transformed data validation failed',
-        errors: validation.errors
-      };
-    }
+   
     
     return {
       success: true,
-      data: transformedData
+      data: draft.draftData
     };
   } catch (error) {
     logger.error('[Property Publishing] Error fetching draft data:', error);
     return {
       success: false,
       message: error.message || 'Failed to fetch draft data'
+    };
+  }
+}
+
+/**
+ * Transform nested draft data structure to flat property format
+ * 
+ * @param {Object} params - Activity parameters
+ * @param {Object} params.draftData - Raw draft data with nested structure
+ * @returns {Promise<Object>} - Result with transformed property data
+ */
+async function transformPropertyDraftData({ draftData }) {
+  logger.info(`[Property Publishing] Transforming draft data structure`);
+  
+  try {
+    // Extract nested sections from draft
+    const listingInfo = draftData['listing-info'] || {};
+    const basicDetails = draftData['basic-details'] || {};
+    const basicConfiguration = draftData['basic-configuration'] || {};
+    const propertyTypeData = draftData['property-type'] || {};
+    const locationSelection = draftData['location-selection'] || {};
+    const locationAttributes = draftData['location-attributes'] || {};
+    const pricingData = draftData.pricing || {};
+    const mediaUpload = draftData['media-upload'] || {};
+    const propertyAmenities = draftData['property-amenities'] || {};
+    const unitAmenities = draftData['unit-amenities'] || {};
+    const floorDetails = draftData['floor-details'] || {};
+    const landAttributes = draftData['land-attributes'] || {};
+    const areaDetails = draftData['area-details'] || {};
+
+    // Transform to flat structure expected by PropertyService
+    const transformedData = {
+      // Basic Information
+      propertyName: basicDetails.customPropertyName || listingInfo.title,
+      title: listingInfo.title,
+      description: listingInfo.description,
+      propertyType: propertyTypeData.propertyType,
+      listingType: basicDetails.listingType,
+      isNewProperty: basicDetails.isNewProperty || false,
+      
+      // Location
+      city: locationSelection.city,
+      locality: locationSelection.locality,
+      landmark: locationSelection.landmark,
+      addressText: locationSelection.addressText,
+      coordinates: locationSelection.coordinates,
+      showMapExact: locationSelection.showMapExact || false,
+      
+      // Configuration from basic-configuration
+      bedrooms: basicConfiguration.bedrooms,
+      bathrooms: basicConfiguration.bathrooms,
+      carpetArea: basicConfiguration.carpetArea,
+      superArea: basicConfiguration.superArea,
+      areaConfig: basicConfiguration.areaConfig || [],
+      measurementMethod: basicConfiguration.measurementMethod,
+      
+      // Floor details
+      floorNumber: floorDetails.floorNumber,
+      totalFloors: floorDetails.totalFloors,
+      unitNumber: floorDetails.unitNumber,
+      towerName: floorDetails.towerName,
+      isUnitNumberPrivate: floorDetails.isUnitNumberPrivate || false,
+      hasIntercom: floorDetails.hasIntercom || false,
+      hasEmergencyExit: floorDetails.hasEmergencyExit || false,
+      
+      // Location attributes
+      facing: locationAttributes.facing,
+      view: locationAttributes.view,
+      propertyPosition: locationAttributes.propertyPosition,
+      
+      // Status & Type
+      ownershipType: basicDetails.ownershipType,
+      possessionStatus: basicDetails.possessionStatus,
+      ageOfProperty: basicDetails.ageOfProperty,
+      possessionDate: basicDetails.possessionDate,
+      
+      // Pricing - extract from nested pricing.pricing array
+      pricing: pricingData.pricing || [],
+      availableFrom: pricingData.availableFrom,
+      isPriceVerified: pricingData.isPriceVerified || false,
+      isPriceNegotiable: pricingData.isPriceNegotiable || false,
+      maintenanceIncludes: pricingData.maintenanceIncludes || [],
+      
+      // Project
+      projectName: basicDetails.projectName,
+      customPropertyName: basicDetails.customPropertyName,
+      
+      // Amenities from multiple sections
+      features: propertyAmenities.features || [],
+      amenities: unitAmenities.amenities || [],
+      flooringTypes: unitAmenities.flooringTypes || [],
+      smartHomeDevices: unitAmenities.smartHomeDevices || [],
+      furnishingStatus: unitAmenities.furnishingStatus,
+      furnishingDetails: unitAmenities.furnishingDetails || {},
+      
+      // Boolean flags
+      isGated: propertyAmenities.isGated || false,
+      fireSafety: propertyAmenities.fireSafety || false,
+      petFriendly: propertyAmenities.petFriendly || false,
+      
+      // RERA & Documents
+      reraIds: basicDetails.reraIds || [],
+      documents: draftData.documents || [],
+      
+      // Media
+      mediaData: mediaUpload.mediaData || [],
+      propertyPlans: mediaUpload.propertyPlans || [],
+      
+      // Land-specific attributes (if applicable)
+      landAttributes: landAttributes || {},
+      
+      // Also keep the original nested structure in case PropertyService needs it
+      'listing-info': listingInfo,
+      'basic-details': basicDetails,
+      'basic-configuration': basicConfiguration,
+      'property-type': propertyTypeData,
+      'location-selection': locationSelection,
+      'location-attributes': locationAttributes,
+      'pricing': pricingData,
+      'media-upload': mediaUpload,
+      'property-amenities': propertyAmenities,
+      'unit-amenities': unitAmenities,
+      'floor-details': floorDetails,
+      'land-attributes': landAttributes,
+      'area-details': areaDetails
+    };
+
+    logger.info(`[Property Publishing] Draft data transformed successfully`);
+    logger.debug(`[Property Publishing] Transformed data summary:`, {
+      propertyName: transformedData.propertyName,
+      title: transformedData.title,
+      propertyType: transformedData.propertyType,
+      listingType: transformedData.listingType,
+      city: transformedData.city,
+      locality: transformedData.locality,
+      bedrooms: transformedData.bedrooms,
+      hasCoordinates: !!transformedData.coordinates
+    });
+    
+    return {
+      success: true,
+      data: transformedData
+    };
+  } catch (error) {
+    logger.error('[Property Publishing] Error transforming draft data:', error);
+    return {
+      success: false,
+      message: error.message || 'Failed to transform draft data'
     };
   }
 }
@@ -113,14 +237,67 @@ async function validatePropertyData({ userId, draftId, propertyData }) {
   try {
     const errors = [];
 
+    // Log key data for debugging
+    logger.debug(`[Property Publishing] Validation input - propertyType: ${propertyData.propertyType}, listingType: ${propertyData.listingType}, city: ${propertyData.city}, propertyName: ${propertyData.propertyName}`);
+
     // Validate required draftId
     if (!draftId) {
       errors.push('Draft ID is required');
     }
 
-    // Validate required fields - at least one name field
-    if (!propertyData.propertyName && !propertyData.title && !propertyData.customPropertyName) {
+    // Handle nested structure
+    const listingInfo = propertyData['listing-info'] || {};
+    const basicDetails = propertyData['basic-details'] || {};
+    const locationSelection = propertyData['location-selection'] || {};
+    const basicConfiguration = propertyData['basic-configuration'] || {};
+
+    // Validate required fields - at least one name field (check both nested and flat)
+    const hasName = propertyData.propertyName || 
+                   propertyData.title || 
+                   propertyData.customPropertyName ||
+                   listingInfo.title ||
+                   basicDetails.customPropertyName;
+    
+    if (!hasName) {
       errors.push('Property name, title, or custom property name is required');
+    }
+    
+    // Validate at least basic property type
+    const propertyType = propertyData.propertyType || propertyData['property-type']?.propertyType;
+    if (!propertyType) {
+      errors.push('Property type is required');
+    }
+    
+    // Validate listing type
+    const listingType = propertyData.listingType || basicDetails.listingType;
+    if (!listingType) {
+      errors.push('Listing type (sale/rent/lease) is required');
+    }
+    
+    // Validate location
+    const hasLocation = (propertyData.city || locationSelection.city) && 
+                       (propertyData.locality || locationSelection.locality);
+    if (!hasLocation) {
+      errors.push('City and locality are required');
+    }
+    
+    // Validate coordinates if provided
+    const coords = propertyData.coordinates || locationSelection.coordinates;
+    if (coords) {
+      if (coords.lat && (isNaN(coords.lat) || coords.lat < -90 || coords.lat > 90)) {
+        errors.push('Invalid latitude value (must be between -90 and 90)');
+      }
+      if (coords.lng && (isNaN(coords.lng) || coords.lng < -180 || coords.lng > 180)) {
+        errors.push('Invalid longitude value (must be between -180 and 180)');
+      }
+    }
+    
+    // Validate at least one bedroom/configuration specified
+    const bedrooms = propertyData.bedrooms || basicConfiguration.bedrooms;
+    if (propertyType === 'apartment' || propertyType === 'villa') {
+      if (!bedrooms) {
+        errors.push('Number of bedrooms is required for apartments and villas');
+      }
     }
 
     // Validate property name length if provided
@@ -204,18 +381,20 @@ async function validatePropertyData({ userId, draftId, propertyData }) {
     });
 
     if (errors.length > 0) {
+      logger.error(`[Property Publishing] Validation failed with ${errors.length} error(s):`, errors);
       return {
         success: false,
         errors
       };
     }
 
+    logger.info(`[Property Publishing] Validation passed successfully`);
     return {
       success: true,
       existingProperty
     };
   } catch (error) {
-    logger.error('[Property Publishing] Validation error:', error);
+    logger.error('[Property Publishing] Validation error (exception):', error);
     return {
       success: false,
       errors: [error.message || 'Validation failed']
@@ -443,6 +622,7 @@ async function deductPublishingCredits({ userId, propertyId, amount = 10 }) {
 
 module.exports = {
   fetchListingDraftData,
+  transformPropertyDraftData,
   validatePropertyData,
   createPropertyRecord,
   updatePropertyRecord,

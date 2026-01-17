@@ -54,93 +54,128 @@ const createProperty = async (userId, draftId, propertyData) => {
       };
     }
 
+    console.log('Property Data Received:', propertyData);
+
+    // Extract data from nested structure (draft format)
+    const listingInfo = propertyData['listing-info'] || {};
+    const basicDetails = propertyData['basic-details'] || {};
+    const propertyTypeData = propertyData['property-type'] || {};
+    const locationSelection = propertyData['location-selection'] || {};
+    const pricingData = propertyData.pricing || {};
+    const mediaUpload = propertyData['media-upload'] || {};
+    const propertyAmenities = propertyData['property-amenities'] || {};
+    const landAttributes = propertyData['land-attributes'] || {};
+    const specifications = propertyData.specifications || {};
+    const areaDetails = propertyData['area-details'] || {};
 
     // Prepare property data
     const propertyRecord = {
-      propertyName: propertyData.propertyName || propertyData.title || propertyData.customPropertyName,
+      propertyName: basicDetails.customPropertyName || listingInfo.title || propertyData.propertyName,
       projectId: propertyData.projectId || null,
       createdBy: userId,
       draftId: draftId,
       status: propertyData.status || 'ACTIVE',
       
       // Basic Information
-      title: propertyData.title,
-      description: propertyData.description,
-      propertyType: propertyData.propertyType,
-      listingType: propertyData.listingType,
-      isNewProperty: propertyData.isNewProperty || false,
+      title: listingInfo.title || propertyData.title,
+      description: listingInfo.description || propertyData.description,
+      propertyType: propertyTypeData.propertyType || propertyData.propertyType,
+      listingType: basicDetails.listingType || propertyData.listingType,
+      isNewProperty: basicDetails.isNewProperty || propertyData.isNewProperty || false,
       
       // Location
-      city: propertyData.city,
-      locality: propertyData.locality,
-      landmark: propertyData.landmark,
-      addressText: propertyData.addressText,
-      lat: propertyData.coordinates?.lat || null,
-      lng: propertyData.coordinates?.lng || null,
-      location: (propertyData.coordinates?.lat && propertyData.coordinates?.lng) 
-        ? { type: 'Point', coordinates: [propertyData.coordinates.lng, propertyData.coordinates.lat] }
+      city: locationSelection.city || propertyData.city,
+      locality: locationSelection.locality || propertyData.locality,
+      landmark: locationSelection.landmark || propertyData.landmark,
+      addressText: locationSelection.addressText || propertyData.addressText,
+      lat: locationSelection.coordinates?.lat || propertyData.coordinates?.lat || null,
+      lng: locationSelection.coordinates?.lng || propertyData.coordinates?.lng || null,
+      location: ((locationSelection.coordinates?.lat && locationSelection.coordinates?.lng) || 
+                 (propertyData.coordinates?.lat && propertyData.coordinates?.lng))
+        ? db.sequelize.fn(
+            'ST_SetSRID',
+            db.sequelize.fn(
+              'ST_MakePoint',
+              locationSelection.coordinates?.lng || propertyData.coordinates?.lng,
+              locationSelection.coordinates?.lat || propertyData.coordinates?.lat
+            ),
+            4326
+          )
         : null,
-      showMapExact: propertyData.showMapExact || false,
+      showMapExact: locationSelection.showMapExact || propertyData.showMapExact || false,
       
       // Specifications
-      bedrooms: propertyData.bedrooms,
-      bathrooms: propertyData.bathrooms,
-      facing: propertyData.facing,
-      view: propertyData.view,
-      floorNumber: propertyData.floorNumber,
-      totalFloors: propertyData.totalFloors,
-      unitNumber: propertyData.unitNumber,
-      towerName: propertyData.towerName,
-      isUnitNumberPrivate: propertyData.isUnitNumberPrivate || false,
+      bedrooms: specifications.bedrooms || propertyData.bedrooms,
+      bathrooms: specifications.bathrooms || propertyData.bathrooms,
+      facing: specifications.facing || propertyData.facing,
+      view: specifications.view || propertyData.view,
+      floorNumber: specifications.floorNumber || propertyData.floorNumber,
+      totalFloors: specifications.totalFloors || propertyData.totalFloors,
+      unitNumber: specifications.unitNumber || propertyData.unitNumber,
+      towerName: specifications.towerName || propertyData.towerName,
+      isUnitNumberPrivate: specifications.isUnitNumberPrivate || propertyData.isUnitNumberPrivate || false,
       
       // Area
-      carpetArea: propertyData.carpetArea,
-      superArea: propertyData.superArea,
-      areaConfig: propertyData.areaConfig || [],
-      measurementMethod: propertyData.measurementMethod,
+      carpetArea: areaDetails.carpetArea || propertyData.carpetArea,
+      superArea: areaDetails.superArea || landAttributes.plotArea || propertyData.superArea,
+      areaConfig: areaDetails.areaConfig || propertyData.areaConfig || [],
+      measurementMethod: areaDetails.measurementMethod || propertyData.measurementMethod,
       
       // Status & Type
-      ownershipType: propertyData.ownershipType,
-      furnishingStatus: propertyData.furnishingStatus,
-      possessionStatus: propertyData.possessionStatus,
-      ageOfProperty: propertyData.ageOfProperty,
-      propertyPosition: propertyData.propertyPosition,
-      availableFrom: validateDate(propertyData.availableFrom),
-      possessionDate: validateDate(propertyData.possessionDate),
+      ownershipType: basicDetails.ownershipType || propertyData.ownershipType,
+      furnishingStatus: specifications.furnishingStatus || propertyData.furnishingStatus,
+      possessionStatus: basicDetails.possessionStatus || propertyData.possessionStatus,
+      ageOfProperty: basicDetails.ageOfProperty || propertyData.ageOfProperty,
+      propertyPosition: specifications.propertyPosition || propertyData.propertyPosition,
+      availableFrom: validateDate(pricingData.availableFrom || propertyData.availableFrom),
+      possessionDate: validateDate(basicDetails.possessionDate || propertyData.possessionDate),
       
       // Pricing
-      pricing: propertyData.pricing || [],
-      isPriceVerified: propertyData.isPriceVerified || false,
-      isPriceNegotiable: propertyData.isPriceNegotiable || false,
+      pricing: pricingData.pricing || propertyData.pricing || [],
+      isPriceVerified: pricingData.isPriceVerified || propertyData.isPriceVerified || false,
+      isPriceNegotiable: pricingData.isPriceNegotiable || propertyData.isPriceNegotiable || false,
       
       // Project & Names
-      projectName: propertyData.projectName,
-      customPropertyName: propertyData.customPropertyName,
+      projectName: basicDetails.projectName || propertyData.projectName,
+      customPropertyName: basicDetails.customPropertyName || propertyData.customPropertyName,
       
       // Features & Amenities
-      features: propertyData.features || [],
-      amenities: propertyData.amenities || [],
-      flooringTypes: propertyData.flooringTypes || [],
-      smartHomeDevices: propertyData.smartHomeDevices || [],
-      maintenanceIncludes: propertyData.maintenanceIncludes || [],
+      features: propertyAmenities.features || propertyData.features || [],
+      amenities: propertyAmenities.amenities || propertyData.amenities || [],
+      flooringTypes: specifications.flooringTypes || propertyData.flooringTypes || [],
+      smartHomeDevices: specifications.smartHomeDevices || propertyData.smartHomeDevices || [],
+      maintenanceIncludes: pricingData.maintenanceIncludes || propertyData.maintenanceIncludes || [],
       
       // Boolean Flags
-      isGated: propertyData.isGated || false,
-      fireSafety: propertyData.fireSafety || false,
-      hasIntercom: propertyData.hasIntercom || false,
-      petFriendly: propertyData.petFriendly || false,
-      hasEmergencyExit: propertyData.hasEmergencyExit || false,
+      isGated: specifications.isGated || propertyData.isGated || false,
+      fireSafety: specifications.fireSafety || propertyData.fireSafety || false,
+      hasIntercom: specifications.hasIntercom || propertyData.hasIntercom || false,
+      petFriendly: specifications.petFriendly || propertyData.petFriendly || false,
+      hasEmergencyExit: specifications.hasEmergencyExit || propertyData.hasEmergencyExit || false,
       
       // RERA & Documents
-      reraIds: propertyData.reraIds || [],
+      reraIds: basicDetails.reraIds || propertyData.reraIds || [],
       documents: propertyData.documents || [],
       
       // Media
-      mediaData: propertyData.mediaData || [],
-      propertyPlans: propertyData.propertyPlans || [],
+      mediaData: mediaUpload.mediaData || propertyData.mediaData || [],
+      propertyPlans: mediaUpload.propertyPlans || propertyData.propertyPlans || [],
       
       // Additional Details
-      furnishingDetails: propertyData.furnishingDetails || {}
+      furnishingDetails: specifications.furnishingDetails || propertyData.furnishingDetails || {},
+      
+      // Land-specific attributes (stored as JSON in appropriate fields)
+      landAttributes: landAttributes ? {
+        fencing: landAttributes.fencing,
+        landUse: landAttributes.landUse,
+        areaUnit: landAttributes.areaUnit,
+        plotArea: landAttributes.plotArea,
+        soilType: landAttributes.soilType,
+        roadWidth: landAttributes.roadWidth,
+        terrainLevel: landAttributes.terrainLevel,
+        plotDimension: landAttributes.plotDimension,
+        irrigationSource: landAttributes.irrigationSource
+      } : propertyData.landAttributes || {}
     };
 
     // Create property record
@@ -246,10 +281,37 @@ const updateProperty = async (propertyId, userId, updateData) => {
       }
       // Update location GEOGRAPHY field if both lat and lng are provided
       if (updateData.coordinates.lat && updateData.coordinates.lng) {
-        updateFields.location = {
-          type: 'Point',
-          coordinates: [updateData.coordinates.lng, updateData.coordinates.lat]
-        };
+        updateFields.location = db.sequelize.fn(
+          'ST_SetSRID',
+          db.sequelize.fn(
+            'ST_MakePoint',
+            updateData.coordinates.lng,
+            updateData.coordinates.lat
+          ),
+          4326
+        );
+      }
+    }
+    
+    // Also handle nested location-selection format from draft data
+    const locationSelection = updateData['location-selection'];
+    if (locationSelection?.coordinates) {
+      if (locationSelection.coordinates.lat !== undefined) {
+        updateFields.lat = locationSelection.coordinates.lat;
+      }
+      if (locationSelection.coordinates.lng !== undefined) {
+        updateFields.lng = locationSelection.coordinates.lng;
+      }
+      if (locationSelection.coordinates.lat && locationSelection.coordinates.lng) {
+        updateFields.location = db.sequelize.fn(
+          'ST_SetSRID',
+          db.sequelize.fn(
+            'ST_MakePoint',
+            locationSelection.coordinates.lng,
+            locationSelection.coordinates.lat
+          ),
+          4326
+        );
       }
     }
 
